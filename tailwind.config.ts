@@ -19,7 +19,7 @@ const config = {
 		},
 		extend: {
 			colors: {
-				primary: "#6200EE",
+				primary: "#714EE7",
 			},
 			keyframes: {
 				"accordion-down": {

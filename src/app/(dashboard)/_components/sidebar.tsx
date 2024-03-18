@@ -18,7 +18,8 @@ const DashboardSidebar = () => {
 						className={cn(
 							"flex w-full items-center gap-2 rounded-md px-2 py-2",
 							"transition-all duration-300 hover:bg-primary hover:text-white",
-							{ "bg-primary text-white": pathname === x.href }
+							{ "bg-primary text-white": pathname === x.href },
+							"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
 						)}
 					>
 						<x.image className={cn("text-2xl", x.imageClass)} />

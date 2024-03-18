@@ -34,8 +34,13 @@ const ProfileDropdown: React.FC<Props> = ({ data }) => {
 						</span>
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className="mt-1 min-w-40 bg-white shadow">
-					<Button variant={"blue"} onClick={logout}>
+				<PopoverContent className="mt-1 min-w-40 rounded-md bg-white px-4 py-6 shadow-md">
+					<Button
+						variant={"dropdown"}
+						size={"dropdown"}
+						onClick={logout}
+						className="w-full"
+					>
 						Logout
 					</Button>
 				</PopoverContent>

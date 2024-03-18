@@ -27,8 +27,11 @@ const Header = () => {
 			)}
 		>
 			<div className="flex w-full items-center justify-between">
-				<Link href={urls.dashboard.home}>
-					<Image priority src={RibbonLogo} alt="" className="w-36" />
+				<Link
+					href={urls.dashboard.home}
+					className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
+				>
+					<Image priority src={RibbonLogo} alt="" className={cn("w-28")} />
 				</Link>
 
 				<span className="text-2xl font-bold">

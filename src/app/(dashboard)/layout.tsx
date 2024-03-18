@@ -2,13 +2,9 @@ import Header from "@/components/header";
 import { cn } from "@/lib/utils";
 import React from "react";
 import DashboardSidebar from "./_components/sidebar";
-// import AdminProtectedRoute from "@/components/protected_route";
+import AdminProtectedRoute from "@/components/protected_route";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-	const AdminProtectedRoute = React.lazy(
-		() => import("@/components/protected_route")
-	);
-
 	return (
 		<AdminProtectedRoute>
 			<Header />
@@ -24,7 +20,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 				</aside>
 				<main
 					className={cn(
-						"w-full bg-gray-50 px-4",
+						"w-full bg-gray-200/50 px-4",
 						"flex h-[calc(100vh-80px)] flex-col",
 						"overflow-y-auto"
 					)}

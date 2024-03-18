@@ -75,7 +75,7 @@ export default function ForgotPasswordForm() {
 				<ErrorMessage>{errors.email?.message}</ErrorMessage>
 			</div>
 
-			<Button type="submit" disabled={isSubmitting} variant={"blue"}>
+			<Button type="submit" disabled={isSubmitting}>
 				{isSubmitting ? <ImSpinner3 className="mr-1 animate-spin" /> : "Reset"}
 			</Button>
 			<br />

@@ -27,6 +27,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 					onClick={() => setShow(!show)}
 					className={cn(
 						"absolute right-0.5 top-1/2 h-9 w-14 -translate-y-1/2 rounded-r-md bg-neutral-200 text-sm",
+						"transition-colors duration-300 hover:text-primary",
 						"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
 					)}
 				>

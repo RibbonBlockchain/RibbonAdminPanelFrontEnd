@@ -28,6 +28,7 @@ export default function ResetPasswordForm() {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
+		trigger,
 		setValue,
 		reset,
 	} = useForm<ResetPasswordSchemaType>({
@@ -73,7 +74,10 @@ export default function ResetPasswordForm() {
 				<Label>OTP</Label>
 				<InputOTP
 					{...register("otp")}
-					onChange={(v) => setValue("otp", v)}
+					onChange={(v) => {
+						setValue("otp", v);
+						trigger("otp");
+					}}
 					maxLength={6}
 					render={({ slots }) => (
 						<>
@@ -104,7 +108,7 @@ export default function ResetPasswordForm() {
 				<ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
 			</div>
 
-			<Button type="submit" disabled={isSubmitting} variant={"blue"}>
+			<Button type="submit" disabled={isSubmitting}>
 				{isSubmitting ? (
 					<ImSpinner3 className="mr-1 animate-spin" />
 				) : (

@@ -11,13 +11,16 @@ const buttonVariants = cva(
 			variant: {
 				default:
 					"bg-primary border-2 border-primary px-2 py-2 text-white hover:border-primary hover:bg-white hover:text-primary disabled:cursor-not-allowed disabled:opacity-50",
-				blue: "border-2 border-blue-500 bg-blue-500 px-2 py-2 text-white hover:border-blue-500 hover:bg-white hover:text-blue-500 disabled:cursor-not-allowed disabled:opacity-50",
+				// blue: "border-2 border-blue-500 bg-blue-500 px-2 py-2 text-white hover:border-blue-500 hover:bg-white hover:text-blue-500 disabled:cursor-not-allowed disabled:opacity-50",
+				dropdown:
+					"text-left justify-start px-0 py-0 hover:bg-primary hover:text-white",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
 				sm: "h-9 rounded-md px-3",
 				lg: "h-11 rounded-md px-8",
 				icon: "h-10 w-10",
+				dropdown: "h-10 px-4",
 			},
 		},
 		defaultVariants: {

@@ -67,7 +67,7 @@ export default function LoginForm() {
 		<form className="flex flex-col gap-4" onSubmit={onSubmit}>
 			<Link
 				href={urls.auth.forgot_password(`email=${watchedFields.email || ""}`)}
-				className="-my-1 self-end text-sm text-blue-500 hover:text-blue-700"
+				className="-my-1 self-end text-sm text-primary hover:text-primary/70"
 			>
 				Forgot password?
 			</Link>
@@ -88,7 +88,7 @@ export default function LoginForm() {
 				<ErrorMessage>{errors.password?.message}</ErrorMessage>
 			</div>
 
-			<Button type="submit" disabled={isPending} variant={"blue"}>
+			<Button type="submit" disabled={isPending}>
 				{isPending ? <ImSpinner3 className="mr-1 animate-spin" /> : "Login"}
 			</Button>
 			<br />

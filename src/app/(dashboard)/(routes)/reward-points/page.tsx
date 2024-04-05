@@ -13,12 +13,12 @@ import { formatCurrency } from "@/lib/utils";
 export default function RewardPoints() {
 	return (
 		<>
-			<div className="relative mt-12 w-full max-w-xs self-end">
+			<div className="relative mx-4 mt-12 w-full max-w-xs self-end">
 				<IoSearchOutline className="absolute left-2 top-1/2 -translate-y-1/2" />
 				<Input type="search" placeholder="Search Program" className=" pl-8" />
 			</div>
 
-			<div className="mt-12 flex gap-6">
+			<div className="mx-4 mt-12 flex gap-6">
 				<span className="rounded-md bg-[#FCECF0] p-2 drop-shadow-sm">
 					Total supply: {formatCurrency(100_000_000_000, { currency: "USD" })}
 				</span>
@@ -28,7 +28,7 @@ export default function RewardPoints() {
 				</span>
 			</div>
 
-			<section className="my-12 grid grid-cols-3 gap-6">
+			<section className="mx-4 my-12 grid grid-cols-3 gap-6">
 				{programs.map((x) => (
 					<figure
 						key={`program-${x.id}`}

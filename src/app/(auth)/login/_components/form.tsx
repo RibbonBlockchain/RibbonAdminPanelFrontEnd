@@ -9,7 +9,6 @@ import { PasswordInput } from "@/components/ui/password_input";
 import { toast } from "@/components/ui/use-toast";
 import urls from "@/lib/urls";
 import { LoginSchema, LoginSchemaType } from "@/schemas";
-import { LoginResponse } from "@/types/response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
@@ -26,7 +25,8 @@ export default function LoginForm() {
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Login"],
 		mutationFn: Login,
-		onSuccess: () => {
+		onSuccess: (data) => {
+			localStorage.setItem("token", data.accessToken);
 			// Invalidate and refetch
 			reset();
 			queryClient.invalidateQueries();

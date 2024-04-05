@@ -19,7 +19,11 @@ const config = {
 		},
 		extend: {
 			colors: {
-				primary: "#714EE7",
+				primary: { DEFAULT: "#714EE7", 900: "#34246B" },
+				black: {
+					primary: "#110D1B",
+					neutral: "#626262",
+				},
 			},
 			keyframes: {
 				"accordion-down": {

@@ -4,27 +4,28 @@ import React from "react";
 import DashboardSidebar from "./_components/sidebar";
 import AdminProtectedRoute from "@/components/protected_route";
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<AdminProtectedRoute>
-			<Header />
-
-			<section className={cn("relative", "z-0 flex", "min-w-[1024px] border")}>
+			<section
+				className={cn("relative", "z-0 flex overflow-hidden", "min-w-[1024px]")}
+			>
 				<aside
 					className={cn(
-						"sticky top-0 flex border-r px-4",
-						"h-[calc(100vh-80px)] min-w-[256px]"
+						"bg-black-primary sticky top-0 flex flex-col border-r px-4 pt-4",
+						"h-screen min-w-[256px]"
 					)}
 				>
 					<DashboardSidebar />
 				</aside>
 				<main
 					className={cn(
-						"w-full bg-gray-200/50 px-4",
-						"flex h-[calc(100vh-80px)] flex-col",
+						"w-full bg-primary/10",
+						"flex h-screen flex-col",
 						"overflow-y-auto"
 					)}
 				>
+					<Header />
 					{children}
 				</main>
 			</section>
@@ -32,4 +33,4 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 	);
 };
 
-export default AuthLayout;
+export default DashboardLayout;

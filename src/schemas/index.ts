@@ -1,3 +1,4 @@
+import { ResponseType } from "@/types/enums";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -39,3 +40,41 @@ export const ResetPasswordSchema = z
 	});
 
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
+
+export const CreateQuestionnaireSchema = z.object({
+	reward: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Reward must be greater than 0"),
+	category: z.string().trim(),
+	questions: z.array(
+		z
+			.object({
+				question: z.string().min(1, "Question cannot be empty").trim(),
+				response_type: z.nativeEnum(ResponseType),
+				options: z.array(z.string().trim()),
+			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					values.options.forEach((v, i) => {
+						if (!v)
+							context.addIssue({
+								code: z.ZodIssueCode.custom,
+								message: `Option ${i + 1} cannot be empty`,
+								path: [`options.${i}`],
+							});
+					});
+				}
+			})
+	),
+});
+
+export type CreateQuestionnaireSchemaType = z.infer<
+	typeof CreateQuestionnaireSchema
+>;

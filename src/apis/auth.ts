@@ -19,7 +19,5 @@ export async function Login(data: LoginSchemaType) {
 
 	const { data: resData } = (await response.json()) as LoginResponse;
 
-	console.log(resData);
-
-	localStorage.setItem("token", resData.accessToken);
+	return resData;
 }

@@ -1,16 +1,12 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils";
-import RibbonLogo from "@/public/images/ribbon.webp";
-import Image from "next/image";
 import { IoNotifications } from "react-icons/io5";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import urls from "@/lib/urls";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProfile } from "@/apis/user";
+import { Button } from "../ui/button";
 import ProfileDropdown from "./profile_dropdown";
+import { getUserProfile } from "@/apis/user";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
 	const { data } = useQuery({
@@ -21,23 +17,12 @@ const Header = () => {
 	return (
 		<header
 			className={cn(
-				"flex h-20 w-full justify-between bg-white px-4 py-4 shadow-sm",
+				"flex h-20 w-full items-center justify-between bg-[#F8F6FF] px-4 py-4",
 				"sticky top-0 z-10",
 				"min-w-[764px]"
 			)}
 		>
-			<div className="flex w-full items-center justify-between">
-				<Link
-					href={urls.dashboard.home}
-					className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
-				>
-					<Image priority src={RibbonLogo} alt="" className={cn("w-28")} />
-				</Link>
-
-				<span className="text-2xl font-bold">
-					Hello, {data?.data.role === "SUPER_ADMIN" ? "Super" : "Admin"} 👋🏼
-				</span>
-			</div>
+			<h1 className="text-2xl font-bold">Overview</h1>
 
 			<div className="flex w-full items-center justify-end gap-4">
 				<Button

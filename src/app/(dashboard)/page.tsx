@@ -9,7 +9,7 @@ import { ButtonLink } from "@/components/ui/button_link";
 
 export default function Home() {
 	return (
-		<section className="grid grid-cols-2 gap-10 py-12">
+		<section className="mx-4 grid grid-cols-2 gap-10 py-12">
 			<figure className="w-full space-y-6 rounded-lg bg-[#EEECFF] p-6">
 				<Image
 					src={RewardIcon}
@@ -40,7 +40,7 @@ export default function Home() {
 					<h2 className="font-semibold">Questionnaires</h2>
 					<span className="text-2xl font-bold">10,000</span>
 					<ButtonLink
-						href={urls.dashboard.questionnaires}
+						href={urls.dashboard.questionnaires.index}
 						className="mt-6 w-full gap-2"
 					>
 						View questionnaires <FaArrowRightLong />

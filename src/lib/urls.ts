@@ -9,7 +9,10 @@ const urls = {
 	dashboard: {
 		home: "/",
 		reward_points: "/reward-points",
-		questionnaires: "/questionnaires",
+		questionnaires: {
+			index: "/questionnaires",
+			create: "/questionnaires/create",
+		},
 		surveys: "/surveys",
 		tasks: "/tasks",
 	},

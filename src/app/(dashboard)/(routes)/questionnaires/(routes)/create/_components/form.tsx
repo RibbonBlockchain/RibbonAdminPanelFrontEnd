@@ -166,7 +166,7 @@ const CreateQuestionnaireForm = () => {
 					</div>
 
 					{questions.map((question, question_index) => (
-						<fieldset className="space-y-6">
+						<fieldset className="space-y-6" key={`question-${question_index}`}>
 							<div>
 								<Label>Question {question_index + 1}</Label>
 								<Input

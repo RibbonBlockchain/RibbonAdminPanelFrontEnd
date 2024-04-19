@@ -11,9 +11,13 @@ export async function getUserProfile() {
 		},
 	});
 
+	const data = await response.json();
+
 	if (!response.ok) {
-		throw new Error((await response.json()).message || "Something went wrong");
+		throw new Error(data.message || "Something went wrong", {
+			cause: data,
+		});
 	}
 
-	return (await response.json()) as UserProfileResponse;
+	return data as UserProfileResponse;
 }

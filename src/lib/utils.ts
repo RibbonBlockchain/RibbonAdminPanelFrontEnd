@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import urls from "./urls";
+import { QueryClient } from "@tanstack/react-query";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -16,4 +18,12 @@ export function formatCurrency(
 			maximumFractionDigits: 2,
 		}
 	).format(price);
+}
+
+export function logout(reroute: boolean = true) {
+	const qc = new QueryClient();
+
+	qc.invalidateQueries();
+	localStorage.removeItem("token");
+	reroute && window.location.replace(urls.auth.login());
 }

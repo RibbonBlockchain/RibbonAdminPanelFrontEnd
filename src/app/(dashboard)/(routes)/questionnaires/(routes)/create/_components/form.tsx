@@ -37,6 +37,8 @@ import { response_types } from "@/lib/constants";
 import { ResponseType } from "@/types/enums";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
+import { useQuery } from "@tanstack/react-query";
+import { getTasks } from "@/apis/questionnaire_category";
 
 const empty_question = [
 	{
@@ -47,6 +49,11 @@ const empty_question = [
 ];
 
 const CreateQuestionnaireForm = () => {
+	const { data, isPending } = useQuery({
+		queryKey: ["questionnaire"],
+		queryFn: getTasks,
+	});
+
 	const {
 		register,
 		handleSubmit,
@@ -117,6 +124,7 @@ const CreateQuestionnaireForm = () => {
 			onSubmit={onSubmit}
 			className="mx-auto my-16 w-full max-w-4xl space-y-10 px-6"
 		>
+			{/* {JSON.stringify(data)} */}
 			<Card className="pb-8 transition-all duration-500">
 				<CardHeader>
 					<CardTitle>Submit Questionnaires manually</CardTitle>

@@ -11,8 +11,9 @@ import {
 	DialogDescription,
 } from "@/components/ui/dialog";
 import urls from "@/lib/urls";
-import { cn } from "@/lib/utils";
+import { cn, logout } from "@/lib/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -20,8 +21,8 @@ import React from "react";
 const LogoutModal = () => {
 	const router = useRouter();
 
-	function logout() {
-		localStorage.removeItem("token");
+	function handleLogout() {
+		logout();
 		router.replace(urls.auth.login());
 	}
 
@@ -54,7 +55,7 @@ const LogoutModal = () => {
 					<DialogClose asChild>
 						<Button>No</Button>
 					</DialogClose>
-					<Button variant={"dropdown"} onClick={logout}>
+					<Button variant={"dropdown"} onClick={handleLogout}>
 						Yes
 					</Button>
 				</DialogFooter>

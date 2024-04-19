@@ -15,3 +15,5 @@ export type LoginResponse = DeafultResponse & {
 export type UserProfileResponse = DeafultResponse & {
 	data: Admin;
 };
+
+export type GetQuestionnaireCategoryResponse = DeafultResponse & {};

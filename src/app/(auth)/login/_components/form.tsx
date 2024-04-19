@@ -19,7 +19,7 @@ import { ImSpinner3 } from "react-icons/im";
 export default function LoginForm() {
 	const router = useRouter();
 	const params = useSearchParams();
-	const emailParam = params?.get("email") || "";
+	const emailParam = params.get("email") || "";
 	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({

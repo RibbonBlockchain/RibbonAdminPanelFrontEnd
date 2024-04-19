@@ -12,7 +12,7 @@ const AuthCard: React.FC<React.PropsWithChildren<Props>> = (props) => {
 			className={`flex flex-grow flex-col gap-8 overflow-hidden rounded-lg p-8 shadow-md ${props.bgColor} max-w-lg`}
 		>
 			<CardHeader className=" self-center">
-				<Image src={RibbonLogo} alt="" className="w-36" />
+				<Image src={RibbonLogo} alt="" className="w-36" priority />
 			</CardHeader>
 			{props.title && (
 				<CardTitle className="text-center text-2xl capitalize text-gray-800">

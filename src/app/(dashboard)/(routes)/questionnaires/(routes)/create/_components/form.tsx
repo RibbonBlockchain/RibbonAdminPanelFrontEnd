@@ -38,7 +38,7 @@ import { ResponseType } from "@/types/enums";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
-import { getTasks } from "@/apis/questionnaire_category";
+import { questionnaireCategoryService } from "@/services/questionnaire_category";
 
 const empty_question = [
 	{
@@ -51,7 +51,7 @@ const empty_question = [
 const CreateQuestionnaireForm = () => {
 	const { data, isPending } = useQuery({
 		queryKey: ["questionnaire"],
-		queryFn: getTasks,
+		queryFn: questionnaireCategoryService.getAll,
 	});
 
 	const {

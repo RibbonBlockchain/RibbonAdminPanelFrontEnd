@@ -9,10 +9,12 @@ import { ButtonLink } from "@/components/ui/button_link";
 import { Input } from "@/components/ui/input";
 import { IoSearchOutline } from "react-icons/io5";
 import { formatCurrency } from "@/lib/utils";
+import Header from "@/components/header";
 
 export default function RewardPoints() {
 	return (
 		<>
+			<Header>Reward Points</Header>
 			<div className="relative mx-4 mt-12 w-full max-w-xs self-end">
 				<IoSearchOutline className="absolute left-2 top-1/2 -translate-y-1/2" />
 				<Input type="search" placeholder="Search Program" className=" pl-8" />

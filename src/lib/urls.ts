@@ -15,6 +15,7 @@ const urls = {
 		},
 		surveys: "/surveys",
 		tasks: "/tasks",
+		send_notification: "/send-notification",
 	},
 };
 

@@ -78,3 +78,18 @@ export const CreateQuestionnaireSchema = z.object({
 export type CreateQuestionnaireSchemaType = z.infer<
 	typeof CreateQuestionnaireSchema
 >;
+
+export const SendNotificationSchema = z.object({
+	title: z
+		.string()
+		.min(1, "Title cannot be empty")
+		.max(100, "Title too long")
+		.trim(),
+	message: z
+		.string()
+		.min(12, "Message cannot be less than 12 characters")
+		.max(1000, "Message cannot be more than 1000 characters")
+		.trim(),
+});
+
+export type SendNotificationSchemaType = z.infer<typeof SendNotificationSchema>;

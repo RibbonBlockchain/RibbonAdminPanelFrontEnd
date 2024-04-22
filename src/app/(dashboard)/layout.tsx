@@ -12,7 +12,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 			>
 				<aside
 					className={cn(
-						"bg-black-primary sticky top-0 flex flex-col border-r px-4 pt-4",
+						"sticky top-0 flex flex-col border-r bg-black-primary px-4 pt-4",
 						"h-screen min-w-[256px]"
 					)}
 				>
@@ -25,7 +25,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 						"overflow-y-auto"
 					)}
 				>
-					<Header />
 					{children}
 				</main>
 			</section>

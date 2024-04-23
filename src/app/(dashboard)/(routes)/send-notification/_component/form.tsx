@@ -10,15 +10,17 @@ import { SendNotificationSchema, SendNotificationSchemaType } from "@/schemas";
 import { sendNotificationService } from "@/services/send_notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { ImSpinner3 } from "react-icons/im";
 
 const SendNotificationForm = () => {
+	const { data: session } = useSession();
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Send Notification"],
 		mutationFn: (data: SendNotificationSchemaType) =>
-			sendNotificationService.sendMessage(data),
+			sendNotificationService.sendMessage(data, session?.user.apiToken || ""),
 
 		onSuccess: ({ data }) => {
 			toast({

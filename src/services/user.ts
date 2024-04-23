@@ -1,7 +1,6 @@
 "use client";
 
 import { UserProfileResponse } from "@/types/response";
-import { myFetch } from ".";
 import axios from "axios";
 
 // const token =

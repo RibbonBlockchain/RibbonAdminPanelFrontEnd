@@ -3,7 +3,6 @@ import urls from "@/lib/urls";
 import { Admin, AdminCustom } from "@/types";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { JWT } from "next-auth/jwt";
 
 export const authOptions: AuthOptions = {
 	pages: {
@@ -24,14 +23,9 @@ export const authOptions: AuthOptions = {
 							password: credentials.password,
 						});
 
-						// TODO: remove
-						console.log({ loginResponse });
-
 						const userResponse = await authService.getProfile(
 							loginResponse.data.accessToken
 						);
-
-						console.log({ userResponse });
 
 						if (typeof userResponse !== "undefined") {
 							return {
@@ -44,9 +38,10 @@ export const authOptions: AuthOptions = {
 					} else {
 						return null;
 					}
-				} catch (error) {
-					console.error(error);
-					return null;
+				} catch (error: any) {
+					console.error({ error });
+					throw new Error(error.response?.data?.message || error?.message);
+					// return null;
 				}
 			},
 		}),
@@ -54,27 +49,14 @@ export const authOptions: AuthOptions = {
 	session: { strategy: "jwt" },
 	callbacks: {
 		async session({ session, token }) {
-			const sanitizedToken = Object.keys(token).reduce((p, c) => {
-				// strip unnecessary properties
-				if (c !== "iat" && c !== "exp" && c !== "jti" && c !== "apiToken") {
-					const t = { ...p, [c]: token[c] };
-					console.log({ t });
-					return t;
-				} else {
-					console.log({ p });
-					return p;
-				}
-			}, {});
-			return { ...session, user: sanitizedToken, apiToken: token.apiToken };
+			session.user = token as any;
+			return session;
 		},
 		async jwt({ token, user }) {
-			console.log({ token });
-			if (typeof user !== "undefined") {
-				// user has just signed in so the user object is populated
-				console.log({ user });
-				return user as unknown as Admin;
-			}
-			return token;
+			return {
+				...token,
+				...user,
+			};
 		},
 	},
 };

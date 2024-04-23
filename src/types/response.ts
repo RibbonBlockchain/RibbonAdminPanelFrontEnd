@@ -13,6 +13,15 @@ export type LoginResponse = DeafultResponse<{
 
 export type UserProfileResponse = DeafultResponse<Admin>;
 
-export type GetQuestionnaireCategoryResponse = DeafultResponse<{}>;
+export type GetQuestionnaireCategoryResponse = DeafultResponse<
+	{
+		id: number;
+		name: string;
+		slug: string;
+		description: string;
+		createdAt: string;
+		updatedAt: string;
+	}[]
+>;
 
 export type SendNotificationResponse = DeafultResponse<{}>;

@@ -24,23 +24,22 @@ export default function LoginForm() {
 
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Login"],
-		mutationFn: (data: LoginSchemaType) =>
-			signIn("credentials", { ...data, redirect: false }),
+		mutationFn: async (data: LoginSchemaType) =>
+			await signIn("credentials", { ...data, redirect: false }),
 		onSuccess: (data) => {
-			console.log({ loginData: data });
+			if (!data?.ok) {
+				return toast({
+					title: "Error",
+					description: data?.error,
+					duration: 5000,
+					variant: "destructive",
+				});
+			}
 			// localStorage.setItem("token", data.);
 			// Invalidate and refetch
 			reset();
 			queryClient.invalidateQueries();
 			router.push(urls.dashboard.home);
-		},
-		onError(error) {
-			toast({
-				title: "Error",
-				description: error.message,
-				duration: 5000,
-				variant: "destructive",
-			});
 		},
 	});
 
@@ -54,7 +53,7 @@ export default function LoginForm() {
 		mode: "onSubmit",
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
-			email: emailParam || "superadmin@ribbon.com",
+			email: emailParam || "superadmin@ribbon.comm",
 			password: "Password123?",
 		},
 	});

@@ -45,13 +45,18 @@ export const CreateQuestionnaireSchema = z.object({
 	reward: z
 		.number({ coerce: true })
 		.min(0.0000000001, "Reward must be greater than 0"),
-	category: z.string().trim(),
+	category: z.number({ coerce: true }),
 	questions: z.array(
 		z
 			.object({
 				question: z.string().min(1, "Question cannot be empty").trim(),
 				response_type: z.nativeEnum(ResponseType),
-				options: z.array(z.string().trim()),
+				options: z.array(
+					z.object({
+						point: z.number({ coerce: true }),
+						value: z.string().trim(),
+					})
+				),
 			})
 			.superRefine((values, context) => {
 				if (

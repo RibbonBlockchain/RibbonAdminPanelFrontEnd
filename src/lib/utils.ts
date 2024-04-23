@@ -28,3 +28,7 @@ export function logout(reroute: boolean = true) {
 	localStorage.removeItem("token");
 	signOut({ callbackUrl: urls.auth.login() });
 }
+
+export function getAxiosErrorMessage(error: any) {
+	return error?.response?.data?.message || error?.message;
+}

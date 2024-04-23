@@ -10,15 +10,16 @@ import { Input } from "@/components/ui/input";
 import { IoSearchOutline } from "react-icons/io5";
 import { formatCurrency } from "@/lib/utils";
 import Header from "@/components/header";
+import SearchInput from "../../_components/search_input";
 
 export default function RewardPoints() {
 	return (
 		<>
 			<Header>Reward Points</Header>
-			<div className="relative mx-4 mt-12 w-full max-w-xs self-end">
-				<IoSearchOutline className="absolute left-2 top-1/2 -translate-y-1/2" />
-				<Input type="search" placeholder="Search Program" className=" pl-8" />
-			</div>
+			<SearchInput
+				placeholder="Search Programs"
+				container_className="w-full max-w-xs self-end mt-12 mx-4"
+			/>
 
 			<div className="mx-4 mt-12 flex gap-6">
 				<span className="rounded-md bg-[#FCECF0] p-2 drop-shadow-sm">

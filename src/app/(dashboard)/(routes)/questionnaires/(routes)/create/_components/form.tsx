@@ -110,13 +110,18 @@ const CreateQuestionnaireForm = () => {
 
 	const onSubmit = handleSubmit(async (data) => {
 		const formattedData = data.questions.map((question) => ({
-			categoryId: data.category,
 			type: question.response_type,
 			question: question.question,
 			options: question.options,
 		}));
 
-		mutate({ data: formattedData });
+		mutate({
+			data: {
+				categoryId: data.category,
+				reward: data.reward,
+				questions: formattedData,
+			},
+		});
 	});
 
 	function duplicateQuestion(index: number) {

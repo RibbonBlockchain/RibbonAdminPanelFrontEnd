@@ -18,7 +18,7 @@ async function createQuestionnaire(
 	token: string
 ) {
 	return await client.post<GetQuestionnaireCategoryResponse>(
-		"/admin/questionnaire/questions",
+		"/admin/questionnaire",
 		input,
 		{
 			headers: {

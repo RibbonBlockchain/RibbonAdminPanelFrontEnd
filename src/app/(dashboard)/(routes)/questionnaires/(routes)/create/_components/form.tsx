@@ -51,7 +51,7 @@ const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 	{
 		question: "",
 		response_type: ResponseType.SHORT_TEXT,
-		options: [{ point: 0, value: "" }],
+		options: [],
 	},
 ];
 
@@ -116,11 +116,9 @@ const CreateQuestionnaireForm = () => {
 		}));
 
 		mutate({
-			data: {
-				categoryId: data.category,
-				reward: data.reward,
-				questions: formattedData,
-			},
+			categoryId: data.category,
+			reward: data.reward,
+			questions: formattedData,
 		});
 	});
 

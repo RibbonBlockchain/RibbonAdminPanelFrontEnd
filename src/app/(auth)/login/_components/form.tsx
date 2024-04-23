@@ -1,6 +1,5 @@
 "use client";
 
-import { Login } from "@/apis/auth";
 import { Button } from "@/components/ui/button";
 import ErrorMessage from "@/components/ui/error_message";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ImSpinner3 } from "react-icons/im";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
 	const router = useRouter();
@@ -24,21 +24,22 @@ export default function LoginForm() {
 
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Login"],
-		mutationFn: Login,
+		mutationFn: async (data: LoginSchemaType) =>
+			await signIn("credentials", { ...data, redirect: false }),
 		onSuccess: (data) => {
-			localStorage.setItem("token", data.accessToken);
+			if (!data?.ok) {
+				return toast({
+					title: "Error",
+					description: data?.error,
+					duration: 5000,
+					variant: "destructive",
+				});
+			}
+			// localStorage.setItem("token", data.);
 			// Invalidate and refetch
 			reset();
 			queryClient.invalidateQueries();
 			router.push(urls.dashboard.home);
-		},
-		onError(error) {
-			toast({
-				title: "Error",
-				description: error.message,
-				duration: 5000,
-				variant: "destructive",
-			});
 		},
 	});
 
@@ -73,13 +74,13 @@ export default function LoginForm() {
 			</Link>
 
 			<div>
-				<Label>Email</Label>
+				<Label htmlFor="email">Email</Label>
 				<Input placeholder="Email" {...register("email")} />
 				<ErrorMessage>{errors.email?.message}</ErrorMessage>
 			</div>
 
 			<div>
-				<Label>Password</Label>
+				<Label htmlFor="password">Password</Label>
 				<PasswordInput
 					placeholder="Password"
 					type="password"

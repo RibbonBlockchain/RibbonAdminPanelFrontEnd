@@ -11,6 +11,7 @@ import { IoCalendarOutline, IoCheckboxOutline } from "react-icons/io5";
 import RoundBoxSvg from "@/components/svgs/round_box";
 import BubbleBoxSvg from "@/components/svgs/bubble_box";
 import LogoutModal from "@/app/(dashboard)/_components/logout_modal";
+import SendNotificationSvg from "@/components/svgs/send_notifications";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -41,6 +42,11 @@ export const nav_links = [
 		name: "Tasks",
 		href: urls.dashboard.tasks,
 		image: TaskSvg,
+	},
+	{
+		name: "Send Notification",
+		href: urls.dashboard.send_notification,
+		image: SendNotificationSvg,
 	},
 ];
 

@@ -1,19 +1,11 @@
-"use client";
-
 import React from "react";
 import { IoNotifications } from "react-icons/io5";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import ProfileDropdown from "./profile_dropdown";
-import { getUserProfile } from "@/apis/user";
 import { cn } from "@/lib/utils";
+// import { getServerSession } from "next-auth";
 
-const Header = () => {
-	const { data } = useQuery({
-		queryKey: ["user"],
-		queryFn: getUserProfile,
-	});
-
+const Header: React.FC<React.PropsWithChildren> = async ({ children }) => {
 	return (
 		<header
 			className={cn(
@@ -22,7 +14,7 @@ const Header = () => {
 				"min-w-[764px]"
 			)}
 		>
-			<h1 className="text-2xl font-bold">Overview</h1>
+			<h1 className="text-nowrap text-2xl font-bold">{children}</h1>
 
 			<div className="flex w-full items-center justify-end gap-4">
 				<Button
@@ -32,7 +24,7 @@ const Header = () => {
 					<IoNotifications />
 				</Button>
 
-				<ProfileDropdown data={data} />
+				<ProfileDropdown />
 			</div>
 		</header>
 	);

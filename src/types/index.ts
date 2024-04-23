@@ -12,3 +12,5 @@ export type Admin = {
 	createdAt: string;
 	updatedAt: string;
 };
+
+export type AdminCustom = Admin & { id: string };

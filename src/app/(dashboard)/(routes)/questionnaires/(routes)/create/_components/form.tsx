@@ -37,21 +37,57 @@ import { response_types } from "@/lib/constants";
 import { ResponseType } from "@/types/enums";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
-import { useQuery } from "@tanstack/react-query";
-import { getTasks } from "@/apis/questionnaire_category";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { questionnaireCategoryService } from "@/services/questionnaire_category";
+import { useSession } from "next-auth/react";
+import { CreateQuestionnaireRequest } from "@/types/request";
+import { toast } from "@/components/ui/use-toast";
+import { getAxiosErrorMessage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import urls from "@/lib/urls";
+import { ImSpinner3 } from "react-icons/im";
 
-const empty_question = [
+const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 	{
 		question: "",
 		response_type: ResponseType.SHORT_TEXT,
-		options: [""],
+		options: [{ point: 0, value: "" }],
 	},
 ];
 
 const CreateQuestionnaireForm = () => {
+	const router = useRouter();
+	const { data: session } = useSession();
 	const { data, isPending } = useQuery({
 		queryKey: ["questionnaire"],
-		queryFn: getTasks,
+		queryFn: () =>
+			questionnaireCategoryService.getAll(session?.user.apiToken || ""),
+	});
+
+	const { mutate, isPending: isPendingMutation } = useMutation({
+		mutationKey: ["create questionnaire"],
+		mutationFn: (data: CreateQuestionnaireRequest) =>
+			questionnaireCategoryService.createQuestionnaire(
+				data,
+				session?.user.apiToken || ""
+			),
+		onSuccess({ data }) {
+			toast({
+				title: "Success",
+				description: data.message,
+				duration: 5000,
+			});
+			reset();
+			router.push(urls.dashboard.questionnaires.index);
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getAxiosErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
 	});
 
 	const {
@@ -73,9 +109,14 @@ const CreateQuestionnaireForm = () => {
 	const [questions, category] = watch(["questions", "category"]);
 
 	const onSubmit = handleSubmit(async (data) => {
-		// mutate(data);
+		const formattedData = data.questions.map((question) => ({
+			categoryId: data.category,
+			type: question.response_type,
+			question: question.question,
+			options: question.options,
+		}));
 
-		console.log(data);
+		mutate({ data: formattedData });
 	});
 
 	function duplicateQuestion(index: number) {
@@ -106,7 +147,9 @@ const CreateQuestionnaireForm = () => {
 
 	function deleteOption(questionIndex: number, optionIndex: number) {
 		if (questions[questionIndex].options.length <= 1) {
-			return setValue(`questions.${questionIndex}.options`, [""]);
+			return setValue(`questions.${questionIndex}.options`, [
+				{ point: 0, value: "" },
+			]);
 		}
 		const newQuestions = [...questions];
 		newQuestions[questionIndex].options.splice(optionIndex, 1);
@@ -115,7 +158,7 @@ const CreateQuestionnaireForm = () => {
 
 	function addOption(questionIndex: number) {
 		const newQuestions = [...questions];
-		newQuestions[questionIndex].options.push("");
+		newQuestions[questionIndex].options.push({ point: 0, value: "" });
 		setValue("questions", newQuestions);
 	}
 
@@ -124,7 +167,6 @@ const CreateQuestionnaireForm = () => {
 			onSubmit={onSubmit}
 			className="mx-auto my-16 w-full max-w-4xl space-y-10 px-6"
 		>
-			{/* {JSON.stringify(data)} */}
 			<Card className="pb-8 transition-all duration-500">
 				<CardHeader>
 					<CardTitle>Submit Questionnaires manually</CardTitle>
@@ -147,8 +189,8 @@ const CreateQuestionnaireForm = () => {
 						<Label>Category</Label>
 						<Select
 							{...register("category")}
-							value={category}
-							onValueChange={(v) => setValue("category", v)}
+							value={category?.toString() || ""}
+							onValueChange={(v) => setValue("category", +v)}
 						>
 							<SelectTrigger className="">
 								<SelectValue
@@ -157,9 +199,15 @@ const CreateQuestionnaireForm = () => {
 								/>
 							</SelectTrigger>
 							<SelectContent className="max-w-sm">
-								<SelectItem value="light">Light</SelectItem>
-								<SelectItem value="dark">Dark</SelectItem>
-								<SelectItem value="system">System</SelectItem>
+								{data?.data.data.map((category) => (
+									<SelectItem
+										key={category.id}
+										value={category.id?.toString() || ""}
+										className="cursor-pointer"
+									>
+										{category.name}
+									</SelectItem>
+								))}
 							</SelectContent>
 						</Select>
 						<ErrorMessage>{errors.category?.message}</ErrorMessage>
@@ -231,7 +279,7 @@ const CreateQuestionnaireForm = () => {
 																placeholder={`Option ${option_index + 1}`}
 																className="pl-8"
 																{...register(
-																	`questions.${question_index}.options.${option_index}`
+																	`questions.${question_index}.options.${option_index}.value`
 																)}
 															/>
 														</div>
@@ -325,7 +373,17 @@ const CreateQuestionnaireForm = () => {
 				</CardContent>
 			</Card>
 
-			<Button className="float-right">Submit questions</Button>
+			<Button
+				type="submit"
+				className="float-right w-full max-w-40"
+				disabled={isPending || isPendingMutation}
+			>
+				{isPendingMutation ? (
+					<ImSpinner3 className="mr-1 animate-spin" />
+				) : (
+					"Submit questions"
+				)}
+			</Button>
 		</form>
 	);
 };

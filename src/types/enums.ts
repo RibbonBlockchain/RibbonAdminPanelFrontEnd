@@ -1,12 +1,12 @@
 export enum ResponseType {
-	SHORT_TEXT = "text",
-	LONG_TEXT = "textarea",
-	RADIO = "radio",
-	CHECK_BOX = "checkbox",
-	ROUND_BOX = "roundbox",
-	BUBBLES = "bubbles",
-	DATE = "date",
-	TIME = "time",
+	SHORT_TEXT = "SHORT_ANSWER",
+	LONG_TEXT = "LONG_ANSWER",
+	RADIO = "MULTICHOICE",
+	CHECK_BOX = "CHECKBOX",
+	ROUND_BOX = "ROUND_BOX",
+	BUBBLES = "BUBBLE",
+	DATE = "DATE",
+	TIME = "TIME",
 }
 
 export enum AdminRole {

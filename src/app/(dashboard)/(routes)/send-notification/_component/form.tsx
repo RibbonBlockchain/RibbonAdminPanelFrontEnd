@@ -79,8 +79,8 @@ const SendNotificationForm = () => {
 				<ErrorMessage>{errors.message?.message}</ErrorMessage>
 			</div>
 
-			<Button className="mt-4 w-full max-w-40 self-end" disabled={isPending}>
-				{isPending ? <ImSpinner3 className="mr-1 animate-spin" /> : "Login"}
+			<Button className="mt-4 w-full max-w-36 self-end" disabled={isPending}>
+				{isPending ? <ImSpinner3 className="mr-1 animate-spin" /> : "Send"}
 			</Button>
 		</form>
 	);

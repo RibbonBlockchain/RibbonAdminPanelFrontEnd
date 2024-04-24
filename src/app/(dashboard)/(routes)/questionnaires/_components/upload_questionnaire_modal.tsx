@@ -19,8 +19,6 @@ import { toast } from "@/components/ui/use-toast";
 import urls from "@/lib/urls";
 import { getAxiosErrorMessage } from "@/lib/utils";
 import {
-	LoginSchemaType,
-	LoginSchema,
 	UploadQuestionnaireSchema,
 	UploadQuestionnaireSchemaType,
 } from "@/schemas";

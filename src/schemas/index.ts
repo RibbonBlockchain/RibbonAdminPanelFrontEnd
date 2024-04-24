@@ -84,6 +84,19 @@ export type CreateQuestionnaireSchemaType = z.infer<
 	typeof CreateQuestionnaireSchema
 >;
 
+export const UploadQuestionnaireSchema = z.object({
+	file: z
+		.instanceof(File, { message: "Please select a file" })
+		.refine((file) => file.size < 1024 * 1024 * 5, {
+			message: "File size must be less than 5MB",
+		})
+		.nullable(),
+});
+
+export type UploadQuestionnaireSchemaType = z.infer<
+	typeof UploadQuestionnaireSchema
+>;
+
 export const SendNotificationSchema = z.object({
 	title: z
 		.string()

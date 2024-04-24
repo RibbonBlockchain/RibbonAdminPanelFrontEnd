@@ -89,13 +89,13 @@ const UploadQuestionnaireModal = () => {
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button variant={"outline"}>
-					Upload a Question <HiOutlineFolderPlus className="ml-2 text-xl" />
+					Upload a Spreadsheet <HiOutlineFolderPlus className="ml-2 text-xl" />
 				</Button>
 			</DialogTrigger>
 
 			<DialogContent className="p-8">
 				<DialogHeader className="space-y-4">
-					<DialogTitle>Upload a file</DialogTitle>
+					<DialogTitle>Upload a Spreadsheet</DialogTitle>
 					<hr />
 				</DialogHeader>
 

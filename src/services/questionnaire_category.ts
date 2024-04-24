@@ -28,7 +28,19 @@ async function createQuestionnaire(
 	);
 }
 
+async function uploadQuestionnaire(file: File, token: string) {
+	const formData = new FormData();
+	formData.append("file", file);
+
+	return await client.post("/admin/questionnaire/upload", formData, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+}
+
 export const questionnaireCategoryService = {
 	getAll,
 	createQuestionnaire,
+	uploadQuestionnaire,
 };

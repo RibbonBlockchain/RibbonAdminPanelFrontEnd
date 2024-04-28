@@ -19,7 +19,12 @@ const config = {
 		},
 		extend: {
 			colors: {
-				primary: { DEFAULT: "#714EE7", 900: "#34246B", 50: "#F2EEFF" },
+				primary: {
+					DEFAULT: "#714EE7",
+					900: "#34246B",
+					500: "#7C56FE",
+					50: "#F2EEFF",
+				},
 				black: {
 					primary: "#110D1B",
 					neutral: "#626262",

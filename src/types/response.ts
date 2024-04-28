@@ -4,7 +4,7 @@ type DeafultResponse<T> = {
 	status: number;
 	message: string;
 	timestamp: string;
-	data: T;
+	data?: T;
 };
 
 export type LoginResponse = DeafultResponse<{
@@ -23,5 +23,7 @@ export type GetQuestionnaireCategoryResponse = DeafultResponse<
 		updatedAt: string;
 	}[]
 >;
+
+export type GetQuestionnaireResponse = DeafultResponse<{}>;
 
 export type SendNotificationResponse = DeafultResponse<{}>;

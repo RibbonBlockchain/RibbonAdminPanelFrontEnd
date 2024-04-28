@@ -23,6 +23,10 @@ export const authOptions: AuthOptions = {
 							password: credentials.password,
 						});
 
+						if (!loginResponse.data) {
+							return null;
+						}
+
 						const userResponse = await authService.getProfile(
 							loginResponse.data.accessToken
 						);

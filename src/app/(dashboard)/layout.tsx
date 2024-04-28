@@ -8,7 +8,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<AdminProtectedRoute>
 			<section
-				className={cn("relative", "z-0 flex overflow-hidden", "min-w-[1024px]")}
+				className={cn(
+					"relative",
+					"z-0 flex overflow-hidden",
+					"min-h-screen min-w-[1024px]"
+				)}
 			>
 				<aside
 					className={cn(

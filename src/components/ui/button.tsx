@@ -16,6 +16,8 @@ const buttonVariants = cva(
 				// blue: "border-2 border-blue-500 bg-blue-500 px-2 py-2 text-white hover:border-blue-500 hover:bg-white hover:text-blue-500 disabled:cursor-not-allowed disabled:opacity-50",
 				dropdown:
 					"text-left justify-start px-0 py-0 hover:bg-primary hover:text-white",
+				faint:
+					"bg-primary-50 border-2 border-primary-50 px-2 py-2 text-primary-500 hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50",
 				plain: "",
 			},
 			size: {

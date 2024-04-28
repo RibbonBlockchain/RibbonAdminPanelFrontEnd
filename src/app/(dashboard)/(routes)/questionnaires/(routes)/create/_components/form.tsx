@@ -202,15 +202,16 @@ const CreateQuestionnaireForm = () => {
 								/>
 							</SelectTrigger>
 							<SelectContent className="max-w-sm">
-								{data?.data.data.map((category) => (
-									<SelectItem
-										key={category.id}
-										value={category.id?.toString() || ""}
-										className="cursor-pointer"
-									>
-										{category.name}
-									</SelectItem>
-								))}
+								{Array.isArray(data?.data?.data) &&
+									data.data.data.map((category) => (
+										<SelectItem
+											key={category.id}
+											value={category.id?.toString() || ""}
+											className="cursor-pointer"
+										>
+											{category.name}
+										</SelectItem>
+									))}
 							</SelectContent>
 						</Select>
 						<ErrorMessage>{errors.category?.message}</ErrorMessage>

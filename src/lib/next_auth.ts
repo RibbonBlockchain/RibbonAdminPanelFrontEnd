@@ -53,10 +53,12 @@ export const authOptions: AuthOptions = {
 	session: { strategy: "jwt" },
 	callbacks: {
 		async session({ session, token }) {
+			// console.log({ token, session });
 			session.user = token as any;
 			return session;
 		},
 		async jwt({ token, user }) {
+			// console.log({ token, user });
 			return {
 				...token,
 				...user,

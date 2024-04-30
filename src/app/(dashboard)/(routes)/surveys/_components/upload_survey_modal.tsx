@@ -28,7 +28,7 @@ import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { ImSpinner3 } from "react-icons/im";
 import ErrorMessage from "@/components/ui/error_message";
-import { questionnaireService } from "@/services/questionnaire";
+import { surveyService } from "@/services/surveys";
 
 const UploadQuestionnaireModal = () => {
 	const qc = useQueryClient();
@@ -39,10 +39,7 @@ const UploadQuestionnaireModal = () => {
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Upload Questionnaire"],
 		mutationFn: async (data: File) =>
-			questionnaireService.uploadQuestionnaire(
-				data,
-				session?.user.apiToken || ""
-			),
+			surveyService.uploadSurvey(data, session?.user.apiToken || ""),
 		onSuccess({ data }) {
 			toast({
 				title: "Success",

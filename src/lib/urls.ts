@@ -13,7 +13,7 @@ const urls = {
 			index: "/questionnaires",
 			create: "/questionnaires/create",
 		},
-		surveys: "/surveys",
+		surveys: { index: "/surveys", create: "/surveys/create" },
 		tasks: "/tasks",
 		send_notification: "/send-notification",
 	},

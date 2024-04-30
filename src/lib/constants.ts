@@ -35,7 +35,7 @@ export const nav_links = [
 	},
 	{
 		name: "Surveys",
-		href: urls.dashboard.surveys,
+		href: urls.dashboard.surveys.index,
 		image: SurveySvg,
 	},
 	{

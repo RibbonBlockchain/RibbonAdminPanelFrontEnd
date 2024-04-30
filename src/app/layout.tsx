@@ -12,8 +12,8 @@ import { authOptions } from "@/lib/next_auth";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Ribbon Blockchain",
-	description: "Ribbon Blockchain",
+	title: "Ribbon Protocol",
+	description: "Ribbon Protocol",
 };
 
 export default async function RootLayout({

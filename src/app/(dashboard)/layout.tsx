@@ -23,6 +23,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 					<DashboardSidebar />
 				</aside>
 				<main
+					id="main-content"
 					className={cn(
 						"w-full bg-primary/10",
 						"flex h-screen flex-col",

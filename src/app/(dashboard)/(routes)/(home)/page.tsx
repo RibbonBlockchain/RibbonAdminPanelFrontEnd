@@ -23,6 +23,12 @@ import UsersChart from "./_components/users_chart";
 import CreateSurveySvg from "@/components/svgs/create_survey";
 import { programs } from "@/lib/sample_data";
 import { FaArrowRight } from "react-icons/fa6";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Home",
+	description: "Home",
+};
 
 export default function Home() {
 	return (
@@ -34,21 +40,21 @@ export default function Home() {
 					<div className="flex gap-4 rounded-2xl bg-white px-6 py-4">
 						<TotalActivitiesSvg className="min-w-fit" />
 						<div className="flex flex-col text-black-primary">
-							<span>Total activities</span>
+							<span className="text-sm">Total activities</span>
 							<span className="text-3xl font-bold">50</span>
 						</div>
 					</div>
 					<div className="flex gap-4 rounded-2xl bg-white px-6 py-4">
 						<AverageCompletionRateSvg className="min-w-fit" />
 						<div className="flex flex-col text-black-primary">
-							<span>Avg. Completion rate</span>
+							<span className="text-sm">Avg. Completion rate</span>
 							<span className="text-3xl font-bold">80%</span>
 						</div>
 					</div>
 					<div className="flex gap-4 rounded-2xl bg-white px-6 py-4">
 						<TotalResponsesSvg className="min-w-fit" />
 						<div className="flex flex-col text-black-primary">
-							<span>Total responses</span>
+							<span className="text-sm">Total responses</span>
 							<span className="text-3xl font-bold">500</span>
 						</div>
 					</div>
@@ -121,7 +127,7 @@ export default function Home() {
 							Click the button below and start collecting response in minutes
 						</p>
 						<ButtonLink
-							href={urls.dashboard.surveys}
+							href={urls.dashboard.surveys.index}
 							className="w-full rounded-xl"
 						>
 							Create survey
@@ -176,7 +182,7 @@ const summary_list = [
 		title: "Surveys",
 		value: 5000,
 		link_text: "View surveys",
-		link_href: urls.dashboard.surveys,
+		link_href: urls.dashboard.surveys.index,
 	},
 	{
 		image: QuestionnaireImage,

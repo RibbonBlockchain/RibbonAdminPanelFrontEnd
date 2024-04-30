@@ -1,16 +1,9 @@
 import Image from "next/image";
-import RewardIcon from "@/public/images/reward.webp";
-import QuestionnaireIcon from "@/public/images/questionnaire.webp";
-import SurveysIcon from "@/public/images/surveys.webp";
-import TasksIcon from "@/public/images/tasks.webp";
-import { FaArrowRightLong } from "react-icons/fa6";
 import urls from "@/lib/urls";
 import { ButtonLink } from "@/components/ui/button_link";
-import { Input } from "@/components/ui/input";
-import { IoSearchOutline } from "react-icons/io5";
 import { formatCurrency } from "@/lib/utils";
 import Header from "@/components/header";
-import SearchInput from "../../_components/search_input";
+import SearchInput from "@/components/ui/search_input";
 import { programs } from "@/lib/sample_data";
 
 export default function RewardPoints() {
@@ -18,7 +11,9 @@ export default function RewardPoints() {
 		<>
 			<Header>Reward Points</Header>
 			<SearchInput
-				placeholder="Search Programs"
+				input={{
+					placeholder: "Search Programs",
+				}}
 				container_className="w-full max-w-xs self-end mt-12 mx-4"
 			/>
 

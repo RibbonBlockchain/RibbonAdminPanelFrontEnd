@@ -46,7 +46,7 @@ import { getAxiosErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
-import { questionnaireService } from "@/services/questionnaire";
+import { surveyService } from "@/services/surveys";
 
 const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 	{
@@ -69,10 +69,7 @@ const CreateQuestionnaireForm = () => {
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create questionnaire"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.createQuestionnaire(
-				data,
-				session?.user.apiToken || ""
-			),
+			surveyService.createSurvey(data, session?.user.apiToken || ""),
 
 		onSuccess({ data }) {
 			toast({
@@ -142,7 +139,7 @@ const CreateQuestionnaireForm = () => {
 	}
 
 	function addQuestion(index: number) {
-		if (questions.length >= +process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT) {
+		if (questions.length >= +process.env.NEXT_PUBLIC_SURVEY_LIMIT) {
 			return;
 		}
 		const newQuestions = [...questions];
@@ -176,10 +173,9 @@ const CreateQuestionnaireForm = () => {
 		>
 			<Card className="pb-8 transition-all duration-500">
 				<CardHeader>
-					<CardTitle>Submit Questionnaires manually</CardTitle>
+					<CardTitle>Submit Survey manually</CardTitle>
 					<CardDescription>
-						Upload maximum of {+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT}{" "}
-						questions
+						Upload maximum of {+process.env.NEXT_PUBLIC_SURVEY_LIMIT} questions
 					</CardDescription>
 				</CardHeader>
 
@@ -189,7 +185,6 @@ const CreateQuestionnaireForm = () => {
 						<Input
 							type="number"
 							step={0.000001}
-							formNoValidate
 							placeholder="Type an amount e.g: 5 WLD"
 							{...register("reward")}
 						/>
@@ -335,10 +330,7 @@ const CreateQuestionnaireForm = () => {
 									<Tooltip>
 										<TooltipTrigger asChild>
 											<Button
-												disabled={
-													questions.length >=
-													+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT
-												}
+												disabled={questions.length > 9}
 												type="button"
 												variant={"plain"}
 												aria-describedby="duplicate question"
@@ -375,8 +367,7 @@ const CreateQuestionnaireForm = () => {
 
 								<Button
 									disabled={
-										questions.length >=
-										+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT
+										questions.length >= +process.env.NEXT_PUBLIC_SURVEY_LIMIT
 									}
 									type="button"
 									variant={"plain"}

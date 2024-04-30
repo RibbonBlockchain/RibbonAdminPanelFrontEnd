@@ -45,7 +45,11 @@ export const CreateQuestionnaireSchema = z.object({
 	reward: z
 		.number({ coerce: true })
 		.min(0.0000000001, "Reward must be greater than 0"),
-	category: z.number({ coerce: true }),
+	category: z.number({
+		coerce: true,
+		required_error: "Category is required",
+		invalid_type_error: "Category is required",
+	}),
 	questions: z.array(
 		z
 			.object({
@@ -90,6 +94,14 @@ export const UploadQuestionnaireSchema = z.object({
 		.refine((file) => file.size < 1024 * 1024 * 5, {
 			message: "File size must be less than 5MB",
 		})
+		.refine(
+			(file) =>
+				file.type ===
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			{
+				message: "Only Excel files are allowed",
+			}
+		)
 		.nullable(),
 });
 

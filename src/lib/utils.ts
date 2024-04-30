@@ -21,6 +21,19 @@ export function formatCurrency(
 	).format(price);
 }
 
+export function debounce<Params extends any[]>(
+	func: (...args: Params) => any,
+	timeout: number = 1000
+): (...args: Params) => void {
+	let timer: NodeJS.Timeout;
+	return (...args: Params) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			func(...args);
+		}, timeout);
+	};
+}
+
 export function logout(reroute: boolean = true) {
 	const qc = new QueryClient();
 

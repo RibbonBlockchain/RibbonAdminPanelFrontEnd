@@ -23,3 +23,15 @@ export type CreateSurveyRequest = {
 		}[];
 	}[];
 };
+export type CreateTaskRequest = {
+	reward: number;
+	categoryId: number;
+	questions: {
+		type: string;
+		question: string;
+		options: {
+			point: number;
+			value: string;
+		}[];
+	}[];
+};

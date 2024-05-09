@@ -10,13 +10,13 @@ const config = {
 	],
 	prefix: "",
 	theme: {
-		container: {
-			center: true,
-			padding: "2rem",
-			screens: {
-				"2xl": "1400px",
-			},
-		},
+		// container: {
+		// 	center: true,
+		// 	padding: "2rem",
+		// 	screens: {
+		// 		"2xl": "1400px",
+		// 	},
+		// },
 		extend: {
 			colors: {
 				primary: {
@@ -26,6 +26,7 @@ const config = {
 					50: "#F2EEFF",
 				},
 				black: {
+					DEFAULT: "#110D1B",
 					primary: "#110D1B",
 					neutral: "#626262",
 				},
@@ -46,7 +47,10 @@ const config = {
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("@tailwindcss/container-queries"),
+	],
 } satisfies Config;
 
 export default config;

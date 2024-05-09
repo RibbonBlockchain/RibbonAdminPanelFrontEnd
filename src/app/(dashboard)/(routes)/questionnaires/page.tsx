@@ -1,20 +1,26 @@
-import urls from "@/lib/urls";
-import { ButtonLink } from "@/components/ui/button_link";
-
+import { Suspense } from "react";
+import type { Metadata } from "next";
 import { FiEdit } from "react-icons/fi";
-import Header from "@/components/header";
+
 import UploadQuestionnaireModal from "./_components/upload_questionnaire_modal";
 import QuestionnairesList from "./_components/questionnaires_list";
-import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import QuestionnairesSearch from "./_components/questionnaires_search";
+import Header from "@/components/header";
+import Search from "@/components/search";
+import StatusToggler from "@/components/status_toggler";
+import { ButtonLink } from "@/components/ui/button_link";
+
+import urls from "@/lib/urls";
 
 export const metadata: Metadata = {
 	title: "Questionnaires",
 	description: "Questionnaires",
 };
 
-export default function Questionnaires() {
+export default function Page({
+	searchParams,
+}: {
+	searchParams: { q?: string; page?: string; pageSize?: string };
+}) {
 	return (
 		<>
 			<Header>Questionnaires</Header>
@@ -38,26 +44,16 @@ export default function Questionnaires() {
 				</h2>
 
 				<div className="flex w-full items-center justify-end gap-4">
-					<ButtonLink
-						href={urls.dashboard.questionnaires.index.concat("?status=ACTIVE")}
-						variant={"plain"}
-						className="rounded-full border border-primary/20 bg-primary/20 text-primary"
-					>
-						Active (0)
-					</ButtonLink>
-					<ButtonLink
-						href={urls.dashboard.questionnaires.index.concat("?status=CLOSED")}
-						variant={"plain"}
-						className="rounded-full border border-primary/20 text-primary"
-					>
-						Closed (0)
-					</ButtonLink>
+					<StatusToggler count={0} title={"Active"} action_status={"ACTIVE"} />
+					<StatusToggler count={0} title={"Closed"} action_status={"CLOSED"} />
 				</div>
 
-				<QuestionnairesSearch />
+				<Search />
 			</div>
 
-			<QuestionnairesList />
+			<Suspense fallback={<div className="mx-4">Loading...</div>}>
+				<QuestionnairesList searchParams={searchParams} />
+			</Suspense>
 		</>
 	);
 }

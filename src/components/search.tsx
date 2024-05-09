@@ -1,24 +1,35 @@
 "use client";
 
 import SearchInput from "@/components/ui/search_input";
-import urls from "@/lib/urls";
 import { debounce } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
-const QuestionnairesSearch = () => {
+type Props = {
+	placeholder?: string;
+};
+
+const Search: React.FC<Props> = (props) => {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const status = searchParams.get("status") || "";
+
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	function handleSearch() {
-		if (inputRef.current) {
-			router.push(
-				urls.dashboard.surveys.index.concat(
-					inputRef.current.value.trim()
-						? `?q=${encodeURIComponent(inputRef.current.value.trim())}`
-						: ""
-				)
-			);
+		if (!inputRef.current) return;
+
+		const url = new URL(window.location.href);
+
+		url.searchParams.set(
+			"q",
+			encodeURIComponent(inputRef.current.value.trim())
+		);
+
+		if (status) {
+			url.searchParams.set("status", status);
 		}
+
+		router.push(url.href);
 	}
 
 	const debouncedSearch = debounce(handleSearch);
@@ -34,7 +45,7 @@ const QuestionnairesSearch = () => {
 			<SearchInput
 				ref={inputRef}
 				input={{
-					placeholder: "Search surveys",
+					placeholder: props.placeholder || "Search",
 					onChange: debouncedSearch,
 				}}
 				container_className="w-full max-w-xs ml-3"
@@ -43,4 +54,4 @@ const QuestionnairesSearch = () => {
 	);
 };
 
-export default QuestionnairesSearch;
+export default Search;

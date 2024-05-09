@@ -11,3 +11,15 @@ html,body{
 .bg-gradient-info {
     background: linear-gradient(87deg, #11cdef, #1171ef) !important;
 }
+
+/* Custom class to hide number input increment and decrement buttons */
+.hide-number-input-buttons::-webkit-inner-spin-button,
+.hide-number-input-buttons::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.hide-number-input-buttons {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}

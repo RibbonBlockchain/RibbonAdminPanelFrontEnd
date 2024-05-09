@@ -28,7 +28,7 @@ const UsersChart = () => {
 						innerRadius={60}
 						outerRadius={80}
 						fill="#7C56FE"
-
+						className="relative"
 						// label
 					>
 						{data02.map((_, index) => (
@@ -44,7 +44,7 @@ const UsersChart = () => {
 							className="max-w-[100px] font-bold text-white"
 							fill="#7C56FE"
 						>
-							{data02.reduce((a, b) => a + b.value, 0)} users
+							{`${data02.reduce((a, b) => a + b.value, 0)}`}
 						</Label>
 					</Pie>
 				</PieChart>

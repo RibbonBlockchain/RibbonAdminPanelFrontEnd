@@ -6,5 +6,6 @@ namespace NodeJS {
 
 		NEXT_PUBLIC_QUESTIONNAIRE_LIMIT: number; // 10
 		NEXT_PUBLIC_SURVEY_LIMIT: number; // 100
+		NEXT_PUBLIC_TASK_LIMIT: number; // 30
 	}
 }

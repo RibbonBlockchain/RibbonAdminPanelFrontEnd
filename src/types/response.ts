@@ -1,4 +1,4 @@
-import { Admin } from ".";
+import { Admin, Pagination } from ".";
 
 type DeafultResponse<T> = {
 	status: number;
@@ -16,16 +16,43 @@ export type LoginResponse = DeafultResponse<{
 export type UserProfileResponse = DeafultResponse<Admin>;
 
 // NOTE: Questionnaire Category
-export type GetQuestionnaireCategoryResponse = DeafultResponse<
-	{
+export type GetQuestionnaireCategoryResponse = DeafultResponse<{
+	data: {
 		id: number;
 		name: string;
 		slug: string;
-		description: string;
+		description: string | null;
 		createdAt: string;
 		updatedAt: string;
-	}[]
->;
+	}[];
+	pagination: Pagination;
+}>;
+
+// NOTE: Survey Category
+export type GetSurveyCategoryResponse = DeafultResponse<{
+	data: {
+		id: number;
+		name: string;
+		slug: string;
+		description: string | null;
+		createdAt: string;
+		updatedAt: string;
+	}[];
+	pagination: Pagination;
+}>;
+
+// NOTE: Task Category
+export type GetTaskCategoryResponse = DeafultResponse<{
+	data: {
+		id: number;
+		name: string;
+		slug: string;
+		description: string | null;
+		createdAt: string;
+		updatedAt: string;
+	}[];
+	pagination: Pagination;
+}>;
 
 // NOTE: Questionnaire
 export type GetQuestionnaireResponse = DeafultResponse<{
@@ -41,6 +68,7 @@ export type GetQuestionnaireResponse = DeafultResponse<{
 		duration: number;
 		createdAt: string;
 	}[];
+	pagination: Pagination;
 }>;
 
 export type CreateQuestionnaireResponse = DeafultResponse<{}>;
@@ -62,6 +90,26 @@ export type GetSurveyResponse = DeafultResponse<{
 		duration: number;
 		createdAt: string;
 	}[];
+	pagination: Pagination;
 }>;
 
 export type CreateSurveyResponse = DeafultResponse<{}>;
+
+// NOTE: Task
+export type GetTasksResponse = DeafultResponse<{
+	data: {
+		id: number;
+		image: null;
+		name: string;
+		slug: string;
+		description: string;
+		type: "QUESTIONNAIRE" | "APP";
+		reward: number;
+		point: number;
+		duration: number;
+		createdAt: string;
+	}[];
+	pagination: Pagination;
+}>;
+
+export type CreateTaskResponse = DeafultResponse<{}>;

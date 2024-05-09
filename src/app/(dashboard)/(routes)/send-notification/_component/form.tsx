@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { getAxiosErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { SendNotificationSchema, SendNotificationSchemaType } from "@/schemas";
 import { sendNotificationService } from "@/services/send_notification";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +35,7 @@ const SendNotificationForm = () => {
 			// console.log(error);
 			toast({
 				title: "Error",
-				description: getAxiosErrorMessage(error),
+				description: getErrorMessage(error),
 				duration: 5000,
 				variant: "destructive",
 			});

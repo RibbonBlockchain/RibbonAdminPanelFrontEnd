@@ -24,8 +24,8 @@ export const nav_links = [
 		image: HomeSvg,
 	},
 	{
-		name: "Reward points",
-		href: urls.dashboard.reward_points,
+		name: "Reward partners",
+		href: urls.dashboard.reward_partners.index,
 		image: RewardPointSvg,
 	},
 	{
@@ -40,7 +40,7 @@ export const nav_links = [
 	},
 	{
 		name: "Tasks",
-		href: urls.dashboard.tasks,
+		href: urls.dashboard.tasks.index,
 		image: TaskSvg,
 	},
 	{

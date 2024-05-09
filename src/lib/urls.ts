@@ -8,13 +8,16 @@ const urls = {
 	},
 	dashboard: {
 		home: "/",
-		reward_points: "/reward-points",
+		reward_partners: {
+			index: "/reward-partners",
+			single: (id: string) => `/reward-partners/${id}`,
+		},
 		questionnaires: {
 			index: "/questionnaires",
 			create: "/questionnaires/create",
 		},
 		surveys: { index: "/surveys", create: "/surveys/create" },
-		tasks: "/tasks",
+		tasks: { index: "/tasks", create: "/tasks/create" },
 		send_notification: "/send-notification",
 	},
 };

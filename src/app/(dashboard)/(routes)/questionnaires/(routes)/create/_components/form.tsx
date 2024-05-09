@@ -38,11 +38,11 @@ import { ResponseType } from "@/types/enums";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { questionnaireCategoryService } from "@/services/questionnaire_category";
+import { categoriesService } from "@/services/categories";
 import { useSession } from "next-auth/react";
 import { CreateQuestionnaireRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
-import { getAxiosErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
@@ -63,7 +63,10 @@ const CreateQuestionnaireForm = () => {
 	const { data, isPending } = useQuery({
 		queryKey: ["questionnaire"],
 		queryFn: () =>
-			questionnaireCategoryService.getAll(session?.user.apiToken || ""),
+			categoriesService.getAllQuestionnaireCategory(
+				{ pageSize: "1000" },
+				session?.user.apiToken || ""
+			),
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
@@ -87,7 +90,7 @@ const CreateQuestionnaireForm = () => {
 		onError(error) {
 			toast({
 				title: "Error",
-				description: getAxiosErrorMessage(error),
+				description: getErrorMessage(error),
 				duration: 5000,
 				variant: "destructive",
 			});

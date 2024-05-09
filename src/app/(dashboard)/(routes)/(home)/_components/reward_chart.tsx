@@ -22,7 +22,7 @@ const RewardChart = () => {
 				<XAxis dataKey="name" />
 				<YAxis tickFormatter={(v) => `${v} WLD`} />
 				<CartesianGrid strokeDasharray="3 3" />
-				<Tooltip />
+				<Tooltip formatter={(v) => `${v} WLD`} />
 				<ReferenceLine x="Page C" stroke="green" label="Min PAGE" />
 				<ReferenceLine
 					y={4000}

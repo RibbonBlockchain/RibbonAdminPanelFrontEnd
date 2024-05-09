@@ -17,7 +17,7 @@ import UploadFileSvg from "@/public/svgs/upload_file.svg";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import urls from "@/lib/urls";
-import { getAxiosErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import {
 	UploadQuestionnaireSchema,
 	UploadQuestionnaireSchemaType,
@@ -57,7 +57,7 @@ const UploadQuestionnaireModal = () => {
 		onError(error) {
 			toast({
 				title: "Error",
-				description: getAxiosErrorMessage(error),
+				description: getErrorMessage(error),
 				duration: 5000,
 				variant: "destructive",
 			});

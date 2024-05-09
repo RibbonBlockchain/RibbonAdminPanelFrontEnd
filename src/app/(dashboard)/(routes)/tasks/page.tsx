@@ -1,5 +1,5 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { FiEdit } from "react-icons/fi";
 
 import UploadModal from "./_components/upload_task_modal";
@@ -8,11 +8,8 @@ import { ButtonLink } from "@/components/ui/button_link";
 import Header from "@/components/header";
 import Search from "@/components/search";
 import StatusToggler from "@/components/status_toggler";
-import PaginateSection from "@/components/sections/paginate_section";
 
 import urls from "@/lib/urls";
-import { authOptions } from "@/lib/next_auth";
-import { taskService } from "@/services/tasks";
 
 export const metadata: Metadata = {
 	title: "Tasks",
@@ -24,13 +21,6 @@ export default async function Page({
 }: {
 	searchParams: { q?: string; page?: string; pageSize?: string };
 }) {
-	const session = await getServerSession(authOptions);
-
-	const data = await taskService.getAll(
-		searchParams,
-		session?.user.apiToken || ""
-	);
-
 	return (
 		<>
 			<Header>Tasks</Header>
@@ -59,12 +49,9 @@ export default async function Page({
 				<Search />
 			</div>
 
-			<TasksList data={data.data.data} />
-
-			<PaginateSection
-				current_page={data.data.data?.pagination.currentPage || 1}
-				total_pages={data.data.data?.pagination.totalPages || 1}
-			/>
+			<Suspense fallback={<div className="mx-4">Loading...</div>}>
+				<TasksList searchParams={searchParams} />
+			</Suspense>
 		</>
 	);
 }

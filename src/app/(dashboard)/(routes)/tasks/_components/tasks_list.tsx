@@ -1,17 +1,11 @@
-"use client";
-
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
-import urls from "@/lib/urls";
 import { cn } from "@/lib/utils";
 import { taskService } from "@/services/tasks";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React from "react";
 import { SlOptions } from "react-icons/sl";
-import { GoArrowUpRight, GoPlus } from "react-icons/go";
+import { GoPlus } from "react-icons/go";
 import { BiEdit } from "react-icons/bi";
 import {
 	DropdownMenu,
@@ -22,19 +16,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
-import { GetTasksResponse } from "@/types/response";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next_auth";
+import PaginateSection from "@/components/sections/paginate_section";
 
 type Props = {
-	data?: GetTasksResponse["data"];
+	searchParams: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+	};
 };
 
-const TasksList: React.FC<Props> = (props) => {
+const TasksList: React.FC<Props> = async (props) => {
+	const session = await getServerSession(authOptions);
+
+	const data = await taskService.getAll(
+		props.searchParams,
+		session?.user.apiToken || ""
+	);
 	return (
 		<div className="my-12 w-full px-4">
-			{props.data && props?.data.data && props?.data.data.length > 0 ? (
+			{data.data && data?.data.data && data?.data.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{props?.data.data?.map((task) => (
+						{data?.data.data.data?.map((task) => (
 							<li
 								key={`task-${task.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -47,7 +53,7 @@ const TasksList: React.FC<Props> = (props) => {
 										</span>
 									</div>
 									<div className="col-span-5 flex gap-2 self-start">
-										<span
+										{/* <span
 											className={cn(
 												"flex h-6 max-w-fit items-center rounded-md px-1 text-xs lowercase",
 												{
@@ -57,7 +63,7 @@ const TasksList: React.FC<Props> = (props) => {
 											)}
 										>
 											{task.type}
-										</span>
+										</span> */}
 										<span className="flex h-6 items-center gap-1 rounded-md bg-[#FEF5E7] px-2 text-xs text-[#DF900A]">
 											<FlameSvg />
 											<span className="mt-1">{task.reward} responses</span>
@@ -80,7 +86,7 @@ const TasksList: React.FC<Props> = (props) => {
 											<GoPlus className="mr-2 text-2xl" /> Add SES score
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										{task.type === "APP" && (
+										{/* {task.type === "APP" && (
 											<DropdownMenuItem className="text-green-500">
 												<LuUndo2 className="mr-2 text-2xl" /> Restore
 											</DropdownMenuItem>
@@ -90,12 +96,17 @@ const TasksList: React.FC<Props> = (props) => {
 												<TbTrash className="mr-2 text-2xl" />
 												Close
 											</DropdownMenuItem>
-										)}
+										)} */}
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</li>
 						))}
 					</ul>
+
+					<PaginateSection
+						current_page={data?.data?.data?.pagination?.currentPage || 1}
+						total_pages={data?.data?.data?.pagination?.totalPages || 1}
+					/>
 				</>
 			) : (
 				<div className="my-16 flex h-full flex-col items-center justify-center">

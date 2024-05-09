@@ -213,8 +213,8 @@ const CreateQuestionnaireForm = () => {
 								/>
 							</SelectTrigger>
 							<SelectContent className="max-w-sm">
-								{Array.isArray(data?.data?.data) &&
-									data.data.data.map((category) => (
+								{Array.isArray(data?.data?.data?.data) &&
+									data.data.data.data.map((category) => (
 										<SelectItem
 											key={category.id}
 											value={category.id?.toString() || ""}

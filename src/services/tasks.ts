@@ -1,12 +1,12 @@
 import { client } from "@/lib/api-client";
 import { CreateTaskRequest } from "@/types/request";
-import { CreateSurveyResponse, GetSurveyResponse } from "@/types/response";
+import { CreateTaskResponse, GetTasksResponse } from "@/types/response";
 
 async function getAll(
 	input: { q?: string; page?: string; pageSize?: string },
 	token: string
 ) {
-	return await client.get<GetSurveyResponse>(
+	return await client.get<GetTasksResponse>(
 		`/admin/task?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
 		{
 			headers: {
@@ -17,7 +17,7 @@ async function getAll(
 }
 
 async function createTasks(input: CreateTaskRequest, token: string) {
-	return await client.post<CreateSurveyResponse>("/admin/task", input, {
+	return await client.post<CreateTaskResponse>("/admin/task", input, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},

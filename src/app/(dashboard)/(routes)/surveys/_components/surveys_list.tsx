@@ -3,15 +3,10 @@
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
-import urls from "@/lib/urls";
 import { cn } from "@/lib/utils";
-import { surveyService } from "@/services/surveys";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React from "react";
 import { SlOptions } from "react-icons/sl";
-import { GoArrowUpRight, GoPlus } from "react-icons/go";
+import { GoPlus } from "react-icons/go";
 import { BiEdit } from "react-icons/bi";
 import {
 	DropdownMenu,
@@ -22,21 +17,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
+import { GetSurveyResponse } from "@/types/response";
 
-const QuestionnairesTabs = () => {
-	const { data: session } = useSession();
+type Props = {
+	data?: GetSurveyResponse["data"];
+};
 
-	const { data } = useQuery({
-		queryKey: ["surveys"],
-		queryFn: () => surveyService.getAll(session?.user.apiToken || ""),
-	});
-
+const SurveysList: React.FC<Props> = (props) => {
 	return (
 		<div className="my-12 w-full px-4">
-			{data?.data && data?.data.data && data?.data.data?.data.length > 0 ? (
+			{props.data && props?.data.data && props?.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{data?.data.data?.data?.map((survey) => (
+						{props?.data.data?.map((survey) => (
 							<li
 								key={`survey-${survey.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -98,23 +91,15 @@ const QuestionnairesTabs = () => {
 							</li>
 						))}
 					</ul>
-
-					<Link
-						href={urls.dashboard.surveys.index}
-						className="mt-6 flex items-center gap-2 font-semibold text-primary hover:text-primary-900"
-					>
-						<span>See all surveys</span>
-						<GoArrowUpRight />
-					</Link>
 				</>
 			) : (
 				<div className="my-16 flex h-full flex-col items-center justify-center">
 					<EmptySvg />
-					<h3 className="mt-4 text-2xl font-semibold">No Survey</h3>
+					<h3 className="mt-4 text-2xl font-semibold">No Surveys</h3>
 				</div>
 			)}
 		</div>
 	);
 };
 
-export default QuestionnairesTabs;
+export default SurveysList;

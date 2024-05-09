@@ -1,5 +1,7 @@
-import { ResponseType } from "@/types/enums";
+"use client";
+
 import * as z from "zod";
+import { ResponseType } from "@/types/enums";
 
 export const LoginSchema = z.object({
 	email: z.string().email("Invalid email address").trim(),
@@ -108,6 +110,96 @@ export const UploadQuestionnaireSchema = z.object({
 export type UploadQuestionnaireSchemaType = z.infer<
 	typeof UploadQuestionnaireSchema
 >;
+
+export const CreateSurveySchema = z.object({
+	reward: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Reward must be greater than 0"),
+	category: z.number({
+		coerce: true,
+		required_error: "Category is required",
+		invalid_type_error: "Category is required",
+	}),
+	questions: z.array(
+		z
+			.object({
+				question: z.string().min(1, "Survey cannot be empty").trim(),
+				response_type: z.nativeEnum(ResponseType),
+				options: z.array(
+					z.object({
+						point: z.number({ coerce: true }),
+						value: z.string().trim(),
+					})
+				),
+			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					values.options.forEach((v, i) => {
+						if (!v)
+							context.addIssue({
+								code: z.ZodIssueCode.custom,
+								message: `Option ${i + 1} cannot be empty`,
+								path: [`options.${i}`],
+							});
+					});
+				}
+			})
+	),
+});
+
+export type CreateSurveySchemaType = z.infer<typeof CreateSurveySchema>;
+
+export const CreateTaskSchema = z.object({
+	reward: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Reward must be greater than 0"),
+	category: z.number({
+		coerce: true,
+		required_error: "Category is required",
+		invalid_type_error: "Category is required",
+	}),
+	questions: z.array(
+		z
+			.object({
+				question: z.string().min(1, "Task cannot be empty").trim(),
+				response_type: z.nativeEnum(ResponseType),
+				options: z.array(
+					z.object({
+						point: z.number({ coerce: true }),
+						value: z.string().trim(),
+					})
+				),
+			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					values.options.forEach((v, i) => {
+						if (!v)
+							context.addIssue({
+								code: z.ZodIssueCode.custom,
+								message: `Option ${i + 1} cannot be empty`,
+								path: [`options.${i}`],
+							});
+					});
+				}
+			})
+	),
+});
+
+export type CreateTaskSchemaType = z.infer<typeof CreateTaskSchema>;
 
 export const SendNotificationSchema = z.object({
 	title: z

@@ -1,17 +1,10 @@
-"use client";
-
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
-import urls from "@/lib/urls";
 import { cn } from "@/lib/utils";
-import { questionnaireService } from "@/services/questionnaire";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React from "react";
 import { SlOptions } from "react-icons/sl";
-import { GoArrowUpRight, GoPlus } from "react-icons/go";
+import { GoPlus } from "react-icons/go";
 import { BiEdit } from "react-icons/bi";
 import {
 	DropdownMenu,
@@ -22,21 +15,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
+import { GetQuestionnaireResponse } from "@/types/response";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next_auth";
+import { questionnaireService } from "@/services/questionnaire";
+import PaginateSection from "@/components/sections/paginate_section";
 
-const QuestionnairesTabs = () => {
-	const { data: session } = useSession();
+type Props = {
+	searchParams: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+	};
+};
 
-	const { data } = useQuery({
-		queryKey: ["questionnaires"],
-		queryFn: () => questionnaireService.getAll(session?.user.apiToken || ""),
-	});
+const QuestionnairesList: React.FC<Props> = async (props) => {
+	const session = await getServerSession(authOptions);
 
+	const data = await questionnaireService.getAll(
+		props.searchParams,
+		session?.user.apiToken || ""
+	);
 	return (
 		<div className="my-12 w-full px-4">
-			{data?.data && data?.data.data && data?.data.data?.data.length > 0 ? (
+			{data.data && data?.data.data && data?.data.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{data?.data.data?.data?.map((questionnaire) => (
+						{data?.data.data.data?.map((questionnaire) => (
 							<li
 								key={`questionnaire-${questionnaire.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -102,13 +107,10 @@ const QuestionnairesTabs = () => {
 						))}
 					</ul>
 
-					<Link
-						href={urls.dashboard.questionnaires.index}
-						className="mt-6 flex items-center gap-2 font-semibold text-primary hover:text-primary-900"
-					>
-						<span>See all questionnaires</span>
-						<GoArrowUpRight />
-					</Link>
+					<PaginateSection
+						current_page={data.data.data?.pagination.currentPage || 1}
+						total_pages={data.data.data?.pagination.totalPages || 1}
+					/>
 				</>
 			) : (
 				<div className="my-16 flex h-full flex-col items-center justify-center">
@@ -120,4 +122,4 @@ const QuestionnairesTabs = () => {
 	);
 };
 
-export default QuestionnairesTabs;
+export default QuestionnairesList;

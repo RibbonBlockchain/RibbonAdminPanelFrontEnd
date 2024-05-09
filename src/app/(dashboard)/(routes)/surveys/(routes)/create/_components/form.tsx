@@ -13,10 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ui/error_message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	CreateQuestionnaireSchema,
-	CreateQuestionnaireSchemaType,
-} from "@/schemas";
+import { CreateSurveySchema, CreateSurveySchemaType } from "@/schemas";
 import { useForm } from "react-hook-form";
 import {
 	Select,
@@ -38,17 +35,17 @@ import { ResponseType } from "@/types/enums";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { questionnaireCategoryService } from "@/services/questionnaire_category";
+import { categoriesService } from "@/services/categories";
 import { useSession } from "next-auth/react";
 import { CreateQuestionnaireRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
-import { getAxiosErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
 import { surveyService } from "@/services/surveys";
 
-const empty_question: CreateQuestionnaireSchemaType["questions"] = [
+const empty_question: CreateSurveySchemaType["questions"] = [
 	{
 		question: "",
 		response_type: ResponseType.SHORT_TEXT,
@@ -56,18 +53,21 @@ const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 	},
 ];
 
-const CreateQuestionnaireForm = () => {
+const CreateSurveyForm = () => {
 	const qc = useQueryClient();
 	const router = useRouter();
 	const { data: session } = useSession();
 	const { data, isPending } = useQuery({
-		queryKey: ["questionnaire"],
+		queryKey: ["survey categories"],
 		queryFn: () =>
-			questionnaireCategoryService.getAll(session?.user.apiToken || ""),
+			categoriesService.getAllSurveyCategory(
+				{ pageSize: "1000" },
+				session?.user.apiToken || ""
+			),
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
-		mutationKey: ["create questionnaire"],
+		mutationKey: ["create survey"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
 			surveyService.createSurvey(data, session?.user.apiToken || ""),
 
@@ -78,13 +78,13 @@ const CreateQuestionnaireForm = () => {
 				duration: 5000,
 			});
 			reset();
-			qc.refetchQueries({ queryKey: ["questionnaire"], type: "active" });
-			router.push(urls.dashboard.questionnaires.index);
+			qc.refetchQueries({ queryKey: ["surveys"], type: "active" });
+			router.push(urls.dashboard.surveys.index);
 		},
 		onError(error) {
 			toast({
 				title: "Error",
-				description: getAxiosErrorMessage(error),
+				description: getErrorMessage(error),
 				duration: 5000,
 				variant: "destructive",
 			});
@@ -98,9 +98,9 @@ const CreateQuestionnaireForm = () => {
 		setValue,
 		reset,
 		watch,
-	} = useForm<CreateQuestionnaireSchemaType>({
+	} = useForm<CreateSurveySchemaType>({
 		mode: "onSubmit",
-		resolver: zodResolver(CreateQuestionnaireSchema),
+		resolver: zodResolver(CreateSurveySchema),
 		defaultValues: {
 			reward: 0,
 			questions: empty_question,
@@ -397,4 +397,4 @@ const CreateQuestionnaireForm = () => {
 	);
 };
 
-export default CreateQuestionnaireForm;
+export default CreateSurveyForm;

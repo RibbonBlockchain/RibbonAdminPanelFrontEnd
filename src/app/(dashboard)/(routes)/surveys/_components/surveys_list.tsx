@@ -1,5 +1,3 @@
-"use client";
-
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
@@ -17,19 +15,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
-import { GetSurveyResponse } from "@/types/response";
+import { authOptions } from "@/lib/next_auth";
+import { surveyService } from "@/services/surveys";
+import PaginateSection from "@/components/sections/paginate_section";
+import { getServerSession } from "next-auth";
 
 type Props = {
-	data?: GetSurveyResponse["data"];
+	searchParams: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+	};
 };
+const SurveysList: React.FC<Props> = async (props) => {
+	const session = await getServerSession(authOptions);
 
-const SurveysList: React.FC<Props> = (props) => {
+	const data = await surveyService.getAll(
+		props.searchParams,
+		session?.user.apiToken || ""
+	);
+
 	return (
 		<div className="my-12 w-full px-4">
-			{props.data && props?.data.data && props?.data.data.length > 0 ? (
+			{data.data && data?.data.data && data?.data.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{props?.data.data?.map((survey) => (
+						{data?.data?.data?.data?.map((survey) => (
 							<li
 								key={`survey-${survey.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -91,6 +102,11 @@ const SurveysList: React.FC<Props> = (props) => {
 							</li>
 						))}
 					</ul>
+
+					<PaginateSection
+						current_page={data?.data?.data?.pagination?.currentPage || 1}
+						total_pages={data?.data?.data?.pagination?.totalPages || 1}
+					/>
 				</>
 			) : (
 				<div className="my-16 flex h-full flex-col items-center justify-center">

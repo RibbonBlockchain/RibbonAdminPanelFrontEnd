@@ -1,22 +1,22 @@
 import { Admin, Pagination } from ".";
 
-type DeafultResponse<T> = {
+type DefaultResponse<T> = {
 	status: number;
 	message: string;
 	timestamp: string;
-	data?: T;
+	data: T | null;
 };
 
 // NOTE: Authentication
-export type LoginResponse = DeafultResponse<{
+export type LoginResponse = DefaultResponse<{
 	accessToken: string;
 }>;
 
 // NOTE: User
-export type UserProfileResponse = DeafultResponse<Admin>;
+export type UserProfileResponse = DefaultResponse<Admin>;
 
 // NOTE: Questionnaire Category
-export type GetQuestionnaireCategoryResponse = DeafultResponse<{
+export type GetQuestionnaireCategoryResponse = DefaultResponse<{
 	data: {
 		id: number;
 		name: string;
@@ -29,7 +29,7 @@ export type GetQuestionnaireCategoryResponse = DeafultResponse<{
 }>;
 
 // NOTE: Survey Category
-export type GetSurveyCategoryResponse = DeafultResponse<{
+export type GetSurveyCategoryResponse = DefaultResponse<{
 	data: {
 		id: number;
 		name: string;
@@ -42,7 +42,7 @@ export type GetSurveyCategoryResponse = DeafultResponse<{
 }>;
 
 // NOTE: Task Category
-export type GetTaskCategoryResponse = DeafultResponse<{
+export type GetTaskCategoryResponse = DefaultResponse<{
 	data: {
 		id: number;
 		name: string;
@@ -55,7 +55,7 @@ export type GetTaskCategoryResponse = DeafultResponse<{
 }>;
 
 // NOTE: Questionnaire
-export type GetQuestionnaireResponse = DeafultResponse<{
+export type GetQuestionnaireResponse = DefaultResponse<{
 	data: {
 		id: number;
 		image: null;
@@ -71,13 +71,13 @@ export type GetQuestionnaireResponse = DeafultResponse<{
 	pagination: Pagination;
 }>;
 
-export type CreateQuestionnaireResponse = DeafultResponse<{}>;
+export type CreateQuestionnaireResponse = DefaultResponse<{}>;
 
 // NOTE: Notification
-export type SendNotificationResponse = DeafultResponse<{}>;
+export type SendNotificationResponse = DefaultResponse<{}>;
 
 // NOTE: Survey
-export type GetSurveyResponse = DeafultResponse<{
+export type GetSurveyResponse = DefaultResponse<{
 	data: {
 		id: number;
 		image: null;
@@ -93,23 +93,25 @@ export type GetSurveyResponse = DeafultResponse<{
 	pagination: Pagination;
 }>;
 
-export type CreateSurveyResponse = DeafultResponse<{}>;
+export type CreateSurveyResponse = DefaultResponse<{}>;
 
 // NOTE: Task
-export type GetTasksResponse = DeafultResponse<{
+export type GetTasksResponse = DefaultResponse<{
 	data: {
 		id: number;
 		image: null;
 		name: string;
 		slug: string;
 		description: string;
-		type: "QUESTIONNAIRE" | "APP";
+		// type: "QUESTIONNAIRE" | "APP";
 		reward: number;
-		point: number;
+		// point: number;
+		categoryId: number;
 		duration: number;
 		createdAt: string;
+		updatedAt: string;
 	}[];
 	pagination: Pagination;
 }>;
 
-export type CreateTaskResponse = DeafultResponse<{}>;
+export type CreateTaskResponse = DefaultResponse<{}>;

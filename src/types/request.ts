@@ -23,6 +23,7 @@ export type CreateSurveyRequest = {
 		}[];
 	}[];
 };
+
 export type CreateTaskRequest = {
 	reward: number;
 	categoryId: number;

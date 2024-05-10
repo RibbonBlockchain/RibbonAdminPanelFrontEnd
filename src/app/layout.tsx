@@ -8,6 +8,7 @@ import QueryProvider from "@/components/providers/query";
 import { getServerSession } from "next-auth";
 import NextAuthProvider from "@/components/providers/next_auth";
 import { authOptions } from "@/lib/next_auth";
+import { TokenProvider } from "@/components/providers/token";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +28,9 @@ export default async function RootLayout({
 		<html lang="en">
 			<body className={cn(inter.className, "relative")}>
 				<QueryProvider>
-					<NextAuthProvider session={session}>{children}</NextAuthProvider>
+					<NextAuthProvider session={session}>
+						<TokenProvider>{children}</TokenProvider>
+					</NextAuthProvider>
 				</QueryProvider>
 				<Toaster />
 			</body>

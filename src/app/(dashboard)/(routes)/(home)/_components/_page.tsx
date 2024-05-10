@@ -24,14 +24,9 @@ import UsersChart from "./users_chart";
 import CreateSurveySvg from "@/components/svgs/create_survey";
 import { programs } from "@/lib/sample_data";
 import { FaArrowRight } from "react-icons/fa6";
-import { useSession } from "next-auth/react";
 import ReportAnalysisSvg from "@/components/svgs/report_analysis";
 
 export default function HomePage() {
-	const { data: session } = useSession({
-		required: true,
-	});
-
 	return (
 		<section className="mx-4 grid gap-4 py-12 xl:grid-cols-4">
 			<div className="col-span-3 grid  grid-cols-3 gap-4">

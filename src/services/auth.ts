@@ -1,19 +1,16 @@
-import { client } from "@/lib/api-client";
+import { Fetch } from ".";
 import { LoginSchemaType } from "@/schemas";
 import { LoginResponse, UserProfileResponse } from "@/types/response";
 
 async function login(data: LoginSchemaType) {
-	return (await client.post<LoginResponse>("/admin/login", data)).data;
+	return await Fetch<LoginResponse>("/admin/login", "", {
+		method: "POST",
+		body: JSON.stringify(data),
+	});
 }
 
-async function getProfile(token?: string) {
-	return (
-		await client.get<UserProfileResponse>("/auth", {
-			headers: {
-				Authorization: token ? `Bearer ${token}` : "",
-			},
-		})
-	).data;
+async function getProfile(token: string) {
+	return await Fetch<UserProfileResponse>("/auth", token);
 }
 
 export const authService = {

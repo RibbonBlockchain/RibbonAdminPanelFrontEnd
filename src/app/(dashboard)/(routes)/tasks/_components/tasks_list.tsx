@@ -1,3 +1,5 @@
+"use client";
+
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,9 @@ import { LuUndo2 } from "react-icons/lu";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next_auth";
 import PaginateSection from "@/components/sections/paginate_section";
+import { useToken } from "@/components/providers/token";
+import { useQuery } from "@tanstack/react-query";
+import ErrorScreen from "@/components/sections/error";
 
 type Props = {
 	searchParams: {
@@ -28,19 +33,23 @@ type Props = {
 	};
 };
 
-const TasksList: React.FC<Props> = async (props) => {
-	const session = await getServerSession(authOptions);
+const TasksList: React.FC<Props> = (props) => {
+	const { token } = useToken();
 
-	const data = await taskService.getAll(
-		props.searchParams,
-		session?.user.apiToken || ""
-	);
+	const { data, error } = useQuery({
+		queryKey: ["tasks", props.searchParams],
+		queryFn: () => taskService.getAll(props.searchParams, token || ""),
+	});
+
+	console.log({ stack: error?.stack });
+	if (error) return <ErrorScreen error={error} />;
+
 	return (
 		<div className="my-12 w-full px-4">
-			{data.data && data?.data.data && data?.data.data.data.length > 0 ? (
+			{data?.data && data?.data.data && data?.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{data?.data.data.data?.map((task) => (
+						{data?.data.data?.map((task) => (
 							<li
 								key={`task-${task.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -104,8 +113,8 @@ const TasksList: React.FC<Props> = async (props) => {
 					</ul>
 
 					<PaginateSection
-						current_page={data?.data?.data?.pagination?.currentPage || 1}
-						total_pages={data?.data?.data?.pagination?.totalPages || 1}
+						current_page={data?.data?.pagination?.currentPage || 1}
+						total_pages={data?.data?.pagination?.totalPages || 1}
 					/>
 				</>
 			) : (

@@ -1,15 +1,22 @@
-import { authOptions } from "@/lib/next_auth";
-import urls from "@/lib/urls";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import React from "react";
+"use client";
 
-const AdminProtectedRoute: React.FC<React.PropsWithChildren> = async ({
+import urls from "@/lib/urls";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
+import { useToken } from "../providers/token";
+
+const AdminProtectedRoute: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
-	const session = await getServerSession(authOptions);
+	const { data: session } = useSession({ required: true });
 
-	console.log({ session });
+	const { setToken } = useToken();
+
+	useEffect(() => {
+		if (!session?.user.apiToken) return;
+		setToken(session.user.apiToken);
+	}, [session?.user.apiToken, setToken]);
 
 	if (
 		!session ||

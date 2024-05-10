@@ -201,6 +201,16 @@ export const CreateTaskSchema = z.object({
 
 export type CreateTaskSchemaType = z.infer<typeof CreateTaskSchema>;
 
+export const CreateCategorySchema = z.object({
+	name: z
+		.string()
+		.min(1, "Category name cannot be empty")
+		.max(100, "Category name too long")
+		.trim(),
+});
+
+export type CreateCategorySchemaType = z.infer<typeof CreateCategorySchema>;
+
 export const SendNotificationSchema = z.object({
 	title: z
 		.string()

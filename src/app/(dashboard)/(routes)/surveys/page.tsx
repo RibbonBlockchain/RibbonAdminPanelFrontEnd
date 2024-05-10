@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FiEdit } from "react-icons/fi";
 
@@ -49,9 +48,7 @@ export default async function Page({
 				<Search />
 			</div>
 
-			<Suspense fallback={<div className="mx-4">Loading...</div>}>
-				<SurveysList searchParams={searchParams} />
-			</Suspense>
+			<SurveysList searchParams={searchParams} />
 		</>
 	);
 }

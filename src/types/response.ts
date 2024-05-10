@@ -54,6 +54,8 @@ export type GetTaskCategoryResponse = DefaultResponse<{
 	pagination: Pagination;
 }>;
 
+export type CreateCategoryResponse = DefaultResponse<{}>;
+
 // NOTE: Questionnaire
 export type GetQuestionnaireResponse = DefaultResponse<{
 	data: {

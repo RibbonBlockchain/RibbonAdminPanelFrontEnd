@@ -1,4 +1,4 @@
-import { client } from "@/lib/api-client";
+import { Fetch } from ".";
 import { CreateTaskRequest } from "@/types/request";
 import { CreateTaskResponse, GetTasksResponse } from "@/types/response";
 
@@ -6,21 +6,16 @@ async function getAll(
 	input: { q?: string; page?: string; pageSize?: string },
 	token: string
 ) {
-	return await client.get<GetTasksResponse>(
+	return await Fetch<GetTasksResponse>(
 		`/admin/task?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
+		token
 	);
 }
 
 async function createTasks(input: CreateTaskRequest, token: string) {
-	return await client.post<CreateTaskResponse>("/admin/task", input, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
+	return await Fetch<CreateTaskResponse>("/admin/task", token, {
+		method: "POST",
+		body: JSON.stringify(input),
 	});
 }
 
@@ -28,9 +23,11 @@ async function uploadTask(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	return await client.post("/admin/task/upload", formData, {
+	return await Fetch<CreateTaskResponse>("/admin/task/upload", token, {
+		method: "POST",
+		body: formData,
 		headers: {
-			Authorization: `Bearer ${token}`,
+			"Content-Type": "multipart/form-data",
 		},
 	});
 }

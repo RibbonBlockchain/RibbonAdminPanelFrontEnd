@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import {
 	Select,
 	SelectContent,
+	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -36,7 +37,6 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { categoriesService } from "@/services/categories";
-import { useSession } from "next-auth/react";
 import { CreateQuestionnaireRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils";
@@ -44,6 +44,8 @@ import { useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
 import { taskService } from "@/services/tasks";
+import { useToken } from "@/components/providers/token";
+import CreateCategoryForm from "@/app/(dashboard)/_components/create_category_form";
 
 const empty_question: CreateTaskSchemaType["questions"] = [
 	{
@@ -56,30 +58,53 @@ const empty_question: CreateTaskSchemaType["questions"] = [
 const CreateTaskForm = () => {
 	const qc = useQueryClient();
 	const router = useRouter();
-	const { data: session } = useSession();
+	const { token } = useToken();
 	const { data, isPending } = useQuery({
-		queryKey: ["task category"],
+		queryKey: ["task categories"],
 		queryFn: () =>
-			categoriesService.getAllTaskCategory(
-				{ pageSize: "1000" },
-				session?.user.apiToken || ""
-			),
+			categoriesService.getAllTaskCategory({ pageSize: "1000" }, token || ""),
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create task"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			taskService.createTasks(data, session?.user.apiToken || ""),
+			taskService.createTasks(data, token || ""),
 
-		onSuccess({ data }) {
+		onSuccess(data) {
 			toast({
 				title: "Success",
 				description: data.message,
 				duration: 5000,
 			});
 			reset();
-			qc.refetchQueries({ queryKey: ["tasks"], type: "active" });
+			qc.refetchQueries({ queryKey: ["tasks"], type: "all" });
 			router.push(urls.dashboard.tasks.index);
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
+	});
+
+	const {
+		mutate: mutateCategory,
+		isPending: isPendingCategoryMutation,
+		isSuccess: isSuccessCategoryMutation,
+	} = useMutation({
+		mutationKey: ["create task category"],
+		mutationFn: (data: { name: string }) =>
+			categoriesService.createTaskCategory(data, token || ""),
+		onSuccess(data) {
+			toast({
+				title: "Success",
+				description: data.message,
+				duration: 5000,
+			});
+			qc.refetchQueries({ queryKey: ["task categories"], type: "all" });
 		},
 		onError(error) {
 			toast({
@@ -205,8 +230,13 @@ const CreateTaskForm = () => {
 								/>
 							</SelectTrigger>
 							<SelectContent className="max-w-sm">
-								{Array.isArray(data?.data?.data?.data) &&
-									data.data.data.data.map((category) => (
+								<CreateCategoryForm
+									mutate={mutateCategory}
+									isPending={isPendingCategoryMutation}
+									isSuccess={isSuccessCategoryMutation}
+								/>
+								{Array.isArray(data?.data?.data) &&
+									data.data.data.map((category) => (
 										<SelectItem
 											key={category.id}
 											value={category.id?.toString() || ""}
@@ -385,7 +415,7 @@ const CreateTaskForm = () => {
 			<Button
 				type="submit"
 				className="float-right w-full max-w-40"
-				disabled={isPending || isPendingMutation}
+				disabled={isPending || isPendingMutation || isPendingCategoryMutation}
 			>
 				{isPendingMutation ? (
 					<ImSpinner3 className="mr-1 animate-spin" />

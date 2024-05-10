@@ -2,7 +2,11 @@ import React from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-type Props = { error?: Error & { digest?: string }; reset?: () => void };
+type Props = {
+	error?: Error & { digest?: string };
+	reset?: () => void;
+	statusCode?: number;
+};
 
 const ErrorScreen: React.FC<Props> = (props) => {
 	return (

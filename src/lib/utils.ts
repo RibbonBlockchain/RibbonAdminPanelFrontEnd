@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import urls from "./urls";
 import { QueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { AxiosError } from "axios";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -73,9 +72,9 @@ export function logout(reroute: boolean = true) {
 }
 
 export function getErrorMessage(error: any) {
-	if (error instanceof AxiosError) {
-		return error.response?.data?.message || error.message;
+	if (error?.message) {
+		return error.message;
 	}
 
-	return error?.message || "Something went wrong!";
+	return "Something went wrong!";
 }

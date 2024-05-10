@@ -1,3 +1,5 @@
+"use client";
+
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
@@ -15,10 +17,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
-import { authOptions } from "@/lib/next_auth";
 import { surveyService } from "@/services/surveys";
 import PaginateSection from "@/components/sections/paginate_section";
-import { getServerSession } from "next-auth";
+import { useToken } from "@/components/providers/token";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
 	searchParams: {
@@ -27,20 +29,20 @@ type Props = {
 		pageSize?: string;
 	};
 };
-const SurveysList: React.FC<Props> = async (props) => {
-	const session = await getServerSession(authOptions);
+const SurveysList: React.FC<Props> = (props) => {
+	const { token } = useToken();
 
-	const data = await surveyService.getAll(
-		props.searchParams,
-		session?.user.apiToken || ""
-	);
+	const { data } = useQuery({
+		queryKey: ["surveys", props.searchParams],
+		queryFn: () => surveyService.getAll(props.searchParams, token || ""),
+	});
 
 	return (
 		<div className="my-12 w-full px-4">
-			{data.data && data?.data.data && data?.data.data.data.length > 0 ? (
+			{data?.data && data?.data.data && data?.data.data.length > 0 ? (
 				<>
 					<ul className="flex flex-col gap-4">
-						{data?.data?.data?.data?.map((survey) => (
+						{data?.data?.data?.map((survey) => (
 							<li
 								key={`survey-${survey.id}`}
 								className="flex items-center justify-between rounded-2xl bg-white p-4"
@@ -104,8 +106,8 @@ const SurveysList: React.FC<Props> = async (props) => {
 					</ul>
 
 					<PaginateSection
-						current_page={data?.data?.data?.pagination?.currentPage || 1}
-						total_pages={data?.data?.data?.pagination?.totalPages || 1}
+						current_page={data?.data?.pagination?.currentPage || 1}
+						total_pages={data?.data?.pagination?.totalPages || 1}
 					/>
 				</>
 			) : (

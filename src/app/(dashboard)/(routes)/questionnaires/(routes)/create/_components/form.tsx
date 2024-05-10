@@ -39,7 +39,6 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { categoriesService } from "@/services/categories";
-import { useSession } from "next-auth/react";
 import { CreateQuestionnaireRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils";
@@ -47,6 +46,8 @@ import { useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
 import { questionnaireService } from "@/services/questionnaire";
+import { useToken } from "@/components/providers/token";
+import CreateCategoryForm from "@/app/(dashboard)/_components/create_category_form";
 
 const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 	{
@@ -59,25 +60,22 @@ const empty_question: CreateQuestionnaireSchemaType["questions"] = [
 const CreateQuestionnaireForm = () => {
 	const qc = useQueryClient();
 	const router = useRouter();
-	const { data: session } = useSession();
+	const { token } = useToken();
 	const { data, isPending } = useQuery({
-		queryKey: ["questionnaire"],
+		queryKey: ["questionnaire categories"],
 		queryFn: () =>
 			categoriesService.getAllQuestionnaireCategory(
 				{ pageSize: "1000" },
-				session?.user.apiToken || ""
+				token || ""
 			),
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create questionnaire"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.createQuestionnaire(
-				data,
-				session?.user.apiToken || ""
-			),
+			questionnaireService.createQuestionnaire(data, token || ""),
 
-		onSuccess({ data }) {
+		onSuccess(data) {
 			toast({
 				title: "Success",
 				description: data.message,
@@ -86,6 +84,35 @@ const CreateQuestionnaireForm = () => {
 			reset();
 			qc.refetchQueries({ queryKey: ["questionnaire"], type: "active" });
 			router.push(urls.dashboard.questionnaires.index);
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
+	});
+
+	const {
+		mutate: mutateCategory,
+		isPending: isPendingCategoryMutation,
+		isSuccess: isSuccessCategoryMutation,
+	} = useMutation({
+		mutationKey: ["create questionnaire category"],
+		mutationFn: (data: { name: string }) =>
+			categoriesService.createQuestionnaireCategory(data, token || ""),
+		onSuccess(data) {
+			toast({
+				title: "Success",
+				description: data.message,
+				duration: 5000,
+			});
+			qc.refetchQueries({
+				queryKey: ["questionnaire categories"],
+				type: "all",
+			});
 		},
 		onError(error) {
 			toast({
@@ -213,8 +240,13 @@ const CreateQuestionnaireForm = () => {
 								/>
 							</SelectTrigger>
 							<SelectContent className="max-w-sm">
-								{Array.isArray(data?.data?.data?.data) &&
-									data.data.data.data.map((category) => (
+								<CreateCategoryForm
+									mutate={mutateCategory}
+									isPending={isPendingCategoryMutation}
+									isSuccess={isSuccessCategoryMutation}
+								/>
+								{Array.isArray(data?.data?.data) &&
+									data.data.data.map((category) => (
 										<SelectItem
 											key={category.id}
 											value={category.id?.toString() || ""}
@@ -397,7 +429,7 @@ const CreateQuestionnaireForm = () => {
 			<Button
 				type="submit"
 				className="float-right w-full max-w-40"
-				disabled={isPending || isPendingMutation}
+				disabled={isPending || isPendingMutation || isPendingCategoryMutation}
 			>
 				{isPendingMutation ? (
 					<ImSpinner3 className="mr-1 animate-spin" />

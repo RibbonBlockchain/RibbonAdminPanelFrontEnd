@@ -24,23 +24,23 @@ import {
 } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { ImSpinner3 } from "react-icons/im";
 import ErrorMessage from "@/components/ui/error_message";
 import { surveyService } from "@/services/surveys";
+import { useToken } from "@/components/providers/token";
 
 const UploadQuestionnaireModal = () => {
 	const qc = useQueryClient();
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
-	const { data: session } = useSession();
+	const { token } = useToken();
 
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Upload Questionnaire"],
 		mutationFn: async (data: File) =>
-			surveyService.uploadSurvey(data, session?.user.apiToken || ""),
-		onSuccess({ data }) {
+			surveyService.uploadSurvey(data, token || ""),
+		onSuccess(data) {
 			toast({
 				title: "Success",
 				description: data.message,

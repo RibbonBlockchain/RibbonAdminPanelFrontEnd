@@ -1,5 +1,6 @@
 "use client";
 
+import { useToken } from "@/components/providers/token";
 import { Button } from "@/components/ui/button";
 import ErrorMessage from "@/components/ui/error_message";
 import { Input } from "@/components/ui/input";
@@ -11,19 +12,18 @@ import { SendNotificationSchema, SendNotificationSchemaType } from "@/schemas";
 import { sendNotificationService } from "@/services/send_notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { ImSpinner3 } from "react-icons/im";
 
 const SendNotificationForm = () => {
-	const { data: session } = useSession();
+	const { token } = useToken();
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Send Notification"],
 		mutationFn: (data: SendNotificationSchemaType) =>
-			sendNotificationService.sendMessage(data, session?.user.apiToken || ""),
+			sendNotificationService.sendMessage(data, token || ""),
 
-		onSuccess: ({ data }) => {
+		onSuccess: (data) => {
 			toast({
 				title: "Success",
 				description: data.message,

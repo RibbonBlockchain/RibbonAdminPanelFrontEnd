@@ -1,15 +1,14 @@
-import { client } from "@/lib/api-client";
+import { Fetch } from ".";
 import { SendNotificationSchemaType } from "@/schemas";
 import { SendNotificationResponse } from "@/types/response";
 
 async function sendMessage(data: SendNotificationSchemaType, token: string) {
-	return await client.post<SendNotificationResponse>(
+	return await Fetch<SendNotificationResponse>(
 		"/notification/send-general",
-		data,
+		token,
 		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
+			method: "POST",
+			body: JSON.stringify(data),
 		}
 	);
 }

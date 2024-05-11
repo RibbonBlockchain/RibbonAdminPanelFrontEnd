@@ -39,10 +39,8 @@ async function uploadQuestionnaire(file: File, token: string) {
 		{
 			method: "POST",
 			body: formData,
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		}
+		},
+		true
 	);
 }
 

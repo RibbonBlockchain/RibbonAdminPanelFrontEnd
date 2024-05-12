@@ -61,7 +61,8 @@ async function uploadQuestionnaire(file: File, token: string) {
 		{
 			method: methods.POST,
 			body: formData,
-		}
+		},
+		true
 	);
 }
 

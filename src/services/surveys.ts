@@ -23,10 +23,15 @@ async function uploadSurvey(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	return await Fetch<CreateSurveyResponse>("/admin/survey/upload", token, {
-		method: methods.POST,
-		body: formData,
-	});
+	return await Fetch<CreateSurveyResponse>(
+		"/admin/survey/upload",
+		token,
+		{
+			method: methods.POST,
+			body: formData,
+		},
+		true
+	);
 }
 
 export const surveyService = {

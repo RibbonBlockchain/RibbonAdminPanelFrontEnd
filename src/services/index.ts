@@ -4,14 +4,21 @@ import { signOut } from "next-auth/react";
 export async function Fetch<T>(
 	url: string,
 	token?: string,
-	init?: RequestInit
+	init?: RequestInit,
+	noHeaders: boolean = false
 ) {
 	const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API.concat(url), {
 		...init,
-		headers: {
-			authorization: `Bearer ${token}`,
-			...init?.headers,
-		},
+		headers: noHeaders
+			? {
+					authorization: `Bearer ${token}`,
+					...init?.headers,
+				}
+			: {
+					authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+					...init?.headers,
+				},
 	});
 
 	const data = (await res.json()) as T;

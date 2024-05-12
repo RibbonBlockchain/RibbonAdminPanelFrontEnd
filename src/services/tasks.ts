@@ -23,10 +23,15 @@ async function uploadTask(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	return await Fetch<CreateTaskResponse>("/admin/task/upload", token, {
-		method: methods.POST,
-		body: formData,
-	});
+	return await Fetch<CreateTaskResponse>(
+		"/admin/task/upload",
+		token,
+		{
+			method: methods.POST,
+			body: formData,
+		},
+		true
+	);
 }
 
 export const taskService = {

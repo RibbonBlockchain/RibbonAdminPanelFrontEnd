@@ -254,7 +254,7 @@ const EditQuestionnaireForm = () => {
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [data?.data]);
+	}, [reset, data?.data]);
 
 	if (isPending) return <p className="p-4">Loading...</p>;
 

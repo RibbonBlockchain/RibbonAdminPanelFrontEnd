@@ -64,7 +64,7 @@ const CreateQuestionnaireForm = () => {
 	const { data, isPending } = useQuery({
 		queryKey: ["questionnaire categories"],
 		queryFn: () =>
-			categoriesService.getAllQuestionnaireCategory(
+			categoriesService.getQuestionnaireCategories(
 				{ pageSize: "1000" },
 				token || ""
 			),

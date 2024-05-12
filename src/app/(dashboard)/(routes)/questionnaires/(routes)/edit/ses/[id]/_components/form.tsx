@@ -128,7 +128,7 @@ const EditSesQuestionnaireForm = () => {
 				})),
 			});
 		}
-	}, [data?.data?.questions]);
+	}, [reset, data?.data, data?.data?.questions]);
 
 	if (isPending) return <p className="p-4">Loading...</p>;
 
@@ -184,8 +184,11 @@ const EditSesQuestionnaireForm = () => {
 									<span className="flex h-10 w-full rounded-md border border-primary/20 bg-white px-3 py-2 text-sm">
 										{response_types
 											.filter((x) => x.value === question.response_type)
-											.map((x) => (
-												<span className="inline-flex items-center gap-2">
+											.map((x, response_index) => (
+												<span
+													key={`response-type-${response_index}-of-question-${question_index}`}
+													className="inline-flex items-center gap-2"
+												>
 													<x.icon className="text-2xl text-primary" /> {x.name}
 												</span>
 											))}

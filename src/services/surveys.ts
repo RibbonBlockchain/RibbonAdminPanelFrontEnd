@@ -1,4 +1,4 @@
-import { Fetch } from ".";
+import { Fetch, methods } from ".";
 import { CreateSurveyRequest } from "@/types/request";
 import { CreateSurveyResponse, GetSurveyResponse } from "@/types/response";
 
@@ -14,7 +14,7 @@ async function getAll(
 
 async function createSurvey(input: CreateSurveyRequest, token: string) {
 	return await Fetch<CreateSurveyResponse>("/admin/survey", token, {
-		method: "POST",
+		method: methods.POST,
 		body: JSON.stringify(input),
 	});
 }
@@ -23,15 +23,10 @@ async function uploadSurvey(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	return await Fetch<CreateSurveyResponse>(
-		"/admin/survey/upload",
-		token,
-		{
-			method: "POST",
-			body: formData,
-		},
-		true
-	);
+	return await Fetch<CreateSurveyResponse>("/admin/survey/upload", token, {
+		method: methods.POST,
+		body: formData,
+	});
 }
 
 export const surveyService = {

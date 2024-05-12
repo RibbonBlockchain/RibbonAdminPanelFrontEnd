@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	Card,
 	CardContent,
@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ui/error_message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-	CreateQuestionnaireSchema,
-	CreateQuestionnaireSchemaType,
+	EditQuestionnaireSchema,
+	EditQuestionnaireSchemaType,
 } from "@/schemas";
 import { useForm } from "react-hook-form";
 import {
@@ -42,38 +42,52 @@ import { categoriesService } from "@/services/categories";
 import { CreateQuestionnaireRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
 import { questionnaireService } from "@/services/questionnaire";
 import { useToken } from "@/components/providers/token";
 import CreateCategoryForm from "@/app/(dashboard)/_components/create_category_form";
 
-const empty_question: CreateQuestionnaireSchemaType["questions"] = [
+const empty_question: EditQuestionnaireSchemaType["questions"] = [
 	{
+		id: null,
 		question: "",
 		response_type: ResponseType.SHORT_TEXT,
 		options: [],
 	},
 ];
 
-const CreateQuestionnaireForm = () => {
+const EditQuestionnaireForm = () => {
+	const params = useParams();
 	const qc = useQueryClient();
 	const router = useRouter();
 	const { token } = useToken();
+
 	const { data, isPending } = useQuery({
+		queryKey: ["questionnaire", { id: params?.id as string }],
+		queryFn: () =>
+			questionnaireService.getById(params?.id as string, token || ""),
+		enabled: !!params?.id && !!token,
+	});
+
+	const { data: categoriesData, isPending: isPendingCategories } = useQuery({
 		queryKey: ["questionnaire categories"],
 		queryFn: () =>
-			categoriesService.getAllQuestionnaireCategory(
+			categoriesService.getQuestionnaireCategories(
 				{ pageSize: "1000" },
 				token || ""
 			),
+		enabled: !!params?.id && !!token,
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
-		mutationKey: ["create questionnaire"],
+		mutationKey: ["edit questionnaire"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.createQuestionnaire(data, token || ""),
+			questionnaireService.editQuestionnaire(
+				{ id: params?.id as string, ...data },
+				token || ""
+			),
 
 		onSuccess(data) {
 			toast({
@@ -82,7 +96,7 @@ const CreateQuestionnaireForm = () => {
 				duration: 5000,
 			});
 			reset();
-			qc.refetchQueries({ queryKey: ["questionnaire"], type: "active" });
+			qc.refetchQueries({ queryKey: ["questionnaire"], type: "all" });
 			router.push(urls.dashboard.questionnaires.index);
 		},
 		onError(error) {
@@ -131,9 +145,9 @@ const CreateQuestionnaireForm = () => {
 		setValue,
 		reset,
 		watch,
-	} = useForm<CreateQuestionnaireSchemaType>({
+	} = useForm<EditQuestionnaireSchemaType>({
 		mode: "onSubmit",
-		resolver: zodResolver(CreateQuestionnaireSchema),
+		resolver: zodResolver(EditQuestionnaireSchema),
 		defaultValues: {
 			reward: 0,
 			questions: empty_question,
@@ -144,12 +158,15 @@ const CreateQuestionnaireForm = () => {
 
 	const onSubmit = handleSubmit(async (data) => {
 		const formattedData = data.questions.map((question) => ({
+			id: question.id,
 			type: question.response_type,
 			question: question.question,
 			options: question.options,
 		}));
 
-		mutate({
+		// TODO: change to mutate
+		console.log({
+			id: parseInt(params?.id as string),
 			categoryId: data.category,
 			reward: data.reward,
 			questions: formattedData,
@@ -158,7 +175,7 @@ const CreateQuestionnaireForm = () => {
 
 	function duplicateQuestion(index: number) {
 		const newQuestions = [...questions];
-		newQuestions.splice(index + 1, 0, questions[index]);
+		newQuestions.splice(index + 1, 0, { ...questions[index], id: null });
 		setValue("questions", newQuestions);
 	}
 
@@ -185,7 +202,11 @@ const CreateQuestionnaireForm = () => {
 	function deleteOption(questionIndex: number, optionIndex: number) {
 		if (questions[questionIndex].options.length <= 1) {
 			return setValue(`questions.${questionIndex}.options`, [
-				{ point: 0, value: "" },
+				{
+					id: null,
+					point: 0,
+					value: "",
+				},
 			]);
 		}
 		const newQuestions = [...questions];
@@ -195,9 +216,47 @@ const CreateQuestionnaireForm = () => {
 
 	function addOption(questionIndex: number) {
 		const newQuestions = [...questions];
-		newQuestions[questionIndex].options.push({ point: 0, value: "" });
+		newQuestions[questionIndex].options.push({
+			id: null,
+			point: 0,
+			value: "",
+		});
 		setValue("questions", newQuestions);
 	}
+
+	useEffect(() => {
+		let timer: NodeJS.Timeout;
+		if (data?.data) {
+			timer = setTimeout(() => {
+				reset(
+					{
+						reward: data?.data?.reward,
+						category: data?.data?.categoryId,
+						questions: Array.isArray(data?.data?.questions)
+							? data?.data?.questions?.map((q) => ({
+									id: q.id,
+									question: q.text,
+									response_type: q.type,
+									options:
+										q.options?.map((o) => ({
+											id: o.id,
+											value: o.text,
+											point: o.point,
+										})) || [],
+								}))
+							: empty_question,
+					},
+					{ keepValues: false }
+				);
+			}, 100);
+		}
+
+		return () => {
+			clearTimeout(timer);
+		};
+	}, [data?.data]);
+
+	if (isPending) return <p className="p-4">Loading...</p>;
 
 	return (
 		<form
@@ -206,7 +265,7 @@ const CreateQuestionnaireForm = () => {
 		>
 			<Card className="pb-8 transition-all duration-500">
 				<CardHeader>
-					<CardTitle>Submit Questionnaires manually</CardTitle>
+					<CardTitle>Edit {data?.data?.name || "Questionnaire"} </CardTitle>
 					<CardDescription>
 						Upload maximum of {+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT}{" "}
 						questions
@@ -245,10 +304,10 @@ const CreateQuestionnaireForm = () => {
 									isPending={isPendingCategoryMutation}
 									isSuccess={isSuccessCategoryMutation}
 								/>
-								{Array.isArray(data?.data?.data) &&
-									data.data.data.map((category) => (
+								{Array.isArray(categoriesData?.data?.data) &&
+									categoriesData.data.data.map((category) => (
 										<SelectItem
-											key={category.id}
+											key={`category-${category.id}`}
 											value={category.id?.toString() || ""}
 											className="cursor-pointer"
 										>
@@ -263,14 +322,15 @@ const CreateQuestionnaireForm = () => {
 					{questions.map((question, question_index) => (
 						<fieldset className="space-y-6" key={`question-${question_index}`}>
 							<div>
-								<Label>Question {question_index + 1}</Label>
+								<Label></Label>
 								<Input
 									type="text"
 									placeholder="Type your question"
 									{...register(`questions.${question_index}.question`)}
 								/>
 								<ErrorMessage>
-									{errors.questions?.[question_index]?.question?.message}
+									{errors.questions?.[question_index]?.question?.message ||
+										errors.questions?.[question_index]?.id?.message}
 								</ErrorMessage>
 							</div>
 
@@ -278,7 +338,8 @@ const CreateQuestionnaireForm = () => {
 								<Label>Response type</Label>
 								<Select
 									{...register(`questions.${question_index}.response_type`)}
-									value={questions[question_index].response_type}
+									// defaultValue={question.response_type}
+									value={question.response_type}
 									onValueChange={(v) =>
 										setValue(
 											`questions.${question_index}.response_type`,
@@ -286,11 +347,12 @@ const CreateQuestionnaireForm = () => {
 										)
 									}
 								>
-									<SelectTrigger className="">
-										<SelectValue
+									<SelectTrigger>
+										<span>{question.response_type}</span>
+										{/* <SelectValue
 											className="placeholder:text-neutral-500"
 											placeholder="Choose a category"
-										/>
+										/> */}
 									</SelectTrigger>
 									<SelectContent className="max-w-sm">
 										{response_types.map((x) => (
@@ -311,7 +373,9 @@ const CreateQuestionnaireForm = () => {
 									ResponseType.RADIO,
 									ResponseType.BUBBLES,
 									ResponseType.ROUND_BOX,
-								].includes(questions[question_index].response_type) && (
+								].includes(
+									questions[question_index].response_type as ResponseType
+								) && (
 									<div className="mt-6 space-y-4 border-y-2 py-6">
 										{questions[question_index].options.map(
 											(_, option_index) => (
@@ -434,16 +498,21 @@ const CreateQuestionnaireForm = () => {
 			<Button
 				type="submit"
 				className="float-right w-full max-w-40"
-				disabled={isPending || isPendingMutation || isPendingCategoryMutation}
+				disabled={
+					isPending ||
+					isPendingCategories ||
+					isPendingMutation ||
+					isPendingCategoryMutation
+				}
 			>
 				{isPendingMutation ? (
 					<ImSpinner3 className="mr-1 animate-spin" />
 				) : (
-					"Submit questions"
+					"Save"
 				)}
 			</Button>
 		</form>
 	);
 };
 
-export default CreateQuestionnaireForm;
+export default EditQuestionnaireForm;

@@ -21,6 +21,8 @@ import { questionnaireService } from "@/services/questionnaire";
 import PaginateSection from "@/components/sections/paginate_section";
 import { useToken } from "@/components/providers/token";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import urls from "@/lib/urls";
 
 type Props = {
 	searchParams: {
@@ -36,6 +38,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 	const { data } = useQuery({
 		queryKey: ["questionnaires", props.searchParams],
 		queryFn: () => questionnaireService.getAll(props.searchParams, token || ""),
+		enabled: !!token,
 	});
 
 	return (
@@ -83,13 +86,25 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 										</Button>
 									</DropdownMenuTrigger>
 									<DropdownMenuContent className="z-10 mr-4 p-4 font-medium text-primary">
-										<DropdownMenuItem>
-											<BiEdit className="mr-2 text-2xl" />
-											Edit
+										<DropdownMenuItem asChild>
+											<Link
+												href={urls.dashboard.questionnaires.edit.index(
+													questionnaire.id.toString()
+												)}
+											>
+												<BiEdit className="mr-2 text-2xl" />
+												Edit
+											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										<DropdownMenuItem>
-											<GoPlus className="mr-2 text-2xl" /> Add SES score
+										<DropdownMenuItem asChild>
+											<Link
+												href={urls.dashboard.questionnaires.edit.ses(
+													questionnaire.id.toString()
+												)}
+											>
+												<GoPlus className="mr-2 text-2xl" /> Add SES score
+											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
 										{questionnaire.type === "APP" && (

@@ -62,7 +62,7 @@ const CreateTaskForm = () => {
 	const { data, isPending } = useQuery({
 		queryKey: ["task categories"],
 		queryFn: () =>
-			categoriesService.getAllTaskCategory({ pageSize: "1000" }, token || ""),
+			categoriesService.getTaskCategories({ pageSize: "1000" }, token || ""),
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({

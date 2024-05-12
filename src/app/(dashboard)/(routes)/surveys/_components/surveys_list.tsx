@@ -35,6 +35,7 @@ const SurveysList: React.FC<Props> = (props) => {
 	const { data } = useQuery({
 		queryKey: ["surveys", props.searchParams],
 		queryFn: () => surveyService.getAll(props.searchParams, token || ""),
+		enabled: !!token,
 	});
 
 	return (

@@ -1,7 +1,8 @@
-import { Fetch } from ".";
+import { Fetch, methods } from ".";
 import {
 	GetQuestionnaireResponse,
 	CreateQuestionnaireResponse,
+	GetQuestionnaireByIdResponse,
 } from "@/types/response";
 import { CreateQuestionnaireRequest } from "@/types/request";
 
@@ -15,6 +16,13 @@ async function getAll(
 	);
 }
 
+async function getById(id: string, token: string) {
+	return await Fetch<GetQuestionnaireByIdResponse>(
+		`/admin/questionnaire/${id}`,
+		token
+	);
+}
+
 async function createQuestionnaire(
 	input: CreateQuestionnaireRequest,
 	token: string
@@ -23,7 +31,21 @@ async function createQuestionnaire(
 		"/admin/questionnaire",
 		token,
 		{
-			method: "POST",
+			method: methods.POST,
+			body: JSON.stringify(input),
+		}
+	);
+}
+
+async function editQuestionnaire(
+	input: CreateQuestionnaireRequest & { id: string },
+	token: string
+) {
+	return await Fetch<CreateQuestionnaireResponse>(
+		"/admin/questionnaire",
+		token,
+		{
+			method: methods.PATCH,
 			body: JSON.stringify(input),
 		}
 	);
@@ -37,15 +59,16 @@ async function uploadQuestionnaire(file: File, token: string) {
 		"/admin/questionnaire/upload",
 		token,
 		{
-			method: "POST",
+			method: methods.POST,
 			body: formData,
-		},
-		true
+		}
 	);
 }
 
 export const questionnaireService = {
 	getAll,
+	getById,
 	createQuestionnaire,
+	editQuestionnaire,
 	uploadQuestionnaire,
 };

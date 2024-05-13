@@ -1,25 +1,68 @@
-import { Fetch } from ".";
-import { CreateSurveyRequest } from "@/types/request";
-import { CreateSurveyResponse, GetSurveyResponse } from "@/types/response";
+import { Fetch, methods } from ".";
+import {
+	CreateSurveyRequest,
+	EditSurveyRequest,
+	UpdateSesScoreRequest,
+	UpdateStatusRequest,
+} from "@/types/request";
+import {
+	GetSurveyResponse,
+	GetSurveyByIdResponse,
+	GetSummaryResponse,
+	CreateSurveyResponse,
+} from "@/types/response";
 
 async function getAll(
-	input: { q?: string; page?: string; pageSize?: string },
+	input: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+		status?: "ACTIVE" | "CLOSED";
+	},
 	token: string
 ) {
 	return await Fetch<GetSurveyResponse>(
-		`/admin/survey?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		`/admin/survey?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}&status=${input.status || "ACTIVE"}`,
 		token
 	);
 }
 
-async function createSurvey(input: CreateSurveyRequest, token: string) {
+async function getById(id: string, token: string) {
+	return await Fetch<GetSurveyByIdResponse>(`/admin/survey/${id}`, token);
+}
+
+async function getSummary(token: string) {
+	return await Fetch<GetSummaryResponse>("/admin/survey/summary", token);
+}
+
+async function create(input: CreateSurveyRequest, token: string) {
 	return await Fetch<CreateSurveyResponse>("/admin/survey", token, {
-		method: "POST",
+		method: methods.POST,
 		body: JSON.stringify(input),
 	});
 }
 
-async function uploadSurvey(file: File, token: string) {
+async function edit(input: EditSurveyRequest, token: string) {
+	return await Fetch<CreateSurveyResponse>("/admin/survey", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+
+async function updateSesScore(input: UpdateSesScoreRequest, token: string) {
+	return await Fetch<CreateSurveyResponse>("/survey/update-ses", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+async function updateStatus(input: UpdateStatusRequest, token: string) {
+	return await Fetch<CreateSurveyResponse>("/admin/survey/status", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+
+async function upload(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
@@ -27,7 +70,7 @@ async function uploadSurvey(file: File, token: string) {
 		"/admin/survey/upload",
 		token,
 		{
-			method: "POST",
+			method: methods.POST,
 			body: formData,
 		},
 		true
@@ -36,6 +79,11 @@ async function uploadSurvey(file: File, token: string) {
 
 export const surveyService = {
 	getAll,
-	createSurvey,
-	uploadSurvey,
+	getById,
+	getSummary,
+	create,
+	edit,
+	updateSesScore,
+	updateStatus,
+	upload,
 };

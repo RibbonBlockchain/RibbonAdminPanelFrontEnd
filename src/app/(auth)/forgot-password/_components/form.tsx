@@ -36,7 +36,7 @@ export default function ForgotPasswordForm() {
 			// const response = await fetch(
 			// 	`${process.env.NEXT_PUBLIC_BACKEND_API}/admin/login`,
 			// 	{
-			// 		method: "POST",
+			// 		method: methods.POST,
 			// 		headers: {
 			// 			"Content-Type": "application/json",
 			// 		},

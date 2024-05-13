@@ -1,16 +1,24 @@
 import {
-	GetQuestionnaireCategoryResponse,
+	GetCategoriesResponse,
 	CreateCategoryResponse,
+	GetCategoryByIdResponse,
 } from "@/types/response";
-import { Fetch } from ".";
+import { Fetch, methods } from ".";
 
 // NOTE: QUESTIONNAIRE CATEGORIES
-async function getAllQuestionnaireCategory(
+async function getQuestionnaireCategories(
 	input: { q?: string; page?: string; pageSize?: string },
 	token: string
 ) {
-	return await Fetch<GetQuestionnaireCategoryResponse>(
+	return await Fetch<GetCategoriesResponse>(
 		`/admin/questionnaire/category?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		token
+	);
+}
+
+async function getQuestionnaireCategoryById(id: string, token: string) {
+	return await Fetch<GetCategoryByIdResponse>(
+		`/admin/questionnaire/category/${id}`,
 		token
 	);
 }
@@ -23,53 +31,72 @@ async function createQuestionnaireCategory(
 		"/admin/questionnaire/category",
 		token,
 		{
-			method: "POST",
+			method: methods.POST,
 			body: JSON.stringify(input),
 		}
 	);
 }
 
 // NOTE: SURVEY CATEGORIES
-async function getAllSurveyCategory(
+async function getSurveyCategories(
 	input: { q?: string; page?: string; pageSize?: string },
 	token: string
 ) {
-	return await Fetch<GetQuestionnaireCategoryResponse>(
+	return await Fetch<GetCategoriesResponse>(
 		`/admin/survey/category?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		token
+	);
+}
+
+async function getSurveyCategoryById(id: string, token: string) {
+	return await Fetch<GetCategoryByIdResponse>(
+		`/admin/questionnaire/survey/${id}`,
 		token
 	);
 }
 
 async function createSurveyCategory(input: { name: string }, token: string) {
 	return await Fetch<CreateCategoryResponse>("/admin/survey/category", token, {
-		method: "POST",
+		method: methods.POST,
 		body: JSON.stringify(input),
 	});
 }
 
 // NOTE: TASK CATEGORIES
-async function getAllTaskCategory(
+async function getTaskCategories(
 	input: { q?: string; page?: string; pageSize?: string },
 	token: string
 ) {
-	return await Fetch<GetQuestionnaireCategoryResponse>(
+	return await Fetch<GetCategoriesResponse>(
 		`/admin/task/category?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		token
+	);
+}
+
+async function getTaskCategoryById(id: string, token: string) {
+	return await Fetch<GetCategoryByIdResponse>(
+		`/admin/questionnaire/task/${id}`,
 		token
 	);
 }
 
 async function createTaskCategory(input: { name: string }, token: string) {
 	return await Fetch<CreateCategoryResponse>("/admin/task/category", token, {
-		method: "POST",
+		method: methods.POST,
 		body: JSON.stringify(input),
 	});
 }
 
 export const categoriesService = {
-	getAllQuestionnaireCategory,
+	getQuestionnaireCategories,
 	createQuestionnaireCategory,
-	getAllSurveyCategory,
+	getSurveyCategories,
 	createSurveyCategory,
-	getAllTaskCategory,
+	getTaskCategories,
 	createTaskCategory,
+
+	// TODO: GET BY ID may not be needed
+	getQuestionnaireCategoryById,
+	getSurveyCategoryById,
+	getTaskCategoryById,
 };

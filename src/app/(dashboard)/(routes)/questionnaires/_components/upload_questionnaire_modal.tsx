@@ -39,7 +39,7 @@ const UploadQuestionnaireModal = () => {
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Upload Questionnaire"],
 		mutationFn: async (data: File) =>
-			questionnaireService.uploadQuestionnaire(data, token || ""),
+			questionnaireService.upload(data, token || ""),
 		onSuccess(data) {
 			toast({
 				title: "Success",
@@ -48,7 +48,7 @@ const UploadQuestionnaireModal = () => {
 			});
 			reset();
 			setOpen(false);
-			qc.refetchQueries({ queryKey: ["questionnaire"], type: "active" });
+			qc.refetchQueries({ queryKey: ["questionnaires"], type: "all" });
 			router.push(urls.dashboard.questionnaires.index);
 		},
 		onError(error) {

@@ -98,4 +98,14 @@ export const response_types = [
 		name: "Time",
 		icon: IoMdTime,
 	},
+	{
+		value: ResponseType.BOOLEAN,
+		name: "Boolean",
+		icon: IoCheckboxOutline,
+	},
+	{
+		value: ResponseType.MULTISELECT,
+		name: "Multiple selections",
+		icon: IoCheckboxOutline,
+	},
 ];

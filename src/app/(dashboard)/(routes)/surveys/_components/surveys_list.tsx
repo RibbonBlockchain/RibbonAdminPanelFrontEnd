@@ -35,6 +35,7 @@ const SurveysList: React.FC<Props> = (props) => {
 	const { data } = useQuery({
 		queryKey: ["surveys", props.searchParams],
 		queryFn: () => surveyService.getAll(props.searchParams, token || ""),
+		enabled: !!token,
 	});
 
 	return (
@@ -55,7 +56,7 @@ const SurveysList: React.FC<Props> = (props) => {
 										</span>
 									</div>
 									<div className="col-span-5 flex gap-2 self-start">
-										<span
+										{/* <span
 											className={cn(
 												"flex h-6 max-w-fit items-center rounded-md px-1 text-xs lowercase",
 												{
@@ -65,7 +66,7 @@ const SurveysList: React.FC<Props> = (props) => {
 											)}
 										>
 											{survey.type}
-										</span>
+										</span> */}
 										<span className="flex h-6 items-center gap-1 rounded-md bg-[#FEF5E7] px-2 text-xs text-[#DF900A]">
 											<FlameSvg />
 											<span className="mt-1">{survey.reward} responses</span>
@@ -88,7 +89,7 @@ const SurveysList: React.FC<Props> = (props) => {
 											<GoPlus className="mr-2 text-2xl" /> Add SES score
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										{survey.type === "APP" && (
+										{/* {survey.type === "APP" && (
 											<DropdownMenuItem className="text-green-500">
 												<LuUndo2 className="mr-2 text-2xl" /> Restore
 											</DropdownMenuItem>
@@ -98,7 +99,7 @@ const SurveysList: React.FC<Props> = (props) => {
 												<TbTrash className="mr-2 text-2xl" />
 												Close
 											</DropdownMenuItem>
-										)}
+										)} */}
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</li>

@@ -39,6 +39,7 @@ const TasksList: React.FC<Props> = (props) => {
 	const { data, error } = useQuery({
 		queryKey: ["tasks", props.searchParams],
 		queryFn: () => taskService.getAll(props.searchParams, token || ""),
+		enabled: !!token,
 	});
 
 	console.log({ stack: error?.stack });

@@ -1,4 +1,4 @@
-import { Admin, Pagination } from ".";
+import { Admin, Category, Pagination, Questionnaire, Survey, Task } from ".";
 
 type DefaultResponse<T> = {
 	status: number;
@@ -15,105 +15,56 @@ export type LoginResponse = DefaultResponse<{
 // NOTE: User
 export type UserProfileResponse = DefaultResponse<Admin>;
 
-// NOTE: Questionnaire Category
-export type GetQuestionnaireCategoryResponse = DefaultResponse<{
-	data: {
-		id: number;
-		name: string;
-		slug: string;
-		description: string | null;
-		createdAt: string;
-		updatedAt: string;
-	}[];
+// NOTE:  Category
+export type GetCategoriesResponse = DefaultResponse<{
+	data: Category[];
 	pagination: Pagination;
 }>;
-
-// NOTE: Survey Category
-export type GetSurveyCategoryResponse = DefaultResponse<{
-	data: {
-		id: number;
-		name: string;
-		slug: string;
-		description: string | null;
-		createdAt: string;
-		updatedAt: string;
-	}[];
-	pagination: Pagination;
-}>;
-
-// NOTE: Task Category
-export type GetTaskCategoryResponse = DefaultResponse<{
-	data: {
-		id: number;
-		name: string;
-		slug: string;
-		description: string | null;
-		createdAt: string;
-		updatedAt: string;
-	}[];
-	pagination: Pagination;
-}>;
-
+export type GetCategoryByIdResponse = DefaultResponse<Category>;
 export type CreateCategoryResponse = DefaultResponse<{}>;
 
 // NOTE: Questionnaire
+type QuestionnaireWithTotal = Omit<Questionnaire, "questions"> & {
+	totalResponses: number;
+	totalQuestions: number;
+};
 export type GetQuestionnaireResponse = DefaultResponse<{
-	data: {
-		id: number;
-		image: null;
-		name: string;
-		slug: string;
-		description: string;
-		type: "QUESTIONNAIRE" | "APP";
-		reward: number;
-		point: number;
-		duration: number;
-		createdAt: string;
-	}[];
+	data: QuestionnaireWithTotal[];
 	pagination: Pagination;
 }>;
+
+export type GetQuestionnaireByIdResponse = DefaultResponse<Questionnaire>;
 
 export type CreateQuestionnaireResponse = DefaultResponse<{}>;
 
-// NOTE: Notification
-export type SendNotificationResponse = DefaultResponse<{}>;
-
 // NOTE: Survey
 export type GetSurveyResponse = DefaultResponse<{
-	data: {
-		id: number;
-		image: null;
-		name: string;
-		slug: string;
-		description: string;
-		type: "QUESTIONNAIRE" | "APP";
-		reward: number;
-		point: number;
-		duration: number;
-		createdAt: string;
-	}[];
+	data: Omit<Survey, "questions">[];
 	pagination: Pagination;
 }>;
+
+export type GetSurveyByIdResponse = DefaultResponse<Survey>;
 
 export type CreateSurveyResponse = DefaultResponse<{}>;
 
 // NOTE: Task
 export type GetTasksResponse = DefaultResponse<{
-	data: {
-		id: number;
-		image: null;
-		name: string;
-		slug: string;
-		description: string;
-		// type: "QUESTIONNAIRE" | "APP";
-		reward: number;
-		// point: number;
-		categoryId: number;
-		duration: number;
-		createdAt: string;
-		updatedAt: string;
-	}[];
+	data: Omit<Task, "questions">[];
 	pagination: Pagination;
 }>;
 
+export type GetTaskByIdResponse = DefaultResponse<Task>;
+
 export type CreateTaskResponse = DefaultResponse<{}>;
+
+// NOTE: Notification
+export type SendNotificationResponse = DefaultResponse<{}>;
+
+// NOTE: Other
+
+export type GetSummaryResponse = DefaultResponse<{
+	count: {
+		active: number;
+		closed: number;
+	};
+}>;

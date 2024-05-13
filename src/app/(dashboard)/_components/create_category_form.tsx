@@ -27,7 +27,7 @@ const CreateCategoryForm: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		reset();
-	}, [props.isSuccess]);
+	}, [props.isSuccess, reset]);
 
 	return (
 		<form

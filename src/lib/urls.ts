@@ -15,9 +15,21 @@ const urls = {
 		questionnaires: {
 			index: "/questionnaires",
 			create: "/questionnaires/create",
+			edit: {
+				index: (id: string) => `/questionnaires/edit/${id}`,
+				ses: (id: string) => `/questionnaires/edit/ses/${id}`,
+			},
 		},
-		surveys: { index: "/surveys", create: "/surveys/create" },
-		tasks: { index: "/tasks", create: "/tasks/create" },
+		surveys: {
+			index: "/surveys",
+			create: "/surveys/create",
+			edit: (id: string) => `/surveys/edit/${id}`,
+		},
+		tasks: {
+			index: "/tasks",
+			create: "/tasks/create",
+			edit: (id: string) => `/tasks/edit/${id}`,
+		},
 		send_notification: "/send-notification",
 	},
 };

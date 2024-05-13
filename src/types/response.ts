@@ -24,17 +24,18 @@ export type GetCategoryByIdResponse = DefaultResponse<Category>;
 export type CreateCategoryResponse = DefaultResponse<{}>;
 
 // NOTE: Questionnaire
+type QuestionnaireWithTotal = Omit<Questionnaire, "questions"> & {
+	totalResponses: number;
+	totalQuestions: number;
+};
 export type GetQuestionnaireResponse = DefaultResponse<{
-	data: Omit<Questionnaire, "questions">[];
+	data: QuestionnaireWithTotal[];
 	pagination: Pagination;
 }>;
 
 export type GetQuestionnaireByIdResponse = DefaultResponse<Questionnaire>;
 
 export type CreateQuestionnaireResponse = DefaultResponse<{}>;
-
-// NOTE: Notification
-export type SendNotificationResponse = DefaultResponse<{}>;
 
 // NOTE: Survey
 export type GetSurveyResponse = DefaultResponse<{
@@ -55,3 +56,15 @@ export type GetTasksResponse = DefaultResponse<{
 export type GetTaskByIdResponse = DefaultResponse<Task>;
 
 export type CreateTaskResponse = DefaultResponse<{}>;
+
+// NOTE: Notification
+export type SendNotificationResponse = DefaultResponse<{}>;
+
+// NOTE: Other
+
+export type GetSummaryResponse = DefaultResponse<{
+	count: {
+		active: number;
+		closed: number;
+	};
+}>;

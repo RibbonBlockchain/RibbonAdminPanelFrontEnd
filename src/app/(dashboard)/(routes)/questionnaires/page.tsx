@@ -5,10 +5,11 @@ import UploadQuestionnaireModal from "./_components/upload_questionnaire_modal";
 import QuestionnairesList from "./_components/questionnaires_list";
 import Header from "@/components/header";
 import Search from "@/components/search";
-import StatusToggler from "@/components/status_toggler";
+
 import { ButtonLink } from "@/components/ui/button_link";
 
 import urls from "@/lib/urls";
+import QuestionnaireStatusToggle from "./_components/questionnaire_status_toggle";
 
 export const metadata: Metadata = {
 	title: "Questionnaires",
@@ -42,10 +43,7 @@ export default function Page({
 					Recently added questionnaires
 				</h2>
 
-				<div className="flex w-full items-center justify-end gap-4">
-					<StatusToggler count={0} title={"Active"} action_status={"ACTIVE"} />
-					<StatusToggler count={0} title={"Closed"} action_status={"CLOSED"} />
-				</div>
+				<QuestionnaireStatusToggle />
 
 				<Search />
 			</div>

@@ -3,15 +3,26 @@ import {
 	GetQuestionnaireResponse,
 	CreateQuestionnaireResponse,
 	GetQuestionnaireByIdResponse,
+	GetSummaryResponse,
 } from "@/types/response";
-import { CreateQuestionnaireRequest } from "@/types/request";
+import {
+	CreateQuestionnaireRequest,
+	EditQuestionnaireRequest,
+	UpdateSesScoreRequest,
+	UpdateStatusRequest,
+} from "@/types/request";
 
 async function getAll(
-	input: { q?: string; page?: string; pageSize?: string },
+	input: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+		status?: "ACTIVE" | "CLOSED";
+	},
 	token: string
 ) {
 	return await Fetch<GetQuestionnaireResponse>(
-		`/admin/questionnaire?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		`/admin/questionnaire?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}&status=${input.status || "ACTIVE"}`,
 		token
 	);
 }
@@ -23,10 +34,11 @@ async function getById(id: string, token: string) {
 	);
 }
 
-async function createQuestionnaire(
-	input: CreateQuestionnaireRequest,
-	token: string
-) {
+async function getSummary(token: string) {
+	return await Fetch<GetSummaryResponse>("/admin/questionnaire/summary", token);
+}
+
+async function create(input: CreateQuestionnaireRequest, token: string) {
 	return await Fetch<CreateQuestionnaireResponse>(
 		"/admin/questionnaire",
 		token,
@@ -37,10 +49,7 @@ async function createQuestionnaire(
 	);
 }
 
-async function editQuestionnaire(
-	input: CreateQuestionnaireRequest & { id: string },
-	token: string
-) {
+async function edit(input: EditQuestionnaireRequest, token: string) {
 	return await Fetch<CreateQuestionnaireResponse>(
 		"/admin/questionnaire",
 		token,
@@ -51,7 +60,28 @@ async function editQuestionnaire(
 	);
 }
 
-async function uploadQuestionnaire(file: File, token: string) {
+async function updateSesScore(input: UpdateSesScoreRequest, token: string) {
+	return await Fetch<CreateQuestionnaireResponse>(
+		"/admin/questionnaire/ses",
+		token,
+		{
+			method: methods.PATCH,
+			body: JSON.stringify(input),
+		}
+	);
+}
+async function updateStatus(input: UpdateStatusRequest, token: string) {
+	return await Fetch<CreateQuestionnaireResponse>(
+		"/admin/questionnaire/status",
+		token,
+		{
+			method: methods.PATCH,
+			body: JSON.stringify(input),
+		}
+	);
+}
+
+async function upload(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
@@ -69,7 +99,10 @@ async function uploadQuestionnaire(file: File, token: string) {
 export const questionnaireService = {
 	getAll,
 	getById,
-	createQuestionnaire,
-	editQuestionnaire,
-	uploadQuestionnaire,
+	getSummary,
+	create,
+	edit,
+	updateSesScore,
+	updateStatus,
+	upload,
 };

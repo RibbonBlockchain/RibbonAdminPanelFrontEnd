@@ -3,11 +3,16 @@ import { CreateTaskRequest } from "@/types/request";
 import { CreateTaskResponse, GetTasksResponse } from "@/types/response";
 
 async function getAll(
-	input: { q?: string; page?: string; pageSize?: string },
+	input: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+		status?: "ACTIVE" | "CLOSED";
+	},
 	token: string
 ) {
 	return await Fetch<GetTasksResponse>(
-		`/admin/task?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		`/admin/task?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}&status=${input.status || "ACTIVE"}`,
 		token
 	);
 }

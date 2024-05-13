@@ -16,10 +16,9 @@ import { response_types } from "@/lib/constants";
 import { ResponseType } from "@/types/enums";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { categoriesService } from "@/services/categories";
-import { CreateQuestionnaireRequest } from "@/types/request";
+import { UpdateSesScoreRequest } from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
-import { getErrorMessage } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
@@ -39,24 +38,10 @@ const EditSesQuestionnaireForm = () => {
 		enabled: !!params?.id && !!token,
 	});
 
-	// const { data: selectedCategory, isPending: isPendingSelectedCategory } =
-	// 	useQuery({
-	// 		queryKey: ["questionnaire category", { id: data?.data?.categoryId }],
-	// 		queryFn: () =>
-	// 			categoriesService.getQuestionnaireCategoryById(
-	// 				data?.data?.categoryId?.toString() || "",
-	// 				token || ""
-	// 			),
-	// 		enabled: !!params?.id && !!token && !!data?.data?.categoryId,
-	// 	});
-
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["edit questionnaire"],
-		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.editQuestionnaire(
-				{ id: params?.id as string, ...data },
-				token || ""
-			),
+		mutationFn: (data: UpdateSesScoreRequest) =>
+			questionnaireService.updateSesScore(data, token || ""),
 
 		onSuccess(data) {
 			toast({
@@ -65,7 +50,10 @@ const EditSesQuestionnaireForm = () => {
 				duration: 5000,
 			});
 			reset();
-			qc.refetchQueries({ queryKey: ["questionnaire"], type: "all" });
+			qc.refetchQueries({
+				queryKey: ["questionnaire", { id: params?.id as string }],
+				type: "all",
+			});
 			router.push(urls.dashboard.questionnaires.index);
 		},
 		onError(error) {
@@ -79,9 +67,9 @@ const EditSesQuestionnaireForm = () => {
 	});
 
 	const {
-		register,
+		// register,
 		handleSubmit,
-		formState: { errors },
+		// formState: { errors },
 		setValue,
 		reset,
 		watch,
@@ -106,7 +94,8 @@ const EditSesQuestionnaireForm = () => {
 			}
 		}
 
-		console.log(formattedData);
+		// TODO: change to mutate
+		mutate(formattedData);
 	});
 
 	const questions = watch("questions");
@@ -138,9 +127,10 @@ const EditSesQuestionnaireForm = () => {
 			className="mx-auto my-16 w-full max-w-4xl space-y-10 px-6"
 		>
 			<Card className="pb-8 transition-all duration-500">
-				{JSON.stringify(questions)}
 				<CardHeader>
-					<CardTitle>Edit {data?.data?.name || "Questionnaire"} </CardTitle>
+					<CardTitle>
+						Update SES Scores of {data?.data?.name || "Questionnaire"}{" "}
+					</CardTitle>
 					<CardDescription>
 						Upload maximum of {+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT}{" "}
 						questions
@@ -161,7 +151,7 @@ const EditSesQuestionnaireForm = () => {
 						<span className="text-sm font-medium leading-none">Category</span>
 
 						<span className="flex h-10 w-full rounded-md border border-primary/20 bg-white px-3 py-2 text-sm ">
-							{data?.data?.reward}
+							{data?.data?.category?.name || "N/A"}
 						</span>
 					</div>
 
@@ -216,10 +206,16 @@ const EditSesQuestionnaireForm = () => {
 
 															<div className="flex gap-2">
 																<Button
+																	type="button"
 																	variant={
 																		option.point === 0 ? "default" : "outline"
 																	}
-																	className="size-8"
+																	className={cn(
+																		"size-8",
+																		option.point === 0
+																			? "hover:bg-primary hover:text-white"
+																			: "border-gray-400 text-black "
+																	)}
 																	onClick={() => {
 																		setValue(
 																			`questions.${question_index}.options.${option_index}.point`,
@@ -230,10 +226,16 @@ const EditSesQuestionnaireForm = () => {
 																	0
 																</Button>
 																<Button
+																	type="button"
 																	variant={
 																		option.point === 1 ? "default" : "outline"
 																	}
-																	className="size-8 border-gray-400 text-black"
+																	className={cn(
+																		"size-8",
+																		option.point === 1
+																			? "hover:bg-primary hover:text-white"
+																			: "border-gray-400 text-black "
+																	)}
 																	onClick={() => {
 																		setValue(
 																			`questions.${question_index}.options.${option_index}.point`,
@@ -244,10 +246,16 @@ const EditSesQuestionnaireForm = () => {
 																	1
 																</Button>
 																<Button
+																	type="button"
 																	variant={
 																		option.point === 2 ? "default" : "outline"
 																	}
-																	className="size-8 border-gray-400 text-black"
+																	className={cn(
+																		"size-8",
+																		option.point === 2
+																			? "hover:bg-primary hover:text-white"
+																			: "border-gray-400 text-black "
+																	)}
 																	onClick={() => {
 																		setValue(
 																			`questions.${question_index}.options.${option_index}.point`,

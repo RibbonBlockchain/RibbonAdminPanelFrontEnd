@@ -80,6 +80,7 @@ export type Questionnaire = {
 	createdAt: string;
 	updatedAt: string;
 	categoryId?: number; // TODO: should be provided by backend but currently not
+	category?: Category; // TODO: should be provided by backend but currently not
 	questions?: QuestionnaireQuestion[];
 };
 

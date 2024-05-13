@@ -73,7 +73,7 @@ const CreateQuestionnaireForm = () => {
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create questionnaire"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.createQuestionnaire(data, token || ""),
+			questionnaireService.create(data, token || ""),
 
 		onSuccess(data) {
 			toast({

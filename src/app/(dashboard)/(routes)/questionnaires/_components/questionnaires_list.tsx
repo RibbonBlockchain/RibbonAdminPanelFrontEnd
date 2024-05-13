@@ -3,7 +3,7 @@
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import React from "react";
 import { SlOptions } from "react-icons/sl";
 import { GoPlus } from "react-icons/go";
@@ -20,9 +20,13 @@ import { LuUndo2 } from "react-icons/lu";
 import { questionnaireService } from "@/services/questionnaire";
 import PaginateSection from "@/components/sections/paginate_section";
 import { useToken } from "@/components/providers/token";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import urls from "@/lib/urls";
+import StatusActiveModal from "@/app/(dashboard)/_components/status_active_modal";
+import StatusCloseModal from "@/app/(dashboard)/_components/status_close_modal";
+import { toast } from "@/components/ui/use-toast";
+import { UpdateStatusRequest } from "@/types/request";
 
 type Props = {
 	searchParams: {
@@ -33,6 +37,14 @@ type Props = {
 };
 
 const QuestionnairesList: React.FC<Props> = (props) => {
+	const qc = useQueryClient();
+	const [id, setId] = React.useState<number | null>(null);
+	const [statusActiveModalOpen, setStatusActiveModalOpen] =
+		React.useState(false);
+
+	const [statusClosedModalOpen, setStatusClosedModalOpen] =
+		React.useState(false);
+
 	const { token } = useToken();
 
 	const { data } = useQuery({
@@ -40,6 +52,57 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 		queryFn: () => questionnaireService.getAll(props.searchParams, token || ""),
 		enabled: !!token,
 	});
+
+	const { mutate, isPending } = useMutation({
+		mutationKey: ["Upload Questionnaire"],
+		mutationFn: async (data: UpdateStatusRequest) =>
+			questionnaireService.updateStatus(data, token || ""),
+		onSuccess(data) {
+			toast({
+				title: "Success",
+				description: data.message,
+				duration: 5000,
+			});
+			qc.refetchQueries({
+				queryKey: ["questionnaires"],
+				type: "all",
+			});
+			qc.refetchQueries({
+				queryKey: ["questionnaire summary"],
+				type: "all",
+			});
+			handleActiveModalClose();
+			handleClosedModalClose();
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
+	});
+
+	function handleActiveModalOpen(id: number) {
+		setId(id);
+		setStatusActiveModalOpen(true);
+	}
+
+	function handleClosedModalOpen(id: number) {
+		setId(id);
+		setStatusClosedModalOpen(true);
+	}
+
+	function handleActiveModalClose() {
+		setId(null);
+		setStatusActiveModalOpen(false);
+	}
+
+	function handleClosedModalClose() {
+		setId(null);
+		setStatusClosedModalOpen(false);
+	}
 
 	return (
 		<div className="my-12 w-full px-4">
@@ -55,7 +118,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 									<div className="col-span-2 flex flex-col gap-1">
 										<span className="font-semibold">{questionnaire.name}</span>
 										<span className="text-xs text-black-neutral">
-											{questionnaire.id} questions
+											{questionnaire.totalQuestions} questions
 										</span>
 									</div>
 									<div className="col-span-5 flex gap-2 self-start">
@@ -74,7 +137,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 										<span className="flex h-6 items-center gap-1 rounded-md bg-[#FEF5E7] px-2 text-xs text-[#DF900A]">
 											<FlameSvg />
 											<span className="mt-1">
-												{questionnaire.reward} responses
+												{questionnaire.totalResponses} responses
 											</span>
 										</span>
 									</div>
@@ -107,15 +170,31 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										{questionnaire.type === "APP" && (
-											<DropdownMenuItem className="text-green-500">
-												<LuUndo2 className="mr-2 text-2xl" /> Restore
+										{questionnaire.status === "CLOSED" && (
+											<DropdownMenuItem className="text-green-500" asChild>
+												<button
+													type="button"
+													className="w-full"
+													onClick={() =>
+														handleActiveModalOpen(questionnaire.id)
+													}
+												>
+													<LuUndo2 className="mr-2 text-2xl" /> Restore
+												</button>
 											</DropdownMenuItem>
 										)}
-										{questionnaire.type === "QUESTIONNAIRE" && (
-											<DropdownMenuItem className="text-red-500">
-												<TbTrash className="mr-2 text-2xl" />
-												Close
+										{questionnaire.status === "ACTIVE" && (
+											<DropdownMenuItem className="text-red-500" asChild>
+												<button
+													type="button"
+													className="w-full"
+													onClick={() =>
+														handleClosedModalOpen(questionnaire.id)
+													}
+												>
+													<TbTrash className="mr-2 text-2xl" />
+													Close
+												</button>
 											</DropdownMenuItem>
 										)}
 									</DropdownMenuContent>
@@ -127,6 +206,22 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 					<PaginateSection
 						current_page={data.data?.pagination.currentPage || 1}
 						total_pages={data.data?.pagination.totalPages || 1}
+					/>
+
+					<StatusActiveModal
+						isOpen={statusActiveModalOpen}
+						closeModal={handleActiveModalClose}
+						handleAction={() => mutate({ id: id as number, status: "ACTIVE" })}
+						type={"questionnaire"}
+						isPending={isPending}
+					/>
+
+					<StatusCloseModal
+						isOpen={statusClosedModalOpen}
+						closeModal={handleClosedModalClose}
+						handleAction={() => mutate({ id: id as number, status: "CLOSED" })}
+						type={"questionnaire"}
+						isPending={isPending}
 					/>
 				</>
 			) : (

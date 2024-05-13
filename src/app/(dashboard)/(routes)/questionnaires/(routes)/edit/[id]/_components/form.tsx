@@ -39,7 +39,10 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { categoriesService } from "@/services/categories";
-import { CreateQuestionnaireRequest } from "@/types/request";
+import {
+	CreateQuestionnaireRequest,
+	EditQuestionnaireRequest,
+} from "@/types/request";
 import { toast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
@@ -83,11 +86,8 @@ const EditQuestionnaireForm = () => {
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["edit questionnaire"],
-		mutationFn: (data: CreateQuestionnaireRequest) =>
-			questionnaireService.editQuestionnaire(
-				{ id: params?.id as string, ...data },
-				token || ""
-			),
+		mutationFn: (data: EditQuestionnaireRequest) =>
+			questionnaireService.edit(data, token || ""),
 
 		onSuccess(data) {
 			toast({
@@ -164,8 +164,7 @@ const EditQuestionnaireForm = () => {
 			options: question.options,
 		}));
 
-		// TODO: change to mutate
-		console.log({
+		mutate({
 			id: parseInt(params?.id as string),
 			categoryId: data.category,
 			reward: data.reward,
@@ -231,7 +230,7 @@ const EditQuestionnaireForm = () => {
 				reset(
 					{
 						reward: data?.data?.reward,
-						category: data?.data?.categoryId,
+						category: data?.data?.category?.id,
 						questions: Array.isArray(data?.data?.questions)
 							? data?.data?.questions?.map((q) => ({
 									id: q.id,
@@ -322,7 +321,7 @@ const EditQuestionnaireForm = () => {
 					{questions.map((question, question_index) => (
 						<fieldset className="space-y-6" key={`question-${question_index}`}>
 							<div>
-								<Label></Label>
+								<Label>Question {question_index + 1}</Label>
 								<Input
 									type="text"
 									placeholder="Type your question"

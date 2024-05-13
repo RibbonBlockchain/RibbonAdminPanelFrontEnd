@@ -3,11 +3,16 @@ import { CreateSurveyRequest } from "@/types/request";
 import { CreateSurveyResponse, GetSurveyResponse } from "@/types/response";
 
 async function getAll(
-	input: { q?: string; page?: string; pageSize?: string },
+	input: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+		status?: "ACTIVE" | "CLOSED";
+	},
 	token: string
 ) {
 	return await Fetch<GetSurveyResponse>(
-		`/admin/survey?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		`/admin/survey?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}&status=${input.status || "ACTIVE"}`,
 		token
 	);
 }

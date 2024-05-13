@@ -33,3 +33,11 @@ export async function Fetch<T>(
 
 	return data;
 }
+
+export const methods = {
+	GET: "GET",
+	POST: "POST",
+	PUT: "PUT",
+	PATCH: "PATCH",
+	DELETE: "DELETE",
+};

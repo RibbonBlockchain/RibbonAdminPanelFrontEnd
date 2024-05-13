@@ -83,11 +83,95 @@ export const CreateQuestionnaireSchema = z.object({
 					});
 				}
 			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					if (values.options.length < 1) {
+						context.addIssue({
+							code: z.ZodIssueCode.custom,
+							message: "Options cannot be empty",
+							path: ["options"],
+						});
+					}
+				}
+			})
 	),
 });
 
 export type CreateQuestionnaireSchemaType = z.infer<
 	typeof CreateQuestionnaireSchema
+>;
+export const EditQuestionnaireSchema = z.object({
+	reward: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Reward must be greater than 0"),
+	category: z.number({
+		coerce: true,
+		required_error: "Category is required",
+		invalid_type_error: "Category is required",
+	}),
+	questions: z.array(
+		z
+			.object({
+				id: z.number({ coerce: true }).nullable(),
+				question: z.string().min(1, "Question cannot be empty").trim(),
+				response_type: z.nativeEnum(ResponseType),
+				options: z.array(
+					z.object({
+						id: z.number({ coerce: true }).nullable(), // TODO: this is causing edit issues because it's not a json but a relation
+						point: z.number({ coerce: true }),
+						value: z.string().trim(),
+					})
+				),
+			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					values.options.forEach((v, i) => {
+						if (!v)
+							context.addIssue({
+								code: z.ZodIssueCode.custom,
+								message: `Option ${i + 1} cannot be empty`,
+								path: [`options.${i}`],
+							});
+					});
+				}
+			})
+			.superRefine((values, context) => {
+				if (
+					[
+						ResponseType.RADIO,
+						ResponseType.CHECK_BOX,
+						ResponseType.ROUND_BOX,
+						ResponseType.BUBBLES,
+					].includes(values.response_type)
+				) {
+					if (values.options.length < 1) {
+						context.addIssue({
+							code: z.ZodIssueCode.custom,
+							message: "Options cannot be empty",
+							path: ["options"],
+						});
+					}
+				}
+			})
+	),
+});
+
+export type EditQuestionnaireSchemaType = z.infer<
+	typeof EditQuestionnaireSchema
 >;
 
 export const UploadQuestionnaireSchema = z.object({
@@ -210,6 +294,25 @@ export const CreateCategorySchema = z.object({
 });
 
 export type CreateCategorySchemaType = z.infer<typeof CreateCategorySchema>;
+
+export const EditSesScoreSchema = z.object({
+	questions: z.array(
+		z.object({
+			id: z.number({ coerce: true }).nullable(),
+			question: z.string().min(1, "Question cannot be empty").trim(),
+			response_type: z.nativeEnum(ResponseType),
+			options: z.array(
+				z.object({
+					id: z.number({ coerce: true }).nullable(), // TODO: this is causing edit issues because it's not a json but a relation
+					point: z.number({ coerce: true }),
+					value: z.string().trim(),
+				})
+			),
+		})
+	),
+});
+
+export type EditSesScoreSchemaType = z.infer<typeof EditSesScoreSchema>;
 
 export const SendNotificationSchema = z.object({
 	title: z

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function CreateQuestionnaires() {
 	return (
 		<>
-			<Header>Questionnaires</Header>
+			<Header>Questionnaire</Header>
 			<CreateQuestionnaireForm />;
 		</>
 	);

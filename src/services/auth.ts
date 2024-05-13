@@ -1,10 +1,10 @@
-import { Fetch } from ".";
+import { Fetch, methods } from ".";
 import { LoginSchemaType } from "@/schemas";
 import { LoginResponse, UserProfileResponse } from "@/types/response";
 
 async function login(data: LoginSchemaType) {
 	return await Fetch<LoginResponse>("/admin/login", "", {
-		method: "POST",
+		method: methods.POST,
 		body: JSON.stringify(data),
 	});
 }

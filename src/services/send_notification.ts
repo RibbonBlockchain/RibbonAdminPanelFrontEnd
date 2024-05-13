@@ -1,4 +1,4 @@
-import { Fetch } from ".";
+import { Fetch, methods } from ".";
 import { SendNotificationSchemaType } from "@/schemas";
 import { SendNotificationResponse } from "@/types/response";
 
@@ -7,7 +7,7 @@ async function sendMessage(data: SendNotificationSchemaType, token: string) {
 		"/notification/send-general",
 		token,
 		{
-			method: "POST",
+			method: methods.POST,
 			body: JSON.stringify(data),
 		}
 	);

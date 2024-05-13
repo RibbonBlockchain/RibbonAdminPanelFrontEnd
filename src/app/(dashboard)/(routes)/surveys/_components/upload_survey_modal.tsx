@@ -38,8 +38,7 @@ const UploadQuestionnaireModal = () => {
 
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Upload Questionnaire"],
-		mutationFn: async (data: File) =>
-			surveyService.uploadSurvey(data, token || ""),
+		mutationFn: async (data: File) => surveyService.upload(data, token || ""),
 		onSuccess(data) {
 			toast({
 				title: "Success",

@@ -1,3 +1,4 @@
+// NOTE: Questionnaire
 export type CreateQuestionnaireRequest = {
 	reward: number;
 	categoryId: number;
@@ -11,6 +12,23 @@ export type CreateQuestionnaireRequest = {
 	}[];
 };
 
+export type EditQuestionnaireRequest = {
+	id: number;
+	reward: number;
+	categoryId: number;
+	questions: {
+		id: number | null;
+		type: string;
+		question: string;
+		options: {
+			id: number | null;
+			point: number;
+			value: string;
+		}[];
+	}[];
+};
+
+// NOTE: Survey
 export type CreateSurveyRequest = {
 	reward: number;
 	categoryId: number;
@@ -24,6 +42,23 @@ export type CreateSurveyRequest = {
 	}[];
 };
 
+export type EditSurveyRequest = {
+	id: number;
+	reward: number;
+	categoryId: number;
+	questions: {
+		id: number | null;
+		type: string;
+		question: string;
+		options: {
+			id: number | null;
+			point: number;
+			value: string;
+		}[];
+	}[];
+};
+
+// NOTE: Task
 export type CreateTaskRequest = {
 	reward: number;
 	categoryId: number;
@@ -35,4 +70,28 @@ export type CreateTaskRequest = {
 			value: string;
 		}[];
 	}[];
+};
+
+export type EditTaskRequest = {
+	id: number;
+	reward: number;
+	categoryId: number;
+	questions: {
+		id: number | null;
+		type: string;
+		question: string;
+		options: {
+			id: number | null;
+			point: number;
+			value: string;
+		}[];
+	}[];
+};
+
+// NOTE: Others
+export type UpdateSesScoreRequest = { optionId: number; point: number }[];
+
+export type UpdateStatusRequest = {
+	id: number;
+	status: "ACTIVE" | "CLOSED";
 };

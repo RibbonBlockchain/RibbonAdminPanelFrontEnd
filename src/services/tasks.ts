@@ -1,6 +1,16 @@
 import { Fetch, methods } from ".";
-import { CreateTaskRequest } from "@/types/request";
-import { CreateTaskResponse, GetTasksResponse } from "@/types/response";
+import {
+	CreateTaskRequest,
+	EditTaskRequest,
+	UpdateSesScoreRequest,
+	UpdateStatusRequest,
+} from "@/types/request";
+import {
+	GetTasksResponse,
+	GetTaskByIdResponse,
+	GetSummaryResponse,
+	CreateTaskResponse,
+} from "@/types/response";
 
 async function getAll(
 	input: {
@@ -17,14 +27,42 @@ async function getAll(
 	);
 }
 
-async function createTasks(input: CreateTaskRequest, token: string) {
+async function getById(id: string, token: string) {
+	return await Fetch<GetTaskByIdResponse>(`/admin/task/${id}`, token);
+}
+
+async function getSummary(token: string) {
+	return await Fetch<GetSummaryResponse>("/admin/task/summary", token);
+}
+
+async function create(input: CreateTaskRequest, token: string) {
 	return await Fetch<CreateTaskResponse>("/admin/task", token, {
 		method: methods.POST,
 		body: JSON.stringify(input),
 	});
 }
 
-async function uploadTask(file: File, token: string) {
+async function edit(input: EditTaskRequest, token: string) {
+	return await Fetch<CreateTaskResponse>("/admin/task", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+
+async function updateSesScore(input: UpdateSesScoreRequest, token: string) {
+	return await Fetch<CreateTaskResponse>("/task/update-ses", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+async function updateStatus(input: UpdateStatusRequest, token: string) {
+	return await Fetch<CreateTaskResponse>("/admin/task/status", token, {
+		method: methods.PATCH,
+		body: JSON.stringify(input),
+	});
+}
+
+async function upload(file: File, token: string) {
 	const formData = new FormData();
 	formData.append("file", file);
 
@@ -41,6 +79,11 @@ async function uploadTask(file: File, token: string) {
 
 export const taskService = {
 	getAll,
-	createTasks,
-	uploadTask,
+	getById,
+	getSummary,
+	create,
+	edit,
+	updateSesScore,
+	updateStatus,
+	upload,
 };

@@ -1,16 +1,16 @@
 import { Fetch, methods } from ".";
 import {
-	GetQuestionnaireResponse,
-	CreateQuestionnaireResponse,
-	GetQuestionnaireByIdResponse,
-	GetSummaryResponse,
-} from "@/types/response";
-import {
 	CreateQuestionnaireRequest,
 	EditQuestionnaireRequest,
 	UpdateSesScoreRequest,
 	UpdateStatusRequest,
 } from "@/types/request";
+import {
+	GetQuestionnaireResponse,
+	GetQuestionnaireByIdResponse,
+	GetSummaryResponse,
+	CreateQuestionnaireResponse,
+} from "@/types/response";
 
 async function getAll(
 	input: {
@@ -62,7 +62,7 @@ async function edit(input: EditQuestionnaireRequest, token: string) {
 
 async function updateSesScore(input: UpdateSesScoreRequest, token: string) {
 	return await Fetch<CreateQuestionnaireResponse>(
-		"/admin/questionnaire/ses",
+		"/questionnaire/update-ses",
 		token,
 		{
 			method: methods.PATCH,

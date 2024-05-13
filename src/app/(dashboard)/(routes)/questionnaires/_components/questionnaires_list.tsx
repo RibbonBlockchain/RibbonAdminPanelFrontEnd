@@ -54,7 +54,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 	});
 
 	const { mutate, isPending } = useMutation({
-		mutationKey: ["Upload Questionnaire"],
+		mutationKey: ["Update Questionnaire Status"],
 		mutationFn: async (data: UpdateStatusRequest) =>
 			questionnaireService.updateStatus(data, token || ""),
 		onSuccess(data) {

@@ -100,13 +100,14 @@ export type Survey = {
 	slug: string;
 	description: string;
 	reward: number;
-	categoryId: number;
 	duration: number;
 	// type: "QUESTIONNAIRE" | "APP";
 	// point: number;
 	// status: "ACTIVE" | "CLOSED";
 	createdAt: string;
 	updatedAt: string;
+	categoryId?: number; // TODO: should be provided by backend but currently not
+	category?: Category; // TODO: should be provided by backend but currently not
 	questions?: SurveyQuestion[];
 };
 

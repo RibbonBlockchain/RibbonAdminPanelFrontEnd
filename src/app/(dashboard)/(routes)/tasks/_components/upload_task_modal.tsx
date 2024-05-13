@@ -38,7 +38,7 @@ const UploadTaskModal = () => {
 
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Upload Task"],
-		mutationFn: async (data: File) => taskService.uploadTask(data, token || ""),
+		mutationFn: async (data: File) => taskService.upload(data, token || ""),
 		onSuccess(data) {
 			toast({
 				title: "Success",

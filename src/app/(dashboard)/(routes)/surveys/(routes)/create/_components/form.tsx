@@ -67,7 +67,7 @@ const CreateSurveyForm = () => {
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create survey"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			surveyService.createSurvey(data, token || ""),
+			surveyService.create(data, token || ""),
 
 		onSuccess(data) {
 			toast({

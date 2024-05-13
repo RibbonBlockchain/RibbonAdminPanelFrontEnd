@@ -18,7 +18,6 @@ import { useForm } from "react-hook-form";
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -68,7 +67,7 @@ const CreateTaskForm = () => {
 	const { mutate, isPending: isPendingMutation } = useMutation({
 		mutationKey: ["create task"],
 		mutationFn: (data: CreateQuestionnaireRequest) =>
-			taskService.createTasks(data, token || ""),
+			taskService.create(data, token || ""),
 
 		onSuccess(data) {
 			toast({

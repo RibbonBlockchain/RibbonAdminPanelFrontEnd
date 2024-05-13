@@ -42,6 +42,22 @@ export type CreateSurveyRequest = {
 	}[];
 };
 
+export type EditSurveyRequest = {
+	id: number;
+	reward: number;
+	categoryId: number;
+	questions: {
+		id: number | null;
+		type: string;
+		question: string;
+		options: {
+			id: number | null;
+			point: number;
+			value: string;
+		}[];
+	}[];
+};
+
 // NOTE: Task
 export type CreateTaskRequest = {
 	reward: number;
@@ -50,6 +66,22 @@ export type CreateTaskRequest = {
 		type: string;
 		question: string;
 		options: {
+			point: number;
+			value: string;
+		}[];
+	}[];
+};
+
+export type EditTaskRequest = {
+	id: number;
+	reward: number;
+	categoryId: number;
+	questions: {
+		id: number | null;
+		type: string;
+		question: string;
+		options: {
+			id: number | null;
 			point: number;
 			value: string;
 		}[];

@@ -95,7 +95,7 @@ export const categoriesService = {
 	getTaskCategories,
 	createTaskCategory,
 
-	// NOTE: GET BY ID may not be needed
+	// TODO: GET BY ID may not be needed
 	getQuestionnaireCategoryById,
 	getSurveyCategoryById,
 	getTaskCategoryById,

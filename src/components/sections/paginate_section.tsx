@@ -3,10 +3,12 @@
 import React from "react";
 import Paginator from "@/components/paginator";
 import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export type Props = {
 	current_page: number;
 	total_pages: number;
+	containerClass?: string;
 };
 
 const PaginateSection: React.FC<Props> = (props) => {
@@ -29,7 +31,7 @@ const PaginateSection: React.FC<Props> = (props) => {
 	}
 
 	return (
-		<div className="bg-custom-white-default py-12">
+		<div className={cn("bg-custom-white-default py-12", props.containerClass)}>
 			<Paginator
 				current_page={props.current_page || 1}
 				total_pages={props.total_pages || 1}

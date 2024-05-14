@@ -51,6 +51,7 @@ import { ImSpinner3 } from "react-icons/im";
 import { questionnaireService } from "@/services/questionnaire";
 import { useToken } from "@/components/providers/token";
 import CreateCategoryForm from "@/app/(dashboard)/_components/create_category_form";
+import { ButtonLink } from "@/components/ui/button_link";
 
 const empty_question: EditQuestionnaireSchemaType["questions"] = [
 	{
@@ -372,6 +373,8 @@ const EditQuestionnaireForm = () => {
 									ResponseType.RADIO,
 									ResponseType.BUBBLES,
 									ResponseType.ROUND_BOX,
+									ResponseType.BOOLEAN,
+									ResponseType.MULTISELECT,
 								].includes(
 									questions[question_index].response_type as ResponseType
 								) && (
@@ -510,6 +513,13 @@ const EditQuestionnaireForm = () => {
 					"Save"
 				)}
 			</Button>
+			<ButtonLink
+				href={urls.dashboard.surveys.index}
+				className="float-right mr-4 w-full max-w-40"
+				variant={"outline"}
+			>
+				Cancel
+			</ButtonLink>
 		</form>
 	);
 };

@@ -27,6 +27,7 @@ import StatusActiveModal from "@/app/(dashboard)/_components/status_active_modal
 import StatusCloseModal from "@/app/(dashboard)/_components/status_close_modal";
 import { toast } from "@/components/ui/use-toast";
 import { UpdateStatusRequest } from "@/types/request";
+import ErrorScreen from "@/components/sections/error";
 
 type Props = {
 	searchParams: {
@@ -47,7 +48,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 
 	const { token } = useToken();
 
-	const { data } = useQuery({
+	const { data, error, refetch } = useQuery({
 		queryKey: ["questionnaires", props.searchParams],
 		queryFn: () => questionnaireService.getAll(props.searchParams, token || ""),
 		enabled: !!token,
@@ -104,6 +105,8 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 		setStatusClosedModalOpen(false);
 	}
 
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
+
 	return (
 		<div className="my-12 w-full px-4">
 			{data?.data && data?.data.data && data?.data.data.length > 0 ? (
@@ -118,7 +121,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 									<div className="col-span-2 flex flex-col gap-1">
 										<span className="font-semibold">{questionnaire.name}</span>
 										<span className="text-xs text-black-neutral">
-											{questionnaire.totalQuestions} questions
+											{questionnaire.totalQuestions || 0} questions
 										</span>
 									</div>
 									<div className="col-span-5 flex gap-2 self-start">
@@ -137,7 +140,7 @@ const QuestionnairesList: React.FC<Props> = (props) => {
 										<span className="flex h-6 items-center gap-1 rounded-md bg-[#FEF5E7] px-2 text-xs text-[#DF900A]">
 											<FlameSvg />
 											<span className="mt-1">
-												{questionnaire.totalResponses} responses
+												{questionnaire.totalResponses || 0} responses
 											</span>
 										</span>
 									</div>

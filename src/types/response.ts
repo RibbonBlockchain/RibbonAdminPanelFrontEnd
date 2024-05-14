@@ -1,4 +1,12 @@
-import { Admin, Category, Pagination, Questionnaire, Survey, Task } from ".";
+import {
+	Admin,
+	Category,
+	Pagination,
+	Questionnaire,
+	RewardPartner,
+	Survey,
+	Task,
+} from ".";
 
 type DefaultResponse<T> = {
 	status: number;
@@ -38,8 +46,13 @@ export type GetQuestionnaireByIdResponse = DefaultResponse<Questionnaire>;
 export type CreateQuestionnaireResponse = DefaultResponse<{}>;
 
 // NOTE: Survey
+
+type SurveyWithTotal = Omit<Survey, "questions"> & {
+	totalResponses: number;
+	totalQuestions: number;
+};
 export type GetSurveyResponse = DefaultResponse<{
-	data: Omit<Survey, "questions">[];
+	data: SurveyWithTotal[];
 	pagination: Pagination;
 }>;
 
@@ -48,8 +61,13 @@ export type GetSurveyByIdResponse = DefaultResponse<Survey>;
 export type CreateSurveyResponse = DefaultResponse<{}>;
 
 // NOTE: Task
+
+type TaskWithTotal = Omit<Task, "questions"> & {
+	totalResponses: number;
+	totalQuestions: number;
+};
 export type GetTasksResponse = DefaultResponse<{
-	data: Omit<Task, "questions">[];
+	data: TaskWithTotal[];
 	pagination: Pagination;
 }>;
 
@@ -60,6 +78,13 @@ export type CreateTaskResponse = DefaultResponse<{}>;
 // NOTE: Notification
 export type SendNotificationResponse = DefaultResponse<{}>;
 
+// NOTE: Reward partners
+export type GetRewardPartnersResponse = DefaultResponse<{
+	data: RewardPartner[];
+	totalBalance: number;
+	pagination: Pagination;
+}>;
+
 // NOTE: Other
 
 export type GetSummaryResponse = DefaultResponse<{
@@ -67,4 +92,16 @@ export type GetSummaryResponse = DefaultResponse<{
 		active: number;
 		closed: number;
 	};
+}>;
+
+export type GetDashboardSummaryResponse = DefaultResponse<{
+	task: number;
+	survey: number;
+	activeUsers: number;
+	questionnaire: number;
+	inactiveUsers: number;
+	completionRate: number;
+	totalResponses: number;
+	totalActivities: number;
+	rewardPoints: number;
 }>;

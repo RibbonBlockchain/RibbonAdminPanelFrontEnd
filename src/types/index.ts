@@ -103,7 +103,7 @@ export type Survey = {
 	duration: number;
 	// type: "QUESTIONNAIRE" | "APP";
 	// point: number;
-	// status: "ACTIVE" | "CLOSED";
+	status: "ACTIVE" | "CLOSED";
 	createdAt: string;
 	updatedAt: string;
 	categoryId?: number; // TODO: should be provided by backend but currently not
@@ -127,12 +127,24 @@ export type Task = {
 	slug: string;
 	description: string;
 	reward: number;
-	categoryId: number;
 	duration: number;
 	// type: "QUESTIONNAIRE" | "APP";
 	// point: number;
-	// status: "ACTIVE" | "CLOSED";
+	status: "ACTIVE" | "CLOSED";
 	createdAt: string;
 	updatedAt: string;
+	categoryId?: number; // TODO: should be provided by backend but currently not
+	category?: Category; // TODO: should be provided by backend but currently not
 	questions?: TaskQuestion[];
+};
+
+export type RewardPartner = {
+	id: number;
+	logo: string;
+	name: string;
+	token: string;
+	value: number;
+	volume: number;
+	createdAt: string;
+	updatedAt: string;
 };

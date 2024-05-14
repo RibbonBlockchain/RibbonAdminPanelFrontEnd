@@ -3,8 +3,8 @@ import EditSesQuestionnaireForm from "./_components/form";
 import Header from "@/components/header";
 
 export const metadata: Metadata = {
-	title: "Edit Questionnaire",
-	description: "Edit Questionnaire",
+	title: "Edit Questionnaire Ses Score",
+	description: "Edit Questionnaire Ses Score",
 };
 
 export default function Page() {

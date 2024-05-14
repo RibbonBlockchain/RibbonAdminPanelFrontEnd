@@ -22,27 +22,27 @@ import { cn, getErrorMessage } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import urls from "@/lib/urls";
 import { ImSpinner3 } from "react-icons/im";
-import { questionnaireService } from "@/services/questionnaire";
+import { surveyService } from "@/services/surveys";
 import { useToken } from "@/components/providers/token";
 import { ButtonLink } from "@/components/ui/button_link";
+import ErrorScreen from "@/components/sections/error";
 
-const EditSesQuestionnaireForm = () => {
+const EditSesSurveyForm = () => {
 	const params = useParams();
 	const qc = useQueryClient();
 	const router = useRouter();
 	const { token } = useToken();
 
-	const { data, isPending } = useQuery({
-		queryKey: ["questionnaire", { id: params?.id as string }],
-		queryFn: () =>
-			questionnaireService.getById(params?.id as string, token || ""),
+	const { data, isPending, error, refetch } = useQuery({
+		queryKey: ["survey", { id: params?.id as string }],
+		queryFn: () => surveyService.getById(params?.id as string, token || ""),
 		enabled: !!params?.id && !!token,
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
-		mutationKey: ["edit questionnaire ses score"],
+		mutationKey: ["edit survey ses score"],
 		mutationFn: (data: UpdateSesScoreRequest) =>
-			questionnaireService.updateSesScore(data, token || ""),
+			surveyService.updateSesScore(data, token || ""),
 
 		onSuccess(data) {
 			toast({
@@ -52,10 +52,10 @@ const EditSesQuestionnaireForm = () => {
 			});
 			reset();
 			qc.refetchQueries({
-				queryKey: ["questionnaire", { id: params?.id as string }],
+				queryKey: ["survey", { id: params?.id as string }],
 				type: "all",
 			});
-			router.push(urls.dashboard.questionnaires.index);
+			router.push(urls.dashboard.surveys.index);
 		},
 		onError(error) {
 			toast({
@@ -122,6 +122,8 @@ const EditSesQuestionnaireForm = () => {
 
 	if (isPending) return <p className="p-4">Loading...</p>;
 
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
+
 	return (
 		<form
 			onSubmit={onSubmit}
@@ -130,11 +132,10 @@ const EditSesQuestionnaireForm = () => {
 			<Card className="pb-8 transition-all duration-500">
 				<CardHeader>
 					<CardTitle>
-						Update SES Scores of {data?.data?.name || "Questionnaire"}{" "}
+						Update SES Scores of {data?.data?.name || "Survey"}{" "}
 					</CardTitle>
 					<CardDescription>
-						Upload maximum of {+process.env.NEXT_PUBLIC_QUESTIONNAIRE_LIMIT}{" "}
-						questions
+						Upload maximum of {+process.env.NEXT_PUBLIC_SURVEY_LIMIT} questions
 					</CardDescription>
 				</CardHeader>
 
@@ -161,7 +162,7 @@ const EditSesQuestionnaireForm = () => {
 							<div className="space-y-6" key={`question-${question_index}`}>
 								<div>
 									<span className="text-sm font-medium leading-none">
-										Question {question_index + 1}
+										Survey {question_index + 1}
 									</span>
 									<span className="flex h-10 w-full rounded-md border border-primary/20 bg-white px-3 py-2 text-sm">
 										{question.question}
@@ -302,4 +303,4 @@ const EditSesQuestionnaireForm = () => {
 	);
 };
 
-export default EditSesQuestionnaireForm;
+export default EditSesSurveyForm;

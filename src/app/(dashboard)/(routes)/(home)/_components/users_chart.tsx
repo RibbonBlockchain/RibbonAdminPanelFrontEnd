@@ -13,7 +13,23 @@ import {
 
 const COLORS = ["#7C56FE", "#D6CBFF"];
 
-const UsersChart = () => {
+type Props = {
+	activeUsers: number;
+	inactiveUsers: number;
+};
+
+const UsersChart: React.FC<Props> = (props) => {
+	const data02 = [
+		{
+			name: "Active Users",
+			value: props.activeUsers,
+		},
+		{
+			name: "Inactive Users",
+			value: props.inactiveUsers,
+		},
+	];
+
 	return (
 		<>
 			<ResponsiveContainer width={"100%"} height={250}>
@@ -69,16 +85,5 @@ const UsersChart = () => {
 		</>
 	);
 };
-
-const data02 = [
-	{
-		name: "Active Users",
-		value: 4400,
-	},
-	{
-		name: "Inactive Users",
-		value: 2567,
-	},
-];
 
 export default UsersChart;

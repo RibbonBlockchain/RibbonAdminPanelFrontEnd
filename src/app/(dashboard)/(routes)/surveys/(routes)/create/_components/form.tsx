@@ -300,6 +300,8 @@ const CreateSurveyForm = () => {
 									ResponseType.RADIO,
 									ResponseType.BUBBLES,
 									ResponseType.ROUND_BOX,
+									ResponseType.BOOLEAN,
+									ResponseType.MULTISELECT,
 								].includes(questions[question_index].response_type) && (
 									<div className="mt-6 space-y-4 border-y-2 py-6">
 										{questions[question_index].options.map(

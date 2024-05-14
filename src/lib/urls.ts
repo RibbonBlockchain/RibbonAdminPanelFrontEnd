@@ -23,12 +23,18 @@ const urls = {
 		surveys: {
 			index: "/surveys",
 			create: "/surveys/create",
-			edit: (id: string) => `/surveys/edit/${id}`,
+			edit: {
+				index: (id: string) => `/surveys/edit/${id}`,
+				ses: (id: string) => `/surveys/edit/ses/${id}`,
+			},
 		},
 		tasks: {
 			index: "/tasks",
 			create: "/tasks/create",
-			edit: (id: string) => `/tasks/edit/${id}`,
+			edit: {
+				index: (id: string) => `/tasks/edit/${id}`,
+				ses: (id: string) => `/tasks/edit/ses/${id}`,
+			},
 		},
 		send_notification: "/send-notification",
 	},

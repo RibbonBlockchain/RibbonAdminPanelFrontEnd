@@ -9,6 +9,7 @@ import Search from "@/components/search";
 import StatusToggler from "@/components/status_toggler";
 
 import urls from "@/lib/urls";
+import SurveyStatusToggle from "./_components/survey_status_toggle";
 
 export const metadata: Metadata = {
 	title: "Surveys",
@@ -40,10 +41,7 @@ export default async function Page({
 					Recently added surveys
 				</h2>
 
-				<div className="flex w-full items-center justify-end gap-4">
-					<StatusToggler count={0} title={"Active"} action_status={"ACTIVE"} />
-					<StatusToggler count={0} title={"Closed"} action_status={"CLOSED"} />
-				</div>
+				<SurveyStatusToggle />
 
 				<Search />
 			</div>

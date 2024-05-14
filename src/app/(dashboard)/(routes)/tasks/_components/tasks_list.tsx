@@ -3,7 +3,7 @@
 import EmptySvg from "@/components/svgs/empty";
 import FlameSvg from "@/components/svgs/flame";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { taskService } from "@/services/tasks";
 import React from "react";
 import { SlOptions } from "react-icons/sl";
@@ -18,11 +18,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TbTrash } from "react-icons/tb";
 import { LuUndo2 } from "react-icons/lu";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/next_auth";
 import PaginateSection from "@/components/sections/paginate_section";
 import { useToken } from "@/components/providers/token";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import { UpdateStatusRequest } from "@/types/request";
+import StatusActiveModal from "@/app/(dashboard)/_components/status_active_modal";
+import StatusCloseModal from "@/app/(dashboard)/_components/status_close_modal";
+import urls from "@/lib/urls";
+import Link from "next/link";
 import ErrorScreen from "@/components/sections/error";
 
 type Props = {
@@ -34,16 +38,74 @@ type Props = {
 };
 
 const TasksList: React.FC<Props> = (props) => {
+	const qc = useQueryClient();
+	const [id, setId] = React.useState<number | null>(null);
+	const [statusActiveModalOpen, setStatusActiveModalOpen] =
+		React.useState(false);
+
+	const [statusClosedModalOpen, setStatusClosedModalOpen] =
+		React.useState(false);
+
 	const { token } = useToken();
 
-	const { data, error } = useQuery({
+	const { data, error, refetch } = useQuery({
 		queryKey: ["tasks", props.searchParams],
 		queryFn: () => taskService.getAll(props.searchParams, token || ""),
 		enabled: !!token,
 	});
 
-	console.log({ stack: error?.stack });
-	if (error) return <ErrorScreen error={error} />;
+	const { mutate, isPending } = useMutation({
+		mutationKey: ["Update Task Status"],
+		mutationFn: async (data: UpdateStatusRequest) =>
+			taskService.updateStatus(data, token || ""),
+		onSuccess(data) {
+			toast({
+				title: "Success",
+				description: data.message,
+				duration: 5000,
+			});
+			qc.refetchQueries({
+				queryKey: ["tasks"],
+				type: "all",
+			});
+			qc.refetchQueries({
+				queryKey: ["task summary"],
+				type: "all",
+			});
+			handleActiveModalClose();
+			handleClosedModalClose();
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
+	});
+
+	function handleActiveModalOpen(id: number) {
+		setId(id);
+		setStatusActiveModalOpen(true);
+	}
+
+	function handleClosedModalOpen(id: number) {
+		setId(id);
+		setStatusClosedModalOpen(true);
+	}
+
+	function handleActiveModalClose() {
+		setId(null);
+		setStatusActiveModalOpen(false);
+	}
+
+	function handleClosedModalClose() {
+		setId(null);
+		setStatusClosedModalOpen(false);
+	}
+
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
 
 	return (
 		<div className="my-12 w-full px-4">
@@ -87,26 +149,48 @@ const TasksList: React.FC<Props> = (props) => {
 										</Button>
 									</DropdownMenuTrigger>
 									<DropdownMenuContent className="z-10 mr-4 p-4 font-medium text-primary">
-										<DropdownMenuItem>
-											<BiEdit className="mr-2 text-2xl" />
-											Edit
+										<DropdownMenuItem asChild>
+											<Link
+												href={urls.dashboard.tasks.edit.index(
+													task.id.toString()
+												)}
+											>
+												<BiEdit className="mr-2 text-2xl" />
+												Edit
+											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										<DropdownMenuItem>
-											<GoPlus className="mr-2 text-2xl" /> Add SES score
+										<DropdownMenuItem asChild>
+											<Link
+												href={urls.dashboard.tasks.edit.ses(task.id.toString())}
+											>
+												<GoPlus className="mr-2 text-2xl" /> Add SES score
+											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
-										{/* {task.type === "APP" && (
-											<DropdownMenuItem className="text-green-500">
-												<LuUndo2 className="mr-2 text-2xl" /> Restore
+										{task.status === "CLOSED" && (
+											<DropdownMenuItem className="text-green-500" asChild>
+												<button
+													type="button"
+													className="w-full"
+													onClick={() => handleActiveModalOpen(task.id)}
+												>
+													<LuUndo2 className="mr-2 text-2xl" /> Restore
+												</button>
 											</DropdownMenuItem>
 										)}
-										{task.type === "QUESTIONNAIRE" && (
-											<DropdownMenuItem className="text-red-500">
-												<TbTrash className="mr-2 text-2xl" />
-												Close
+										{task.status === "ACTIVE" && (
+											<DropdownMenuItem className="text-red-500" asChild>
+												<button
+													type="button"
+													className="w-full"
+													onClick={() => handleClosedModalOpen(task.id)}
+												>
+													<TbTrash className="mr-2 text-2xl" />
+													Close
+												</button>
 											</DropdownMenuItem>
-										)} */}
+										)}
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</li>
@@ -116,6 +200,22 @@ const TasksList: React.FC<Props> = (props) => {
 					<PaginateSection
 						current_page={data?.data?.pagination?.currentPage || 1}
 						total_pages={data?.data?.pagination?.totalPages || 1}
+					/>
+
+					<StatusActiveModal
+						isOpen={statusActiveModalOpen}
+						closeModal={handleActiveModalClose}
+						handleAction={() => mutate({ id: id as number, status: "ACTIVE" })}
+						type={"task"}
+						isPending={isPending}
+					/>
+
+					<StatusCloseModal
+						isOpen={statusClosedModalOpen}
+						closeModal={handleClosedModalClose}
+						handleAction={() => mutate({ id: id as number, status: "CLOSED" })}
+						type={"task"}
+						isPending={isPending}
 					/>
 				</>
 			) : (

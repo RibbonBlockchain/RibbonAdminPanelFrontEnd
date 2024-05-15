@@ -14,24 +14,25 @@ import {
 const COLORS = ["#7C56FE", "#D6CBFF"];
 
 type Props = {
-	active_users: number;
-	inactive_users: number;
+	month: string;
+	paid_out: number;
+	total_tokens: number;
 };
 
-const UsersChart: React.FC<Props> = (props) => {
+const RewardPaidOutChart: React.FC<Props> = (props) => {
 	const data02 = [
 		{
-			name: "Active Users",
-			value: props.active_users,
+			name: "Paid Out",
+			value: props.paid_out,
 		},
 		{
-			name: "Inactive Users",
-			value: props.inactive_users,
+			name: "Max Tokens",
+			value: props.total_tokens - props.paid_out,
 		},
 	];
 
 	return (
-		<>
+		<div>
 			<ResponsiveContainer width={"100%"} height={250}>
 				<PieChart>
 					<Tooltip />
@@ -41,7 +42,7 @@ const UsersChart: React.FC<Props> = (props) => {
 						nameKey="name"
 						cx="50%"
 						cy="50%"
-						innerRadius={60}
+						innerRadius={65}
 						outerRadius={80}
 						fill="#7C56FE"
 						className="relative"
@@ -60,30 +61,19 @@ const UsersChart: React.FC<Props> = (props) => {
 							className="max-w-[100px] font-bold text-white"
 							fill="#7C56FE"
 						>
-							{`${data02.reduce((a, b) => a + b.value, 0)}`}
+							{props.paid_out}
 						</Label>
 					</Pie>
 				</PieChart>
 			</ResponsiveContainer>
-
-			<div className="inline-flex items-center gap-4 text-xs">
-				<span className="flex h-2 w-4 rounded-full bg-primary" />
-				<span className="text-nowrap">Active Users</span>
-				<span className="flex items-center">
-					<FaArrowDown className="text-red-500" />
-					{data02[0].value}
-				</span>
+			<div className="flex flex-col items-center justify-center">
+				<p>
+					Tokens paid out in <span className="capitalize">{props.month}</span>
+				</p>
+				<p className="text-primary-500">{props.paid_out} WLD tokens</p>
 			</div>
-			<div className="mt-8 inline-flex items-center gap-2 text-xs">
-				<span className="flex h-2 w-4 rounded-full bg-[#D6CBFF]" />
-				<span className="text-nowrap">Inactive Users</span>
-				<span className="flex items-center">
-					<FaArrowUp className="text-green-500" />
-					{data02[1].value}
-				</span>
-			</div>
-		</>
+		</div>
 	);
 };
 
-export default UsersChart;
+export default RewardPaidOutChart;

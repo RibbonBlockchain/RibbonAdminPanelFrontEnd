@@ -8,6 +8,7 @@ const urls = {
 	},
 	dashboard: {
 		home: "/",
+		reports: "/reports",
 		reward_partners: {
 			index: "/reward-partners",
 			single: (id: string) => `/reward-partners/${id}`,

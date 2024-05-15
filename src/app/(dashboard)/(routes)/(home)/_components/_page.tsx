@@ -22,7 +22,6 @@ import {
 import RewardChart from "./reward_chart";
 import UsersChart from "./users_chart";
 import CreateSurveySvg from "@/components/svgs/create_survey";
-import { programs } from "@/lib/sample_data";
 import { FaArrowRight } from "react-icons/fa6";
 import ReportAnalysisSvg from "@/components/svgs/report_analysis";
 import { useToken } from "@/components/providers/token";
@@ -113,8 +112,8 @@ export default function HomePage() {
 						<div className="col-span-2 px-4">
 							<h2 className="text-nowrap text-lg font-bold">Users Overview</h2>
 							<UsersChart
-								activeUsers={data?.data?.activeUsers || 0}
-								inactiveUsers={data?.data?.inactiveUsers || 0}
+								active_users={data?.data?.activeUsers || 0}
+								inactive_users={data?.data?.inactiveUsers || 0}
 							/>
 						</div>
 					</div>
@@ -158,7 +157,7 @@ export default function HomePage() {
 					<p className="text-xl text-white">
 						Select a report type and Export Report Analysis
 					</p>
-					<ButtonLink href="" className="max-w-48">
+					<ButtonLink href={urls.dashboard.reports} className="max-w-48">
 						Print reports analysis
 					</ButtonLink>
 				</div>

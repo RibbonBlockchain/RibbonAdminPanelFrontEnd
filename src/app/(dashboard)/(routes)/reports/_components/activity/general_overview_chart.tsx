@@ -90,7 +90,7 @@ const ActivityGeneralOverviewChart: React.FC<Props> = (props) => {
 					<span className="text-nowrap">Avg. Completion rate</span>
 					<span className="flex items-center">
 						<GoDash />
-						{props.average_completion_rate}%
+						{Math.round(props.average_completion_rate)}%
 					</span>
 				</div>
 			</div>

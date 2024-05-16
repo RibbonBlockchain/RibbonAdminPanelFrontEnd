@@ -4,8 +4,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RewardTab from "./reward";
 import UserTab from "./user";
 import ActivityTab from "./activity";
+import React from "react";
+import { useRouter } from "next/navigation";
 
-export default function ReportPage() {
+type Props = {
+	view: string;
+};
+
+const ReportPage: React.FC<Props> = (props) => {
+	const router = useRouter();
+
+	function handleTabChange(
+		tab: "reward" | "users" | "activities" | "notifications"
+	) {
+		const url = new URL(window.location.href);
+
+		url.searchParams.set("view", tab);
+
+		router.push(url.href);
+	}
+
 	return (
 		<>
 			<div className="my-12">
@@ -17,12 +35,30 @@ export default function ReportPage() {
 				</p>
 			</div>
 
-			<Tabs defaultValue="reward" className="mx-auto w-full max-w-5xl px-4">
+			<Tabs
+				defaultValue="reward"
+				value={props.view}
+				className="mx-auto w-full max-w-5xl px-4"
+			>
 				<TabsList className="w-full gap-x-6 bg-transparent ">
-					<TabsTrigger value="reward">Rewards Summary</TabsTrigger>
-					<TabsTrigger value="users">Users Overview</TabsTrigger>
-					<TabsTrigger value="activities">Activity Rate</TabsTrigger>
-					<TabsTrigger value="notifications">Notifications Report</TabsTrigger>
+					<TabsTrigger onClick={() => handleTabChange("reward")} value="reward">
+						Rewards Summary
+					</TabsTrigger>
+					<TabsTrigger onClick={() => handleTabChange("users")} value="users">
+						Users Overview
+					</TabsTrigger>
+					<TabsTrigger
+						onClick={() => handleTabChange("activities")}
+						value="activities"
+					>
+						Activity Rate
+					</TabsTrigger>
+					{/* <TabsTrigger
+						onClick={() => handleTabChange("notifications")}
+						value="notifications"
+					>
+						Notifications Report
+					</TabsTrigger> */}
 				</TabsList>
 				<TabsContent value="reward" className="my-12">
 					<RewardTab />
@@ -39,4 +75,6 @@ export default function ReportPage() {
 			</Tabs>
 		</>
 	);
-}
+};
+
+export default ReportPage;

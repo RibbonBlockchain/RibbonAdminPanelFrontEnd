@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils";
 import { SendNotificationSchema, SendNotificationSchemaType } from "@/schemas";
-import { sendNotificationService } from "@/services/send_notification";
+import { notificationService } from "@/services/notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
@@ -21,7 +21,7 @@ const SendNotificationForm = () => {
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["Send Notification"],
 		mutationFn: (data: SendNotificationSchemaType) =>
-			sendNotificationService.sendMessage(data, token || ""),
+			notificationService.sendMessage(data, token || ""),
 
 		onSuccess: (data) => {
 			toast({
@@ -58,7 +58,8 @@ const SendNotificationForm = () => {
 	});
 
 	return (
-		<form onSubmit={onSubmit} className="flex flex-col gap-6">
+		<form onSubmit={onSubmit} className="mx-auto flex max-w-3xl flex-col gap-6">
+			<h2 className="text-xl font-semibold">New Notification</h2>
 			<div>
 				<Label htmlFor="title">Title</Label>
 				<Input
@@ -74,7 +75,7 @@ const SendNotificationForm = () => {
 				<Textarea
 					id="message"
 					{...register("message")}
-					className="min-h-40"
+					className="min-h-60"
 					placeholder="Type your message here"
 				/>
 				<ErrorMessage>{errors.message?.message}</ErrorMessage>

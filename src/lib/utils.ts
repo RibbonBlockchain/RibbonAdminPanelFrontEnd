@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import urls from "./urls";
 import { QueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
+import { months } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -19,6 +20,37 @@ export function formatCurrency(
 			maximumFractionDigits: 2,
 		}
 	).format(price);
+}
+
+export function formatTime(isoDatetimeString: string): string {
+	const date = new Date(isoDatetimeString);
+
+	// Ensure valid Date object
+	if (isNaN(date.getTime())) {
+		return "Invalid time";
+	}
+
+	const hours = date.getHours();
+	const minutes = date.getMinutes().toString().padStart(2, "0");
+	const meridiem = hours >= 12 ? "PM" : "AM";
+	const formattedHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+
+	return `${formattedHours}:${minutes}${meridiem}`;
+}
+
+export function formatDate(isoDatetimeString: string): string {
+	const date = new Date(isoDatetimeString);
+
+	// Ensure valid Date object
+	if (isNaN(date.getTime())) {
+		return "Invalid date";
+	}
+
+	const day = date.getDate().toString().padStart(2, "0");
+	const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
+	const year = date.getFullYear().toString().slice(-2); // Extract last two digits of year
+
+	return `${day}/${month}/${year}`;
 }
 
 export function getTimeAgo(dateString: string): string {
@@ -48,6 +80,13 @@ export function getTimeAgo(dateString: string): string {
 	} else {
 		return `${minutes} min ago`;
 	}
+}
+
+export function getCurrentMonth(): string {
+	const now = new Date();
+	const monthNum = now.getMonth(); // Months are zero-indexed (January = 0)
+	const monthNames = months.map((month) => month.id);
+	return monthNames[monthNum];
 }
 
 export function debounce<Params extends any[]>(

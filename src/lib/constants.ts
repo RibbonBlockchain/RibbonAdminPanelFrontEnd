@@ -109,3 +109,18 @@ export const response_types = [
 		icon: IoCheckboxOutline,
 	},
 ];
+
+export const months = [
+	{ id: "Jan", name: "January" },
+	{ id: "Feb", name: "February" },
+	{ id: "Mar", name: "March" },
+	{ id: "Apr", name: "April" },
+	{ id: "May", name: "May" },
+	{ id: "Jun", name: "June" },
+	{ id: "Jul", name: "July" },
+	{ id: "Aug", name: "August" },
+	{ id: "Sep", name: "September" },
+	{ id: "Oct", name: "October" },
+	{ id: "Nov", name: "November" },
+	{ id: "Dec", name: "December" },
+];

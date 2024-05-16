@@ -6,6 +6,7 @@ type Props = {
 	error?: Error & { digest?: string };
 	reset?: () => void;
 	statusCode?: number;
+	containerClass?: string;
 };
 
 const ErrorScreen: React.FC<Props> = (props) => {
@@ -13,7 +14,8 @@ const ErrorScreen: React.FC<Props> = (props) => {
 		<main
 			className={cn(
 				"min-h-[min(100vh,40rem)] px-4",
-				"flex h-full w-full flex-col items-center justify-center gap-4"
+				"flex h-full w-full flex-col items-center justify-center gap-4",
+				props.containerClass
 			)}
 		>
 			<span className="text-4xl">😔</span>

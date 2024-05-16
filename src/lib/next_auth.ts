@@ -1,6 +1,6 @@
 import { authService } from "@/services/auth";
 import urls from "@/lib/urls";
-import { Admin, AdminCustom } from "@/types";
+import { AdminCustom } from "@/types";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 

@@ -1,4 +1,4 @@
-import { AdminRole, AdminStatus, ResponseType } from "./enums";
+import { UserRole, UserStatus, ResponseType } from "./enums";
 
 export type Pagination = {
 	pageSize: number;
@@ -11,20 +11,32 @@ export type Pagination = {
 	hasPreviousPage: boolean;
 };
 
-export type Admin = {
+export type User = {
 	id: number;
 	avatar?: null;
 	firstName: string;
 	lastName: string;
+	otherNames?: string;
 	email: string;
 	phone?: string;
-	role: AdminRole;
-	status: AdminStatus;
+	role: UserRole;
+	status: UserStatus;
+	gender?: string;
+	worldId?: string;
+	dob?: string;
+	numberOfClaims?: number;
+	lastClaimTime?: string;
+	socials?: {
+		x?: string;
+		discord?: string;
+		linkedIn?: string;
+		instagram?: string;
+	};
 	createdAt: string;
 	updatedAt: string;
 };
 
-export type AdminCustom = Admin & { id: string };
+export type AdminCustom = User & { id: string };
 
 export type Category = {
 	id: number;
@@ -145,6 +157,18 @@ export type RewardPartner = {
 	token: string;
 	value: number;
 	volume: number;
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type Notification = {
+	id: number;
+	title: string;
+	message: string;
+	userId?: number;
+	isRead: boolean;
+	senderId?: number;
+	user?: User;
 	createdAt: string;
 	updatedAt: string;
 };

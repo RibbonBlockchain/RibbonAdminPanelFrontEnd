@@ -11,12 +11,13 @@ export enum ResponseType {
 	BOOLEAN = "BOOLEAN",
 }
 
-export enum AdminRole {
+export enum UserRole {
 	SUPER_ADMIN = "SUPER_ADMIN",
 	ADMIN = "ADMIN",
+	PATIENT = "PATIENT",
 }
 
-export enum AdminStatus {
+export enum UserStatus {
 	ACTIVE = "ACTIVE",
 	INACTIVE = "INACTIVE",
 }

@@ -1,11 +1,12 @@
 import {
-	Admin,
+	User,
 	Category,
 	Pagination,
 	Questionnaire,
 	RewardPartner,
 	Survey,
 	Task,
+	Notification,
 } from ".";
 
 type DefaultResponse<T> = {
@@ -21,7 +22,7 @@ export type LoginResponse = DefaultResponse<{
 }>;
 
 // NOTE: User
-export type UserProfileResponse = DefaultResponse<Admin>;
+export type UserProfileResponse = DefaultResponse<User>;
 
 // NOTE:  Category
 export type GetCategoriesResponse = DefaultResponse<{
@@ -85,6 +86,63 @@ export type GetRewardPartnersResponse = DefaultResponse<{
 	pagination: Pagination;
 }>;
 
+// NOTE: Reports
+export type GetAllRewardsReportResponse = DefaultResponse<{
+	total: number;
+	active: number;
+	inactive: number;
+	data: {
+		id: string;
+		name: string;
+		active: number;
+		inactive: number;
+	}[];
+}>;
+export type GetAllUsersReportResponse = DefaultResponse<{
+	total: number;
+	active: number;
+	inactive: number;
+	data: {
+		id: string;
+		name: string;
+		active: number;
+		inactive: number;
+	}[];
+}>;
+export type GetAllTaskActivityReportResponse = DefaultResponse<{
+	total?: number;
+	pending?: number;
+	averageCompletionRate?: number;
+	data: {
+		id: string;
+		name: string;
+		completed: number;
+		pending: number;
+	}[];
+}>;
+export type GetAllSurveyActivityReportResponse = DefaultResponse<{
+	total?: number;
+	pending?: number;
+	averageCompletionRate?: number;
+	data: {
+		id: string;
+		name: string;
+		completed: number;
+		pending: number;
+	}[];
+}>;
+export type GetAllQuestionnaireActivityReportResponse = DefaultResponse<{
+	total?: number;
+	pending?: number;
+	averageCompletionRate?: number;
+	data: {
+		id: string;
+		name: string;
+		completed: number;
+		pending: number;
+	}[];
+}>;
+
 // NOTE: Other
 
 export type GetSummaryResponse = DefaultResponse<{
@@ -105,3 +163,5 @@ export type GetDashboardSummaryResponse = DefaultResponse<{
 	totalActivities: number;
 	rewardPoints: number;
 }>;
+
+export type GetNotificationHistoryResponse = DefaultResponse<Notification[]>;

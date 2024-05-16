@@ -12,13 +12,26 @@ import {
 	YAxis,
 } from "recharts";
 
-const RewardChart = () => {
+type Props = {
+	data: {
+		id: string;
+		name: string;
+		active: number;
+		inactive: number;
+	}[];
+};
+
+const RewardChart: React.FC<Props> = (props) => {
+	const data = React.useMemo(() => {
+		return props.data.map((item) => ({
+			name: item.id,
+			value: item.active,
+		}));
+	}, [props.data]);
+
 	return (
-		<ResponsiveContainer width={"100%"} height="90%">
-			<AreaChart
-				data={chart_data}
-				margin={{ top: 20, right: 0, left: 0, bottom: 0 }}
-			>
+		<ResponsiveContainer width={"100%"} height="90%" className={"max-h-96"}>
+			<AreaChart data={data} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
 				<XAxis dataKey="name" />
 				<YAxis tickFormatter={(v) => `${v} WLD`} />
 				<CartesianGrid strokeDasharray="3 3" />

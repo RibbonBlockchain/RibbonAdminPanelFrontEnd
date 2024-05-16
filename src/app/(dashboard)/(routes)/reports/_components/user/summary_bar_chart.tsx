@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import React from "react";
+import { GetAllUsersReportResponse } from "@/types/response";
+import React, { useMemo } from "react";
 import {
 	BarChart,
 	Bar,
@@ -19,82 +20,25 @@ const colors = {
 	inactive_users: "#D6CBFF",
 };
 
-const data = [
-	{
-		name: "Jan",
-		registered_users: 4000,
-		active_users: 2400,
-		inactive_users: 2400,
-	},
-	{
-		name: "Feb",
-		registered_users: 3000,
-		active_users: 1398,
-		inactive_users: 2210,
-	},
-	{
-		name: "Mar",
-		registered_users: 2000,
-		active_users: 9800,
-		inactive_users: 2290,
-	},
-	{
-		name: "Apr",
-		registered_users: 2780,
-		active_users: 3908,
-		inactive_users: 2000,
-	},
-	{
-		name: "May",
-		registered_users: 1890,
-		active_users: 4800,
-		inactive_users: 2181,
-	},
-	{
-		name: "Jun",
-		registered_users: 2390,
-		active_users: 3800,
-		inactive_users: 2500,
-	},
-	{
-		name: "Jul",
-		registered_users: 3490,
-		active_users: 4300,
-		inactive_users: 2100,
-	},
-	{
-		name: "Aug",
-		registered_users: 3490,
-		active_users: 4300,
-		inactive_users: 2100,
-	},
-	{
-		name: "Sep",
-		registered_users: 2490,
-		active_users: 1900,
-		inactive_users: 2100,
-	},
-	{
-		name: "Oct",
-		registered_users: 2490,
-		active_users: 400,
-		inactive_users: 1100,
-	},
-	{
-		name: "Nov",
-		registered_users: 3490,
-		active_users: 4300,
-		inactive_users: 2100,
-	},
-	{
-		name: "Dec",
-		registered_users: 2490,
-		active_users: 6300,
-		inactive_users: 2100,
-	},
-];
+type Props = {
+	data: {
+		id: string;
+		name: string;
+		active: number;
+		inactive: number;
+	}[];
+};
 
-export default function UserSummaryBarChart() {
+const UserSummaryBarChart: React.FC<Props> = (props) => {
+	const data = useMemo(() => {
+		return props.data.map((item) => ({
+			name: item.id,
+			registered_users: item.active + item.inactive,
+			active_users: item.active,
+			inactive_users: item.inactive,
+		}));
+	}, [props.data]);
+
 	const [showActiveUsers, setShowActiveUsers] = React.useState(true);
 	const [showInactiveUsers, setShowInactiveUsers] = React.useState(true);
 	const [showRegisteredUsers, setShowRegisteredUsers] = React.useState(true);
@@ -167,4 +111,6 @@ export default function UserSummaryBarChart() {
 			</ResponsiveContainer>
 		</>
 	);
-}
+};
+
+export default UserSummaryBarChart;

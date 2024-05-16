@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import { cn } from "@/lib/utils";
 import React from "react";
 import DashboardSidebar from "./_components/sidebar";

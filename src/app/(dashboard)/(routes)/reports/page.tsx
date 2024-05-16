@@ -8,11 +8,23 @@ export const metadata: Metadata = {
 	description: "Reports",
 };
 
-export default function Page() {
+export default function Page({
+	searchParams,
+}: {
+	searchParams: { view?: string };
+}) {
 	return (
 		<>
 			<Header>Reports</Header>
-			<ReportPage />
+			<ReportPage
+				view={
+					["reward", "users", "activities", "notifications"].includes(
+						searchParams.view || ""
+					)
+						? (searchParams.view as string)
+						: "reward"
+				}
+			/>
 		</>
 	);
 }

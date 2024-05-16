@@ -25,32 +25,51 @@ import CreateSurveySvg from "@/components/svgs/create_survey";
 import { FaArrowRight } from "react-icons/fa6";
 import ReportAnalysisSvg from "@/components/svgs/report_analysis";
 import { useToken } from "@/components/providers/token";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { dashboardService } from "@/services/dashboard";
 import ErrorScreen from "@/components/sections/error";
 import { rewardPartnerService } from "@/services/reward_partner";
+import { reportService } from "@/services/reports";
 
 export default function HomePage() {
 	const { token } = useToken();
 
-	const { data, isPending, error, refetch } = useQuery({
-		queryKey: ["dashboard summary"],
-		queryFn: () => dashboardService.getSummary(token || ""),
-		enabled: !!token,
+	const [
+		{ data, isPending, error, refetch },
+		{
+			data: rewardPartnerData,
+			isPending: isPendingRewardPartner,
+			error: errorRewardPartner,
+			refetch: refetchRewardPartner,
+		},
+		{
+			data: rewardData,
+			isPending: isPendingReward,
+			refetch: refetchRewardData,
+			error: errorReward,
+		},
+	] = useQueries({
+		queries: [
+			{
+				queryKey: ["dashboard summary"],
+				queryFn: () => dashboardService.getSummary(token || ""),
+				enabled: !!token,
+			},
+			{
+				queryKey: ["reward partners", {}],
+				queryFn: () => rewardPartnerService.getAll({}, token || ""),
+				enabled: !!token,
+			},
+			{
+				queryKey: ["reward reports"],
+				queryFn: () => reportService.getAllRewardReports(token || ""),
+				enabled: !!token,
+			},
+		],
 	});
 
-	const {
-		data: rewardData,
-		isPending: isPendingReward,
-		error: errorReward,
-		refetch: refetchReward,
-	} = useQuery({
-		queryKey: ["reward partners", {}],
-		queryFn: () => rewardPartnerService.getAll({}, token || ""),
-		enabled: !!token,
-	});
-
-	if (isPending) return <div className="p-4">Loading...</div>;
+	if (isPending || isPendingRewardPartner || isPendingReward)
+		return <div className="p-4">Loading...</div>;
 
 	if (error) return <ErrorScreen error={error} reset={refetch} />;
 
@@ -90,23 +109,8 @@ export default function HomePage() {
 				<div className="col-span-3 rounded-2xl bg-white px-4 py-8">
 					<div className="grid grid-cols-7 gap-6 divide-x">
 						<div className="col-span-5 ">
-							<div className="flex items-center justify-between">
-								<h2 className="text-lg font-bold">Reward Summary</h2>
-								<Select>
-									<SelectTrigger className="max-w-32">
-										<SelectValue
-											className="placeholder:text-neutral-500"
-											placeholder="Choose a month"
-										/>
-									</SelectTrigger>
-									<SelectContent className="max-w-sm">
-										<SelectItem value={"january"} className="cursor-pointer">
-											January
-										</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-							<RewardChart />
+							<h2 className="mb-2 text-lg font-bold">Reward Summary</h2>
+							<RewardChart data={rewardData?.data?.data || []} />
 						</div>
 
 						<div className="col-span-2 px-4">
@@ -122,10 +126,10 @@ export default function HomePage() {
 				{/* summary */}
 				<ul className="col-span-3 flex flex-col gap-4 rounded-2xl bg-white px-4 py-8">
 					{summary_list({
-						reward: data.data?.rewardPoints || 0,
-						questionnaire: data.data?.questionnaire || 0,
-						task: data.data?.task || 0,
-						survey: data.data?.survey || 0,
+						reward: data?.data?.rewardPoints || 0,
+						questionnaire: data?.data?.questionnaire || 0,
+						task: data?.data?.task || 0,
+						survey: data?.data?.survey || 0,
 					}).map((item) => (
 						<li
 							key={item.title}
@@ -187,7 +191,7 @@ export default function HomePage() {
 					</h2>
 
 					<ul className="mt-8 flex flex-col gap-y-4">
-						{rewardData?.data?.data.map((partner) => (
+						{rewardPartnerData?.data?.data.map((partner) => (
 							<li
 								key={partner.id}
 								className="flex items-center justify-between gap-4"
@@ -221,7 +225,7 @@ const summary_list = (input: {
 }) => [
 	{
 		image: RewardPointsImage,
-		title: "Reward Partners",
+		title: "Reward points",
 		value: input.reward,
 		link_text: "Reward partners",
 		link_href: urls.dashboard.reward_partners.index,

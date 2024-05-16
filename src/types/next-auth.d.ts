@@ -1,8 +1,8 @@
 import NextAuth from "next-auth/next";
-import { Admin } from ".";
+import { User } from ".";
 
 export declare module "next-auth" {
 	interface Session {
-		user: Admin & { apiToken: string };
+		user: User & { apiToken: string };
 	}
 }

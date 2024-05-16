@@ -89,9 +89,30 @@ const data = [
 	},
 ];
 
-export default function ActivitySummaryBarChart() {
+type Props = {
+	reportToShow: "questionnaire" | "task" | "survey";
+	setReportToShow: React.Dispatch<
+		React.SetStateAction<"questionnaire" | "task" | "survey">
+	>;
+	data: {
+		id: string;
+		name: string;
+		completed: number;
+		pending: number;
+	}[];
+};
+
+const ActivitySummaryBarChart: React.FC<Props> = (props) => {
 	const [showActiveUsers, setShowActiveUsers] = React.useState(true);
 	const [showInactiveUsers, setShowInactiveUsers] = React.useState(true);
+
+	const data = React.useMemo(() => {
+		return props.data.map((item) => ({
+			name: item.id,
+			"Complete responses": item.completed,
+			"Incomplete responses": item.pending,
+		}));
+	}, [props.data]);
 
 	return (
 		<>
@@ -122,7 +143,10 @@ export default function ActivitySummaryBarChart() {
 						<span>Incompleted responses</span>
 					</Button>
 				</div>
-				<Select value="questionniare">
+				<Select
+					value={props.reportToShow}
+					onValueChange={(v) => props.setReportToShow(v as any)}
+				>
 					<SelectTrigger className="max-w-32">
 						<SelectValue
 							className="placeholder:text-neutral-500"
@@ -130,7 +154,7 @@ export default function ActivitySummaryBarChart() {
 						/>
 					</SelectTrigger>
 					<SelectContent className="max-w-sm">
-						<SelectItem value={"questionniare"} className="cursor-pointer">
+						<SelectItem value={"questionnaire"} className="cursor-pointer">
 							Questionnaire
 						</SelectItem>
 						<SelectItem value={"survey"} className="cursor-pointer">
@@ -171,4 +195,6 @@ export default function ActivitySummaryBarChart() {
 			</ResponsiveContainer>
 		</>
 	);
-}
+};
+
+export default ActivitySummaryBarChart;

@@ -37,7 +37,7 @@ const urls = {
 				ses: (id: string) => `/tasks/edit/ses/${id}`,
 			},
 		},
-		send_notification: "/send-notification",
+		send_notification: "/notifications",
 	},
 };
 

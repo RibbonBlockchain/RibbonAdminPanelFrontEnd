@@ -100,10 +100,13 @@ const RewardTab = () => {
 					<div className="mt-8 space-y-2 text-black-neutral">
 						<h3>Overview</h3>
 						<p className="px-4">
-							In April, we paid out a total of 80 WLD tokens as rewards to users
-							in our rewards program. This report gives a detailed look at how
-							we distributed these rewards, helping us understand how well our
-							program is working and showing us where we can make improvements.
+							In {months.filter((m) => m.id === month)[0].name}, we paid out a
+							total of{" "}
+							{data?.data?.data?.filter((r) => r.id === month)[0].active} WLD
+							tokens as rewards to users in our rewards program. This report
+							gives a detailed look at how we distributed these rewards, helping
+							us understand how well our program is working and showing us where
+							we can make improvements.
 						</p>
 					</div>
 				</div>

@@ -1,11 +1,19 @@
 import { Fetch } from ".";
 import {
+	DownloadSystemReportResponse,
 	GetAllRewardsReportResponse,
 	GetAllUsersReportResponse,
 	GetAllTaskActivityReportResponse,
 	GetAllSurveyActivityReportResponse,
 	GetAllQuestionnaireActivityReportResponse,
 } from "@/types/response";
+
+async function downloadSystemReport(token: string) {
+	return await Fetch<DownloadSystemReportResponse>(
+		"/admin/report/downloads",
+		token
+	);
+}
 
 async function getAllRewardReports(token: string) {
 	return await Fetch<GetAllRewardsReportResponse>(
@@ -40,6 +48,7 @@ async function getAllQuestionnaireActivityReports(token: string) {
 }
 
 export const reportService = {
+	downloadSystemReport,
 	getAllRewardReports,
 	getAllUserReports,
 	getAllTaskActivityReports,

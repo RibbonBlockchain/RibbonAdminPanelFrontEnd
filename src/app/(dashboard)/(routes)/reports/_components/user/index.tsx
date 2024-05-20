@@ -103,7 +103,7 @@ const UserTab = () => {
 				</div>
 			</section>
 
-			<Button className="float-right my-12">Export report</Button>
+			{/* <Button className="float-right my-12">Export report</Button> */}
 		</>
 	);
 };

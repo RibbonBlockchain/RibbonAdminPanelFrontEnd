@@ -87,6 +87,9 @@ export type GetRewardPartnersResponse = DefaultResponse<{
 }>;
 
 // NOTE: Reports
+
+export type DownloadSystemReportResponse = DefaultResponse<{}>;
+
 export type GetAllRewardsReportResponse = DefaultResponse<{
 	total: number;
 	active: number;

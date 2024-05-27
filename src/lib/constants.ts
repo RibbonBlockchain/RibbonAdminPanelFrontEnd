@@ -12,6 +12,7 @@ import RoundBoxSvg from "@/components/svgs/round_box";
 import BubbleBoxSvg from "@/components/svgs/bubble_box";
 import LogoutModal from "@/app/(dashboard)/_components/logout_modal";
 import SendNotificationSvg from "@/components/svgs/send_notifications";
+import RatingOverviewSvg from "@/components/svgs/rating_overview";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -42,6 +43,11 @@ export const nav_links = [
 		name: "Tasks",
 		href: urls.dashboard.tasks.index,
 		image: TaskSvg,
+	},
+	{
+		name: "Ratings Overview",
+		href: urls.dashboard.ratings.index,
+		image: RatingOverviewSvg,
 	},
 	{
 		name: "Send Notification",

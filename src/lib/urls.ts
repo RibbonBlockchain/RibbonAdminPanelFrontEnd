@@ -37,6 +37,9 @@ const urls = {
 				ses: (id: string) => `/tasks/edit/ses/${id}`,
 			},
 		},
+		ratings: {
+			index: "/ratings",
+		},
 		send_notification: "/notifications",
 	},
 };

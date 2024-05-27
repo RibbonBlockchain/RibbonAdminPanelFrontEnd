@@ -25,10 +25,16 @@ const config = {
 					500: "#7C56FE",
 					50: "#F2EEFF",
 				},
+				secondary: {
+					DEFAULT: "#D6CBFF",
+				},
 				black: {
 					DEFAULT: "#110D1B",
 					primary: "#110D1B",
 					neutral: "#626262",
+				},
+				golden: {
+					DEFAULT: "#F59E0B",
 				},
 			},
 			keyframes: {

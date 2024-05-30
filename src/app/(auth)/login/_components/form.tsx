@@ -53,8 +53,8 @@ export default function LoginForm() {
 		mode: "onSubmit",
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
-			email: emailParam || "superadmin@ribbon.com",
-			password: "Password123?",
+			email: emailParam || process.env.NEXT_PUBLIC_LOGIN_EMAIL,
+			password: process.env.NEXT_PUBLIC_LOGIN_PASSWORD,
 		},
 	});
 

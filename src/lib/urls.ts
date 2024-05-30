@@ -40,6 +40,9 @@ const urls = {
 		ratings: {
 			index: "/ratings",
 		},
+		cp_index: {
+			index: "/cp-index",
+		},
 		send_notification: "/notifications",
 	},
 };

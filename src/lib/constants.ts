@@ -13,6 +13,7 @@ import BubbleBoxSvg from "@/components/svgs/bubble_box";
 import LogoutModal from "@/app/(dashboard)/_components/logout_modal";
 import SendNotificationSvg from "@/components/svgs/send_notifications";
 import RatingOverviewSvg from "@/components/svgs/rating_overview";
+import CPIndexSvg from "@/components/svgs/cp_index";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -48,6 +49,11 @@ export const nav_links = [
 		name: "Ratings Overview",
 		href: urls.dashboard.ratings.index,
 		image: RatingOverviewSvg,
+	},
+	{
+		name: "CP Index",
+		href: urls.dashboard.cp_index.index,
+		image: CPIndexSvg,
 	},
 	{
 		name: "Send Notification",

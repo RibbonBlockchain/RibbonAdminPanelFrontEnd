@@ -1,4 +1,7 @@
-import { GetRewardPartnersResponse } from "@/types/response";
+import {
+	CreateVaultResponse,
+	GetRewardPartnersResponse,
+} from "@/types/response";
 import { Fetch, methods } from ".";
 
 async function getAll(
@@ -15,6 +18,13 @@ async function getAll(
 	);
 }
 
+async function createVault(token: string) {
+	return await Fetch<CreateVaultResponse>("/admin/create-vault", token, {
+		method: methods.POST,
+	});
+}
+
 export const rewardPartnerService = {
 	getAll,
+	createVault,
 };

@@ -86,6 +86,8 @@ export type GetRewardPartnersResponse = DefaultResponse<{
 	pagination: Pagination;
 }>;
 
+export type CreateVaultResponse = DefaultResponse<null>;
+
 // NOTE: Reports
 
 export type DownloadSystemReportResponse = DefaultResponse<{}>;

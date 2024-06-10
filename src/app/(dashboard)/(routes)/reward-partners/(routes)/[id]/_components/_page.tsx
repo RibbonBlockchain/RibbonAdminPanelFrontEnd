@@ -135,9 +135,12 @@ const RewardPartnerSinglePage = () => {
 
 	const onSubmit = handleSubmit(async (data) => {
 		if (!rewardPartnerData?.data?.vaultAddress) {
-			createVaultMutation({ address: data.type.address, amount: data.output });
+			createVaultMutation({
+				address: data.type.address,
+				amount: data.output * 0.9,
+			});
 		} else {
-			transferToVaultMutation({ amount: data.output });
+			transferToVaultMutation({ amount: data.output * 0.9 });
 		}
 	});
 

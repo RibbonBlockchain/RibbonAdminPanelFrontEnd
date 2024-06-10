@@ -155,6 +155,7 @@ export type RewardPartner = {
 	logo: string;
 	name: string;
 	token: string;
+	vaultAddress: string;
 	value: number;
 	volume: number;
 	createdAt: string;

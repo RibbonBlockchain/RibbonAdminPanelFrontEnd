@@ -14,6 +14,10 @@ import LogoutModal from "@/app/(dashboard)/_components/logout_modal";
 import SendNotificationSvg from "@/components/svgs/send_notifications";
 import RatingOverviewSvg from "@/components/svgs/rating_overview";
 import CPIndexSvg from "@/components/svgs/cp_index";
+import UsdcSvg from "@/components/svgs/usdc";
+import UsdtSvg from "@/components/svgs/usdt";
+import WorldCoinSvg from "@/components/svgs/worldcoin";
+import { CreateVaultSchemaType } from "@/schemas";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -135,4 +139,31 @@ export const months = [
 	{ id: "Oct", name: "October" },
 	{ id: "Nov", name: "November" },
 	{ id: "Dec", name: "December" },
+];
+
+export const reward_partner_input: Required<CreateVaultSchemaType["type"]>[] = [
+	{
+		id: 1,
+		image: WorldCoinSvg,
+		name: "Worldcoin",
+		ticker: "WLD",
+		point_per_coin: 5000,
+		address: process.env.NEXT_PUBLIC_WORLD_COIN_ADDRESS,
+	},
+	{
+		id: 2,
+		image: UsdtSvg,
+		name: "USDT",
+		ticker: "USDT",
+		point_per_coin: 10,
+		address: process.env.NEXT_PUBLIC_USDT_ADDRESS,
+	},
+	{
+		id: 3,
+		image: UsdcSvg,
+		name: "USDC",
+		ticker: "USDC",
+		point_per_coin: 10.5,
+		address: process.env.NEXT_PUBLIC_USDC_ADDRESS,
+	},
 ];

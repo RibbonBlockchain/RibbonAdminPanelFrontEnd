@@ -173,7 +173,7 @@ const CPIndexPage: React.FC<Props> = (props) => {
 					variant={"outline"}
 					className="items-center gap-2 [&>svg>path]:hover:fill-white"
 				>
-					<span>Upload history</span> <HistorySvg />{" "}
+					<span>View history</span> <HistorySvg />{" "}
 				</Button>
 				<Button className="items-center gap-2 [&>svg>path]:hover:stroke-primary">
 					<span>Upload a file</span>

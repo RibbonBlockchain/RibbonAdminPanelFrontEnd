@@ -20,6 +20,7 @@ export default function LoginForm() {
 	const router = useRouter();
 	const params = useSearchParams();
 	const emailParam = params.get("email") || "";
+	const callbackParam = params.get("callbackUrl") || "";
 	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({
@@ -39,7 +40,7 @@ export default function LoginForm() {
 			// Invalidate and refetch
 			reset();
 			queryClient.invalidateQueries();
-			router.push(urls.dashboard.home);
+			router.push(callbackParam || urls.dashboard.home);
 		},
 	});
 

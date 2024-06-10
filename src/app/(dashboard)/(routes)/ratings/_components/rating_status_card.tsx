@@ -45,7 +45,7 @@ const RatingStatusCard: React.FC<Props> = (props) => {
 					</div>
 					<div className="flex justify-between ">
 						<span className="flex items-center gap-4">
-							<span className="bg-secondary flex size-3 rounded-full" />
+							<span className="flex size-3 rounded-full bg-secondary" />
 							Unrated activities
 						</span>
 						<span>{props.unrated_status || 0}</span>

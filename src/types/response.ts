@@ -86,7 +86,10 @@ export type GetRewardPartnersResponse = DefaultResponse<{
 	pagination: Pagination;
 }>;
 
+export type GetRewardPartnerByIdResponse = DefaultResponse<RewardPartner>;
+
 export type CreateVaultResponse = DefaultResponse<null>;
+export type TransferToVaultResponse = DefaultResponse<null>;
 
 // NOTE: Reports
 
@@ -146,6 +149,23 @@ export type GetAllQuestionnaireActivityReportResponse = DefaultResponse<{
 		completed: number;
 		pending: number;
 	}[];
+}>;
+
+// NOTE: Rating
+export type GetRatingOverviewResponse = DefaultResponse<{
+	ratingDistributions: {
+		"0": string;
+		"1": string;
+		"2": string;
+		"3": string;
+		"4": string;
+		"5": string;
+	};
+	ratingsStatus: {
+		withRating: string;
+		withoutRating: string;
+	};
+	totalAverageRatings: string;
 }>;
 
 // NOTE: Other

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { IoIosClose } from "react-icons/io";
 import { RxCaretDown } from "react-icons/rx";
@@ -15,46 +14,45 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { programs } from "@/lib/sample_data";
 import { Button } from "@/components/ui/button";
+import { CreateVaultSchemaType } from "@/schemas";
 
-const InputDropdown = () => {
+type Props = {
+	selectedValue: CreateVaultSchemaType["type"];
+	setSelectedValue: (v: CreateVaultSchemaType["type"]) => void;
+
+	items: CreateVaultSchemaType["type"][];
+};
+
+const InputDropdown: React.FC<Props> = (props) => {
 	const [open, setOpen] = React.useState(false);
-	const [value, setValue] = React.useState<(typeof programs)[number] | null>(
-		programs[0]
-	);
+
 	const [search, setSearch] = React.useState<string>("");
 
 	const list_of_programs = React.useMemo(() => {
 		if (search) {
-			return programs.filter(
+			return props.items.filter(
 				(program) =>
 					program.name.toLowerCase().includes(search.toLowerCase()) ||
 					program.ticker.toLowerCase().includes(search.toLowerCase())
 			);
 		}
 
-		return programs;
+		return props.items;
 	}, [search]);
 
 	return (
 		<DropdownMenu onOpenChange={setOpen} open={open}>
 			<DropdownMenuTrigger asChild>
-				{value ? (
+				{props.selectedValue ? (
 					<Button
 						variant={"plain"}
 						size={"plain"}
 						className="flex items-center gap-x-2 rounded-full border px-2 py-1"
 					>
-						<Image
-							src={value?.image}
-							alt={value?.name}
-							width={40}
-							height={40}
-							className="size-4 border"
-						/>
+						<props.selectedValue.image />
 						<figcaption className="flex items-center text-black">
-							<span className=" text-xs">{value?.ticker}</span>
+							<span className=" text-xs">{props.selectedValue?.ticker}</span>
 
 							<RxCaretDown className="text-lg" />
 						</figcaption>
@@ -94,15 +92,11 @@ const InputDropdown = () => {
 					<ul className="flex flex-col gap-3 py-2">
 						{list_of_programs.map((program, index) => (
 							<li key={`list-of-tokens-${index}`}>
-								<DropdownMenuItem onClick={() => setValue(program)}>
+								<DropdownMenuItem
+									onClick={() => props.setSelectedValue(program)}
+								>
 									<figure className="flex items-center gap-x-1">
-										<Image
-											src={program.image}
-											alt={program.name}
-											width={40}
-											height={40}
-											className="size-5 border"
-										/>
+										<program.image />
 										<figcaption className="text-xs font-medium">
 											{program.name}
 										</figcaption>

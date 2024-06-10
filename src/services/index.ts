@@ -25,6 +25,9 @@ export async function Fetch<T>(
 
 	if (!res.ok) {
 		if (res.status === 401) {
+			console.log(
+				`\n ============== Unauthorized request: ${url} ============== \n`
+			);
 			await signOut({ redirect: true, callbackUrl: window.location.href });
 		}
 

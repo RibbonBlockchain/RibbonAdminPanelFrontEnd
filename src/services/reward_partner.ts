@@ -5,6 +5,7 @@ import {
 } from "@/types/response";
 import { Fetch, methods } from ".";
 import { CreateVaultRequest, TransferToVaultRequest } from "@/types/request";
+import { parseUnits } from "ethers";
 
 async function getAll(
 	input: {
@@ -31,7 +32,7 @@ async function createVault(input: CreateVaultRequest, token: string) {
 	return await Fetch<CreateVaultResponse>("/admin/create-vault", token, {
 		method: methods.POST,
 		body: JSON.stringify({
-			amount: String(input.amount * 10 ** 18),
+			amount: parseUnits(input.amount.toString(), 18).toString(),
 			address: input.address,
 		}),
 	});
@@ -41,7 +42,7 @@ async function transferToVault(input: TransferToVaultRequest, token: string) {
 	return await Fetch<CreateVaultResponse>("/admin/wallet-transfer", token, {
 		method: methods.POST,
 		body: JSON.stringify({
-			amount: String(input.amount * 10 ** 18),
+			amount: parseUnits(input.amount.toString(), 18).toString(),
 		}),
 	});
 }

@@ -316,6 +316,31 @@ export const EditSesScoreSchema = z.object({
 
 export type EditSesScoreSchemaType = z.infer<typeof EditSesScoreSchema>;
 
+export const CreateVaultSchema = z.object({
+	type: z.object(
+		{
+			id: z.number({ coerce: true }),
+			address: z.string().min(1, "Address cannot be empty").trim(),
+			image: z.any(),
+			name: z.string().min(1, "Name cannot be empty").trim(),
+			point_per_coin: z.number({ coerce: true }),
+			ticker: z.string().min(1, "Ticker cannot be empty").trim(),
+		},
+		{
+			required_error: "Input type is required",
+			invalid_type_error: "Input type is required",
+		}
+	),
+	input: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Input must be greater than 0"),
+	output: z
+		.number({ coerce: true })
+		.min(0.0000000001, "Output must be greater than 0"),
+});
+
+export type CreateVaultSchemaType = z.infer<typeof CreateVaultSchema>;
+
 export const SendNotificationSchema = z.object({
 	title: z
 		.string()

@@ -14,8 +14,7 @@ import {
 } from "recharts";
 
 type Props = {
-	rated_status: number;
-	unrated_status: number;
+	average_rating: string;
 };
 
 const COLORS = ["#7C56FE", "#D6CBFF"];
@@ -69,16 +68,16 @@ const TotalAverageRatingCard: React.FC<Props> = (props) => {
 		<div className="rounded-xl bg-white px-4 py-8">
 			<h2 className="text-nowrap text-lg font-bold">Total average ratings</h2>
 
-			<div className="grid grid-cols-5 items-center gap-x-12">
-				<div className="col-span-1 flex items-center text-3xl">
-					<span className="font-semibold">4.8</span>
-					<TiStarFullOutline className="text-golden text-2xl" />
+			<div className="grid grid-cols-7 items-center gap-x-12">
+				<div className="col-span-2 flex items-center text-3xl">
+					<span className="font-semibold">{props.average_rating}</span>
+					<TiStarFullOutline className="text-2xl text-golden" />
 				</div>
 
 				<ResponsiveContainer
 					width={"100%"}
 					height={200}
-					className={"col-span-4"}
+					className={"col-span-5"}
 				>
 					<BarChart
 						// width={500}

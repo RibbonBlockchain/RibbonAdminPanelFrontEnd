@@ -88,6 +88,12 @@ export type EditTaskRequest = {
 	}[];
 };
 
+// NOTE: Reward Partner
+
+export type CreateVaultRequest = { amount: number; address: string };
+
+export type TransferToVaultRequest = { amount: number };
+
 // NOTE: Others
 export type UpdateSesScoreRequest = { optionId: number; point: number }[];
 

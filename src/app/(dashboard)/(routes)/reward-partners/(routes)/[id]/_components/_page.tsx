@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { ImSpinner3 } from "react-icons/im";
 
@@ -13,7 +13,6 @@ import {
 	TableBody,
 	TableCell,
 } from "@/components/ui/table";
-import BreadcrumIconSvg from "@/components/svgs/breadcrum_icon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FundingHistorySvg from "@/components/svgs/funding_history";
@@ -21,27 +20,51 @@ import { Button } from "@/components/ui/button";
 import InputDropdown from "./input_dropdown";
 import DepositAddress from "./deposit_address";
 
-import urls from "@/lib/urls";
 import { funding_history } from "@/lib/sample_data";
 import { cn, getTimeAgo, getErrorMessage, debounce } from "@/lib/utils";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { rewardPartnerService } from "@/services/reward_partner";
 import { useToken } from "@/components/providers/token";
 import { toast } from "@/components/ui/use-toast";
+import { reward_partner_input } from "@/lib/constants";
+import ErrorScreen from "@/components/sections/error";
+import { useParams } from "next/navigation";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { CreateVaultSchema, CreateVaultSchemaType } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateVaultRequest, TransferToVaultRequest } from "@/types/request";
+import ErrorMessage from "@/components/ui/error_message";
 
 const RewardPartnerSinglePage = () => {
+	const params = useParams();
 	const qc = useQueryClient();
 	const { token } = useToken();
 
-	const [input, setInput] = React.useState(0);
-	const [output, setOutput] = React.useState(0);
+	const [
+		{
+			data: rewardPartnerData,
+			isLoading: isLoadingRewardPartner,
+			error: rewardPartnerError,
+			refetch: refetchRewardPartner,
+		},
+	] = useQueries({
+		queries: [
+			{
+				queryKey: ["reward partner", { id: params?.id as string }],
+				queryFn: () =>
+					rewardPartnerService.getById(params?.id as string, token || ""),
+				enabled: !!params?.id && !!token,
+			},
+		],
+	});
 
 	const { mutate: createVaultMutation, isPending: isCreateVaultPending } =
 		useMutation({
 			mutationKey: ["Create Vault"],
-			mutationFn: async () =>
-				await rewardPartnerService.createVault(token || ""),
+			mutationFn: async (data: CreateVaultRequest) =>
+				await rewardPartnerService.createVault(data, token || ""),
 			onSuccess(data) {
 				toast({
 					title: "Success",
@@ -49,9 +72,10 @@ const RewardPartnerSinglePage = () => {
 					duration: 5000,
 				});
 				qc.refetchQueries({
-					queryKey: ["reward partners", { id: 1 }],
-					type: "active",
+					queryKey: ["reward partner", { id: params?.id as string }],
+					type: "all",
 				});
+				reset();
 			},
 			onError(error) {
 				toast({
@@ -63,41 +87,95 @@ const RewardPartnerSinglePage = () => {
 			},
 		});
 
+	const {
+		mutate: transferToVaultMutation,
+		isPending: isTransferToVaultPending,
+	} = useMutation({
+		mutationKey: ["transfer to vault"],
+		mutationFn: async (data: TransferToVaultRequest) =>
+			await rewardPartnerService.transferToVault(data, token || ""),
+		onSuccess(data) {
+			toast({
+				title: "Success",
+				description: data?.message,
+				duration: 5000,
+			});
+			qc.refetchQueries({
+				queryKey: ["reward partner", { id: params?.id as string }],
+				type: "all",
+			});
+			reset();
+		},
+		onError(error) {
+			toast({
+				title: "Error",
+				description: getErrorMessage(error),
+				duration: 5000,
+				variant: "destructive",
+			});
+		},
+	});
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+		watch,
+		setValue,
+	} = useForm<CreateVaultSchemaType>({
+		mode: "onSubmit",
+		resolver: zodResolver(CreateVaultSchema),
+		defaultValues: {
+			type: reward_partner_input[0],
+			input: 0,
+			output: 0,
+		},
+	});
+
+	const onSubmit = handleSubmit(async (data) => {
+		if (!rewardPartnerData?.data?.vaultAddress) {
+			createVaultMutation({ address: data.type.address, amount: data.output });
+		} else {
+			transferToVaultMutation({ amount: data.output });
+		}
+	});
+
+	const [input, amount, inputType] = watch(["input", "output", "type"]);
+
 	React.useEffect(() => {
-		const timer = setTimeout(() => setOutput(input * 5000 * (90 / 100)), 700);
+		const timer = setTimeout(() => {
+			const newamount = input * inputType.point_per_coin;
+			setValue("output", newamount);
+		}, 1000);
 
 		() => clearTimeout(timer);
-	}, [input, setOutput]);
+	}, [input, inputType.point_per_coin, setValue]);
 
-	React.useEffect(() => {
-		const timer = setTimeout(() => setInput(output / 5000 / (90 / 100)), 700);
+	if (isLoadingRewardPartner) return <div className="p-4">Loading...</div>;
 
-		() => clearTimeout(timer);
-	}, [output, setInput]);
+	if (rewardPartnerError)
+		return (
+			<ErrorScreen error={rewardPartnerError} reset={refetchRewardPartner} />
+		);
 
 	return (
 		<>
-			<div className="my-4 flex items-center gap-x-2 px-4">
-				<Link
-					href={urls.dashboard.reward_partners.index}
-					className="hover:text-primary"
-				>
-					Reward partners
-				</Link>
-				<BreadcrumIconSvg />
-				<span>Deposit address</span>
-			</div>
-
-			<section className="mx-4 grid grid-cols-2 divide-x rounded-2xl bg-white p-6">
+			<form
+				onSubmit={onSubmit}
+				className="mx-4 grid grid-cols-2 divide-x rounded-2xl bg-white p-6"
+			>
 				<div className="flex flex-col gap-y-6 p-4 pr-8">
 					<div className="rounded-xl border p-4">
 						<Label className="text-sm text-primary">Input</Label>
 						<div className="relative mt-2 flex items-center gap-x-3">
-							<InputDropdown />
+							<InputDropdown
+								selectedValue={inputType}
+								setSelectedValue={(v) => setValue("type", v)}
+								items={reward_partner_input}
+							/>
 							<Input
-								value={input}
-								onChange={(e) => setInput(Number(e.target.value))}
-								min={0}
+								{...register("input")}
 								step={0.01}
 								type="number"
 								className={cn(
@@ -107,9 +185,13 @@ const RewardPartnerSinglePage = () => {
 							/>
 						</div>
 						<div className="mt-2 flex justify-end gap-2 text-xs text-black-neutral">
-							<span>1 wld</span>=<span>5000 pts</span>
+							<span>1 {inputType?.ticker.toLowerCase()}</span>=
+							<span>{inputType?.point_per_coin} pts</span>
 						</div>
 					</div>
+					<ErrorMessage className="-mt-6">
+						{errors.input?.message || errors.type?.message}
+					</ErrorMessage>
 
 					<LiaExchangeAltSolid className="-rotate-90 self-center text-xl" />
 
@@ -120,8 +202,8 @@ const RewardPartnerSinglePage = () => {
 								PTS
 							</span>
 							<Input
-								value={output}
-								onChange={(e) => setOutput(Number(e.target.value))}
+								readOnly
+								value={amount * 0.9}
 								step={1}
 								min={0}
 								type="number"
@@ -133,11 +215,24 @@ const RewardPartnerSinglePage = () => {
 						</div>
 						<div className="mt-4 flex justify-between gap-x-6 text-xs">
 							<span>Fees</span>
-							<span>1 USDT</span>
+							<span>{amount * 0.1} PTS</span>
 						</div>
 					</div>
+					<ErrorMessage className="-mt-6">
+						{errors.output?.message}
+					</ErrorMessage>
 
-					<Button disabled>Mint to vault</Button>
+					<Button
+						disabled={
+							!rewardPartnerData?.data?.vaultAddress || isTransferToVaultPending
+						}
+					>
+						{isTransferToVaultPending ? (
+							<ImSpinner3 className="mr-1 animate-spin" />
+						) : (
+							"Transfer to vault"
+						)}
+					</Button>
 				</div>
 				<div className="flex flex-col justify-center gap-y-4 p-4 pr-0">
 					<h2 className="text-center text-lg font-bold">
@@ -150,21 +245,24 @@ const RewardPartnerSinglePage = () => {
 					</p>
 
 					<div className="mt-8 flex w-full flex-col items-center gap-8 [&>*]:max-w-[80%]">
-						<DepositAddress />
-						<Button
-							disabled={isCreateVaultPending}
-							className="w-full rounded-xl"
-							onClick={() => createVaultMutation()}
-						>
-							{isCreateVaultPending ? (
-								<ImSpinner3 className="mr-1 animate-spin" />
-							) : (
-								"Create Vault"
-							)}
-						</Button>
+						<DepositAddress
+							address={rewardPartnerData?.data?.vaultAddress || ""}
+						/>
+						{!rewardPartnerData?.data?.vaultAddress && (
+							<Button
+								disabled={isCreateVaultPending}
+								className="w-full rounded-xl"
+							>
+								{isCreateVaultPending ? (
+									<ImSpinner3 className="mr-1 animate-spin" />
+								) : (
+									"Create Vault"
+								)}
+							</Button>
+						)}
 					</div>
 				</div>
-			</section>
+			</form>
 
 			<section className="mx-4 mb-12 mt-8 rounded-2xl bg-white p-6">
 				<h2 className="text-lg font-bold">Funding History</h2>

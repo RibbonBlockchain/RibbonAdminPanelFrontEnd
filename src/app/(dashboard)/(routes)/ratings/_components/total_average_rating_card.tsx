@@ -12,6 +12,7 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from "recharts";
+import TotalAverageRatingSvg from "@/components/svgs/total_average_rating";
 
 type Props = {
 	average_rating: string;
@@ -68,37 +69,13 @@ const TotalAverageRatingCard: React.FC<Props> = (props) => {
 		<div className="rounded-xl bg-white px-4 py-8">
 			<h2 className="text-nowrap text-lg font-bold">Total average ratings</h2>
 
-			<div className="grid grid-cols-7 items-center gap-x-12">
+			<div className="flex h-full items-center justify-between gap-x-12 pr-6">
 				<div className="col-span-2 flex items-center text-3xl">
 					<span className="font-semibold">{props.average_rating}</span>
 					<TiStarFullOutline className="text-2xl text-golden" />
 				</div>
 
-				<ResponsiveContainer
-					width={"100%"}
-					height={200}
-					className={"col-span-5"}
-				>
-					<BarChart
-						// width={500}
-						// height={300}
-						data={data}
-						margin={{
-							top: 20,
-							right: 30,
-							left: 20,
-							bottom: 5,
-						}}
-					>
-						<CartesianGrid strokeDasharray="3 3" className="hidden" />
-						<XAxis dataKey="name" className="hidden" />
-						<YAxis className="hidden" />
-						<Tooltip />
-						{/* <Legend className="hidden" /> */}
-						<Bar dataKey="pv" stackId="a" fill={COLORS[0]} barSize={7} />
-						<Bar dataKey="uv" stackId="a" fill={COLORS[1]} barSize={7} />
-					</BarChart>
-				</ResponsiveContainer>
+				<TotalAverageRatingSvg />
 			</div>
 		</div>
 	);

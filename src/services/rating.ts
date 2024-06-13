@@ -1,9 +1,9 @@
 import { GetRatingOverviewResponse } from "@/types/response";
 import { Fetch } from ".";
 
-async function getOverview(token: string) {
+async function getOverview(type: "q" | "s" | "t" = "q", token: string) {
 	return await Fetch<GetRatingOverviewResponse>(
-		`/admin/rating/overview`,
+		`/admin/rating/overview?type=${type}`,
 		token
 	);
 }

@@ -1,31 +1,48 @@
 import Image from "next/image";
 import React from "react";
 
-const GeographicalDistributionCard = () => {
+type Props = {
+	data?: {
+		code: string;
+		count: number;
+		percentage: string;
+	}[];
+};
+
+const GeographicalDistributionCard: React.FC<Props> = (props) => {
 	return (
-		<div className="col-span-2 rounded-xl bg-white px-4 py-8">
+		<div className="col-span-2 min-h-96 rounded-xl bg-white px-4 py-8">
 			<h2 className="text-nowrap text-lg font-bold">
 				Geographical distributions
 			</h2>
 
-			<ul>
-				{data.map((x, i) => (
-					<li key={`geographical-distribution-${i}`} className="border-b py-4">
-						<figure className="flex gap-2">
-							<Image
-								className="size-7"
-								src={x.image}
-								alt=""
-								width={28}
-								height={28}
-							/>
-							<figcaption className="flex w-full justify-between gap-4">
-								<span className="font-bold">{x.country}</span>
-								<span>{x.distribution}%</span>
-							</figcaption>
-						</figure>
+			<ul className="h-full">
+				{props.data && props.data.length > 0 ? (
+					props.data.map((x, i) => (
+						<li
+							key={`geographical-distribution-${i}`}
+							className="border-b py-4"
+						>
+							<figure className="flex gap-2">
+								<Image
+									className="size-7"
+									src={""}
+									alt=""
+									width={28}
+									height={28}
+								/>
+								<figcaption className="flex w-full justify-between gap-4">
+									<span className="font-bold">{x.code}</span>
+									<span>{x.percentage}</span>
+								</figcaption>
+							</figure>
+						</li>
+					))
+				) : (
+					<li className="flex h-full items-center justify-center">
+						No data available
 					</li>
-				))}
+				)}
 			</ul>
 		</div>
 	);

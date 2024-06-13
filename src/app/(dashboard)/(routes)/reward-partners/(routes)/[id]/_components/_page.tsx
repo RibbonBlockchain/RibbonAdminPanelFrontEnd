@@ -137,7 +137,7 @@ const RewardPartnerSinglePage = () => {
 		if (!rewardPartnerData?.data?.vaultAddress) {
 			createVaultMutation({
 				address: data.type.address,
-				amount: data.output * 0.9,
+				points: data.output * 0.9,
 			});
 		} else {
 			transferToVaultMutation({ amount: data.output * 0.9 });

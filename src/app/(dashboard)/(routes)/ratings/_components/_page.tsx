@@ -1,51 +1,54 @@
 "use client";
 
 import React from "react";
-import RatingStatusCard from "./rating_status_card";
-import TotalAverageRatingCard from "./total_average_rating_card";
-import RatingDistributionCard from "./rating_distribution_card";
-import GeographicalDistributionCard from "./geographical_distribution_card";
-import ActivitiesRatedCard from "./activities_rated_card";
-import { useToken } from "@/components/providers/token";
-import { useQuery } from "@tanstack/react-query";
-import { ratingService } from "@/services/rating";
-import ErrorScreen from "@/components/sections/error";
+import { useRouter } from "next/navigation";
 
-const RatingPage = () => {
-	const { token } = useToken();
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import QuestionnaireRatingsTab from "./tabs/questionnaire";
+import SurveyRatingsTab from "./tabs/surveys";
+import TaskRatingsTab from "./tabs/tasks";
 
-	const { data, isPending, error, refetch } = useQuery({
-		queryKey: ["Rating Overview"],
-		queryFn: () => ratingService.getOverview(token || ""),
-	});
+type Props = {
+	type: "q" | "s" | "t";
+};
 
-	if (isPending) return <div className="p-4">Loading...</div>;
+const RatingPage: React.FC<Props> = (props) => {
+	const router = useRouter();
+	function handleTabChange(tab: "q" | "s" | "t") {
+		const url = new URL(window.location.href);
 
-	if (error) return <ErrorScreen error={error} reset={refetch} />;
+		url.searchParams.set("type", tab);
+
+		router.push(url.href);
+	}
 
 	return (
-		<>
-			<section className="mt-12 grid grid-cols-2 gap-6 px-6">
-				<RatingStatusCard
-					rated_status={parseFloat(data.data?.ratingsStatus.withRating || "0")}
-					unrated_status={parseFloat(
-						data.data?.ratingsStatus.withoutRating || "0"
-					)}
-				/>
-				<TotalAverageRatingCard
-					average_rating={data?.data?.totalAverageRatings || "0.0"}
-				/>
-			</section>
-
-			<section className="mt-6 grid grid-cols-5 gap-6 px-6">
-				<RatingDistributionCard />
-				<GeographicalDistributionCard />
-			</section>
-
-			<section className="mb-12 mt-6 px-6">
-				<ActivitiesRatedCard />
-			</section>
-		</>
+		<Tabs
+			defaultValue="reward"
+			value={props.type}
+			className="mx-auto mt-4 w-full"
+		>
+			<TabsList className="w-full gap-x-6 bg-transparent ">
+				<TabsTrigger onClick={() => handleTabChange("q")} value="q">
+					Questionnaire
+				</TabsTrigger>
+				<TabsTrigger onClick={() => handleTabChange("s")} value="s">
+					Surveys
+				</TabsTrigger>
+				<TabsTrigger onClick={() => handleTabChange("t")} value="t">
+					Tasks
+				</TabsTrigger>
+			</TabsList>
+			<TabsContent value="q" className="my-12">
+				<QuestionnaireRatingsTab />
+			</TabsContent>
+			<TabsContent value="s" className="my-12">
+				<SurveyRatingsTab />
+			</TabsContent>
+			<TabsContent value="t" className="my-12">
+				<TaskRatingsTab />
+			</TabsContent>
+		</Tabs>
 	);
 };
 

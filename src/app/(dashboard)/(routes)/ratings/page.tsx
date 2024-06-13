@@ -8,7 +8,11 @@ export const metadata: Metadata = {
 	description: "Ratings Overview",
 };
 
-export default async function Page() {
+export default async function Page({
+	searchParams,
+}: {
+	searchParams: { type: "q" | "s" | "t" };
+}) {
 	return (
 		<>
 			<Header>Admin Dashboard</Header>
@@ -17,7 +21,11 @@ export default async function Page() {
 				User Ratings Overview
 			</h2>
 
-			<RatingPage />
+			<RatingPage
+				type={
+					["q", "s", "t"].includes(searchParams.type) ? searchParams.type : "q"
+				}
+			/>
 		</>
 	);
 }

@@ -28,11 +28,15 @@ async function getById(id: string | number, token: string) {
 	);
 }
 
+async function getFundingHistory(id: string, token: string) {
+	return await Fetch<CreateVaultResponse>(`/admin/wallet/history`, token);
+}
+
 async function createVault(input: CreateVaultRequest, token: string) {
 	return await Fetch<CreateVaultResponse>("/admin/create-vault", token, {
 		method: methods.POST,
 		body: JSON.stringify({
-			amount: parseUnits(input.amount.toString(), 18).toString(),
+			points: parseUnits(input.points.toString(), 18).toString(),
 			address: input.address,
 		}),
 	});
@@ -50,6 +54,7 @@ async function transferToVault(input: TransferToVaultRequest, token: string) {
 export const rewardPartnerService = {
 	getAll,
 	getById,
+	getFundingHistory,
 	createVault,
 	transferToVault,
 };

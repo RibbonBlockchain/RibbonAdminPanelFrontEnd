@@ -39,7 +39,7 @@ const InputDropdown: React.FC<Props> = (props) => {
 		}
 
 		return props.items;
-	}, [search]);
+	}, [search, props.items]);
 
 	return (
 		<DropdownMenu onOpenChange={setOpen} open={open}>

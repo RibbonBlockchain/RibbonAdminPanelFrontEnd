@@ -1,11 +1,11 @@
 import Header from "@/components/header";
 
 import type { Metadata } from "next";
-import CPIndexPage from "./_components/_page";
+import CpIndexUploadHistoryTable from "./_components/history_table";
 
 export const metadata: Metadata = {
-	title: "CP Index",
-	description: "CP Index",
+	title: "CP Index Upload History",
+	description: "CP Index Upload History",
 };
 
 export default function Page({ searchParams }: { searchParams: {} }) {
@@ -16,18 +16,13 @@ export default function Page({ searchParams }: { searchParams: {} }) {
 				<h2 className="text-center text-2xl font-semibold">
 					Consumer price indices (CPIs)
 				</h2>
-				<p className="mt-1 text-center text-sm">Consumer Price Index</p>
-
-				<p>
-					{new Date().toLocaleDateString("en-US", {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					})}
-				</p>
+				<p className="mt-1 text-center text-sm">File Upload History</p>
 			</div>
 
-			<CPIndexPage />
+			<section className="mx-auto w-full max-w-3xl">
+				<h3 className="mb-8 text-xl font-semibold">Upload History</h3>
+				<CpIndexUploadHistoryTable />
+			</section>
 		</>
 	);
 }

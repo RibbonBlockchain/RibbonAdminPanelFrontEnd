@@ -66,7 +66,7 @@ const TotalAverageRatingCard: React.FC<Props> = (props) => {
 		},
 	];
 	return (
-		<div className="rounded-xl bg-white px-4 py-8">
+		<div className="rounded-xl bg-gradient-to-r from-white from-[60%] to-[#EBE8FD] px-4 py-8 shadow">
 			<h2 className="text-nowrap text-lg font-bold">Total average ratings</h2>
 
 			<div className="flex h-full items-center justify-between gap-x-12 pr-6">

@@ -6,17 +6,17 @@ import urls from "@/lib/urls";
 import { redirect } from "next/navigation";
 
 const page = async () => {
-	const session = await getServerSession();
+	// const session = await getServerSession();
 
-	if (!session || !session?.user) {
-		return (
-			<AuthCard bgColor="bg-white">
-				<LoginForm />
-			</AuthCard>
-		);
-	}
+	// if (!session || !session?.user) {
+	return (
+		<AuthCard bgColor="bg-white">
+			<LoginForm />
+		</AuthCard>
+	);
+	// }
 
-	return redirect(urls.dashboard.home);
+	// return redirect(urls.dashboard.home);
 };
 
 export default page;

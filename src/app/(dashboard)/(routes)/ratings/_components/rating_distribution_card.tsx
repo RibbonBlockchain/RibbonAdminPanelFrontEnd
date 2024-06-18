@@ -20,7 +20,7 @@ type Props = {
 
 const RatingDistributionCard: React.FC<Props> = (props) => {
 	return (
-		<div className="col-span-3 min-h-96 rounded-xl bg-white px-4 py-8">
+		<div className="col-span-3 min-h-96 rounded-xl bg-white px-4 py-8 shadow">
 			<div className="flex justify-between gap-6">
 				<h2 className="text-nowrap text-lg font-bold">Ratings distributions</h2>
 

@@ -259,6 +259,9 @@ export type GetRatingOverviewResponse = DefaultResponse<{
 
 // NOTE: Other
 
+export type GetCPIndexResponse = DefaultResponse<{}>;
+export type UploadCPIndexResponse = DefaultResponse<{}>;
+
 export type GetSummaryResponse = DefaultResponse<{
 	count: {
 		active: number;

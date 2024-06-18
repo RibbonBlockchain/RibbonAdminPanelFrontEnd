@@ -16,9 +16,15 @@ import {
 	SelectContent,
 	SelectItem,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import FileSvg from "@/components/svgs/file";
+
 import HistorySvg from "@/components/svgs/history";
+import { useToken } from "@/components/providers/token";
+import { useQuery } from "@tanstack/react-query";
+import { cpIndexService } from "@/services/cp_index";
+import ErrorScreen from "@/components/sections/error";
+import { ButtonLink } from "@/components/ui/button_link";
+import urls from "@/lib/urls";
+import UploadCpIndexModal from "./upload_cpindex_modal";
 
 type Props = {};
 
@@ -38,7 +44,24 @@ const months_header = [
 ];
 
 const CPIndexPage: React.FC<Props> = (props) => {
-	const [year, setYear] = React.useState(new Date().getFullYear());
+	const { token } = useToken();
+	const [year, setYear] = React.useState(new Date().getFullYear() - 1);
+
+	const {
+		data: cpiData,
+		isPending,
+		error,
+		refetch,
+	} = useQuery({
+		queryKey: ["cp-index", { year }],
+		queryFn: () => cpIndexService.getAll(year, token || ""),
+		enabled: !!token && !!year,
+	});
+
+	if (isPending) return <p className="px-4">Loading...</p>;
+
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
+
 	return (
 		<>
 			<div className="mx-4 grid grid-cols-5 gap-0.5">
@@ -169,16 +192,15 @@ const CPIndexPage: React.FC<Props> = (props) => {
 			</div>
 
 			<div className="ml-4 mr-12 mt-12 flex justify-end gap-4">
-				<Button
+				<ButtonLink
+					href={urls.dashboard.cp_index["upload-history"]}
 					variant={"outline"}
 					className="items-center gap-2 [&>svg>path]:hover:fill-white"
 				>
 					<span>View history</span> <HistorySvg />{" "}
-				</Button>
-				<Button className="items-center gap-2 [&>svg>path]:hover:stroke-primary">
-					<span>Upload a file</span>
-					<FileSvg />
-				</Button>
+				</ButtonLink>
+
+				<UploadCpIndexModal />
 			</div>
 		</>
 	);

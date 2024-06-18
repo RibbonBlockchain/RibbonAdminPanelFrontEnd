@@ -67,7 +67,12 @@ export function getTimeAgo(dateString: string): string {
 	const days = Math.floor(hours / 24);
 
 	// Determine the text based on the time units
-	if (days >= 2) {
+
+	if (days > 7) {
+		return formatDate(dateString);
+	} else if (days === 7) {
+		return `1 week ago`;
+	} else if (days >= 2) {
 		return `${days} days ago`;
 	} else if (days === 1) {
 		return `1 day ago`;
@@ -106,7 +111,7 @@ export function logout(reroute: boolean = true) {
 	const qc = new QueryClient();
 
 	qc.invalidateQueries();
-	localStorage.removeItem("token");
+	// localStorage.removeItem("token");
 	signOut({ callbackUrl: urls.auth.login() });
 }
 

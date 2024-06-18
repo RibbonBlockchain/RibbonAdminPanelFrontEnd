@@ -32,7 +32,7 @@ const RatingStatusCard: React.FC<Props> = (props) => {
 	];
 
 	return (
-		<div className="rounded-xl bg-white px-4 py-8">
+		<div className="rounded-xl bg-white px-4 py-8 shadow">
 			<h2 className="text-nowrap text-lg font-bold">Rating status</h2>
 
 			<div className="grid grid-cols-5 items-center gap-x-12">

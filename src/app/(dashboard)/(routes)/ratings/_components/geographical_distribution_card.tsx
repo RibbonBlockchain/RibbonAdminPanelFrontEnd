@@ -1,5 +1,7 @@
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import ReactCountryFlag from "react-country-flag";
+import { countries } from "@/lib/constants";
 
 type Props = {
 	data?: {
@@ -10,29 +12,60 @@ type Props = {
 };
 
 const GeographicalDistributionCard: React.FC<Props> = (props) => {
+	const formattedData = React.useMemo(() => {
+		if (!!props.data && Array.isArray(props.data) && props.data.length > 0) {
+			const data = [];
+			for (let i = 0; i < props.data?.length; i++) {
+				const x = props.data[i];
+
+				const country = countries.find(
+					(c) => c.phone.toString() === x.code.slice(1)
+				); // Find country
+
+				data.push({
+					name: country?.name || x.code,
+					count: x.count,
+					percentage: x.percentage,
+					code: country?.code,
+				});
+			}
+
+			return data;
+		}
+
+		return null;
+	}, [props.data]);
 	return (
-		<div className="col-span-2 min-h-96 rounded-xl bg-white px-4 py-8">
+		<div className="col-span-2 min-h-96 rounded-xl bg-white px-4 py-8 shadow">
 			<h2 className="text-nowrap text-lg font-bold">
 				Geographical distributions
 			</h2>
 
 			<ul className="h-full">
-				{props.data && props.data.length > 0 ? (
-					props.data.map((x, i) => (
+				{formattedData && formattedData.length > 0 ? (
+					formattedData.map((x, i) => (
 						<li
 							key={`geographical-distribution-${i}`}
 							className="border-b py-4"
 						>
 							<figure className="flex gap-2">
-								<Image
-									className="size-7"
-									src={""}
-									alt=""
-									width={28}
-									height={28}
-								/>
+								{x.code ? (
+									<ReactCountryFlag
+										countryCode={x.code}
+										svg
+										className="mt-1 size-5"
+									/>
+								) : (
+									<Image
+										className="size-5 border"
+										src={""}
+										alt=""
+										width={28}
+										height={28}
+									/>
+								)}
 								<figcaption className="flex w-full justify-between gap-4">
-									<span className="font-bold">{x.code}</span>
+									<span className="font-bold">{x.name}</span>
 									<span>{x.percentage}</span>
 								</figcaption>
 							</figure>

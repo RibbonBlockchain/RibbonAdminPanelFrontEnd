@@ -42,6 +42,7 @@ const urls = {
 		},
 		cp_index: {
 			index: "/cp-index",
+			"upload-history": "/cp-index/upload-history",
 		},
 		send_notification: "/notifications",
 	},

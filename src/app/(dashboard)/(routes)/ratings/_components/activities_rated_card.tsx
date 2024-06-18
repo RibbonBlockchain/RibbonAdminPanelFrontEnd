@@ -31,7 +31,7 @@ type Props = {
 const ActivitiesRatedCard: React.FC<Props> = (props) => {
 	const [status, setStatus] = React.useState<"rated" | "unrated">("rated");
 	return (
-		<div className="col-span-2 min-h-96 rounded-xl bg-white px-4 py-8 ">
+		<div className="col-span-2 min-h-96 rounded-xl bg-white px-4 py-8 shadow ">
 			<h2 className="text-nowrap text-lg font-bold">Activities rated</h2>
 
 			{props.data && props.data.length > 0 ? (

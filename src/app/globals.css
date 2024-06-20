@@ -23,3 +23,23 @@ html,body{
     -moz-appearance: textfield;
     appearance: textfield;
 }
+
+/* Target the scrollbar */
+.sidebar-scrollbar::-webkit-scrollbar {
+    width: 2px; /* Width of the scrollbar */
+}
+  
+  /* Track */
+  .sidebar-scrollbar::-webkit-scrollbar-track {
+   @apply bg-gray-200
+  }
+  
+  /* Handle */
+  .sidebar-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-primary /* Color of the handle */
+  }
+  
+  /* Handle on hover */
+  .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+   @apply bg-primary-50 /* Color of the handle on hover */
+  }

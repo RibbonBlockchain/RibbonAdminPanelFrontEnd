@@ -37,6 +37,9 @@ const urls = {
 				ses: (id: string) => `/tasks/edit/ses/${id}`,
 			},
 		},
+		users_report: {
+			index: "/users-report",
+		},
 		ratings: {
 			index: "/ratings",
 		},

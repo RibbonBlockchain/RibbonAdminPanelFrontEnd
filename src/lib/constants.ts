@@ -18,6 +18,7 @@ import UsdcSvg from "@/components/svgs/usdc";
 import UsdtSvg from "@/components/svgs/usdt";
 import WorldCoinSvg from "@/components/svgs/worldcoin";
 import { CreateVaultSchemaType } from "@/schemas";
+import UsersReportSvg from "@/components/svgs/users_report";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -48,6 +49,11 @@ export const nav_links = [
 		name: "Tasks",
 		href: urls.dashboard.tasks.index,
 		image: TaskSvg,
+	},
+	{
+		name: "Users Report",
+		href: urls.dashboard.users_report.index,
+		image: UsersReportSvg,
 	},
 	{
 		name: "Ratings Overview",

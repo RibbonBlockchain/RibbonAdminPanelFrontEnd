@@ -1,3 +1,7 @@
+"use client";
+
+import { useToken } from "@/components/providers/token";
+import ErrorScreen from "@/components/sections/error";
 import {
 	Table,
 	TableBody,
@@ -6,25 +10,33 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatTime, getTimeAgo } from "@/lib/utils";
+import { formatDate, formatTime } from "@/lib/utils";
+import { cpIndexService } from "@/services/cp_index";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 const header = ["User", "File name", "Time", "Date"];
 
-const data = [
-	{
-		name: "Gugu Newman",
-		filename: "January CPI update.xlsx",
-		time: formatTime("2022-01-01T00:00:00.000Z"),
-		date: formatDate("2022-01-01T00:00:00.000Z"),
-	},
-];
-
 const CpIndexUploadHistoryTable = () => {
+	const { token } = useToken();
+
+	const { data, isPending, error, refetch } = useQuery({
+		queryKey: ["cp-index upload history"],
+		queryFn: () => cpIndexService.getUploadHistory(token || ""),
+		enabled: !!token,
+	});
+
+	if (isPending) return <p className="px-4">Loading...</p>;
+
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
+
+	if (!data.data || data.data.length === 0)
+		return <p className="px-4">No data</p>;
+
 	return (
 		<Table>
-			<TableHeader className="bg-primary-500">
-				<TableRow className="border-none ">
+			<TableHeader className="bg-primary-500 ">
+				<TableRow className="border-none hover:bg-transparent">
 					{header.map((x, i) => (
 						<TableHead
 							key={`month-header-${i}`}
@@ -36,19 +48,21 @@ const CpIndexUploadHistoryTable = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{data.map((x, i) => (
+				{data.data.map((x, i) => (
 					<TableRow key={`country-cpi-${i}`}>
 						<TableCell className="border  border-primary/20 text-center">
-							<span>{x.name}</span>
+							<span>
+								{x?.user?.firstName} {x?.user?.lastName}
+							</span>
 						</TableCell>
 						<TableCell className="border border-primary/20 text-center">
-							{x.filename}
+							{x.fileName}
 						</TableCell>
 						<TableCell className="border border-primary/20 text-center">
-							{x.time}
+							{formatTime(x.createdAt)}
 						</TableCell>
 						<TableCell className="border border-primary/20 text-center">
-							{x.date}
+							{formatDate(x.createdAt)}
 						</TableCell>
 					</TableRow>
 				))}

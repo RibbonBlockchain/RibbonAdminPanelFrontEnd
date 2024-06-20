@@ -6,17 +6,18 @@ import urls from "./lib/urls";
 export default withAuth(function middleware(req) {}, {
 	callbacks: {
 		authorized: ({ req, token }) => {
+			console.log(`\n req: ${req.nextUrl.pathname} \n token: ${token} \n`);
+
 			if (
-				![
-					urls.auth.login(),
-					urls.auth.forgot_password(),
-					urls.auth.reset_password(),
-				].includes(req.nextUrl.pathname) &&
-				req.nextUrl.pathname.startsWith("/") &&
-				token === null
+				req.nextUrl.pathname.startsWith(urls.auth.login()) ||
+				req.nextUrl.pathname.startsWith(urls.auth.forgot_password()) ||
+				req.nextUrl.pathname.startsWith(urls.auth.reset_password())
 			) {
+				return true;
+			} else if (req.nextUrl.pathname.startsWith("/") && token === null) {
 				return false;
 			}
+
 			return true;
 		},
 	},

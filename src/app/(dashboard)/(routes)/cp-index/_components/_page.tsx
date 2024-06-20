@@ -45,7 +45,7 @@ const months_header = [
 
 const CPIndexPage: React.FC<Props> = (props) => {
 	const { token } = useToken();
-	const [year, setYear] = React.useState(new Date().getFullYear() - 1);
+	const [year, setYear] = React.useState(new Date().getFullYear());
 
 	const {
 		data: cpiData,
@@ -62,6 +62,9 @@ const CPIndexPage: React.FC<Props> = (props) => {
 
 	if (error) return <ErrorScreen error={error} reset={refetch} />;
 
+	if (!cpiData.data || cpiData.data?.length < 1)
+		return <p className="px-4">No data</p>;
+
 	return (
 		<>
 			<div className="mx-4 grid grid-cols-5 gap-0.5">
@@ -69,9 +72,11 @@ const CPIndexPage: React.FC<Props> = (props) => {
 					<Table>
 						<TableHeader className="bg-primary-500">
 							<TableRow className="border-none ">
-								<TableHead className="h-14 text-center text-white"></TableHead>
 								<TableHead className="text-center text-white">
-									Time Period
+									<span className="flex h-14 items-center"></span>
+								</TableHead>
+								<TableHead className="text-center text-white">
+									<span className="flex h-14 items-center">Time Period</span>
 								</TableHead>
 								<TableHead className="flex items-center justify-end gap-4 text-white">
 									<Select
@@ -98,20 +103,38 @@ const CPIndexPage: React.FC<Props> = (props) => {
 						</TableHeader>
 						<TableBody className="bg-white">
 							<TableRow className="font-semibold">
-								<TableCell className="text-center">Country</TableCell>
-								<TableCell className="text-center">Avg. CP Index</TableCell>
-								<TableCell className="text-center">Current CP Index</TableCell>
+								<TableCell className="p-0">
+									<span className="flex h-14 w-full items-center justify-center">
+										Country
+									</span>
+								</TableCell>
+								<TableCell className="p-0">
+									<span className="flex h-14 w-full items-center justify-center text-center">
+										Avg. CP Index
+									</span>
+								</TableCell>
+								<TableCell className="p-0">
+									<span className="flex h-14 w-full items-center justify-center text-center">
+										Current CP Index
+									</span>
+								</TableCell>
 							</TableRow>
-							{data.map((x, i) => (
-								<TableRow key={`countries-sub-header-${i}`}>
-									<TableCell className="text-center">
-										<span>{x.activity}</span>
+							{cpiData.data.map((x, i) => (
+								<TableRow key={`countries-sub-header-${i}`} className="h-10">
+									<TableCell className="p-0">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.country}
+										</span>
 									</TableCell>
-									<TableCell className="text-center">
-										{x.total_ratings}
+									<TableCell className="p-0">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.averageCPI}
+										</span>
 									</TableCell>
-									<TableCell className="text-center">
-										{x.average_ratings}
+									<TableCell className="p-0">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.currentCPI}
+										</span>
 									</TableCell>
 								</TableRow>
 							))}
@@ -126,9 +149,9 @@ const CPIndexPage: React.FC<Props> = (props) => {
 								{months_header.map((x, i) => (
 									<TableHead
 										key={`month-header-${i}`}
-										className="h-14 text-center text-white"
+										className="text-center text-white "
 									>
-										{x}
+										<span className="flex h-14 items-center">{x}</span>
 									</TableHead>
 								))}
 							</TableRow>
@@ -138,51 +161,75 @@ const CPIndexPage: React.FC<Props> = (props) => {
 								{Array.from({ length: months_header.length }, (_, i) => (
 									<TableCell
 										key={`empty-month-header-${i}`}
-										className="border border-l-0 border-primary/20 text-center"
+										className="border border-l-0 border-primary/20 p-0 text-center"
 									>
-										<span aria-hidden className="opacity-0">
+										<span aria-hidden className="flex h-14 opacity-0">
 											{months_header[i]}
 										</span>
 									</TableCell>
 								))}
 							</TableRow>
-							{months_data.map((x, i) => (
+							{cpiData.data.map((x, i) => (
 								<TableRow key={`country-cpi-${i}`}>
-									<TableCell className="border border-l-0 border-primary/20 text-center">
-										<span>{x.january}</span>
+									<TableCell className="border border-l-0 border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											<span>{x.january}</span>
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.february}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.february}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.march}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.march}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.april}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.april}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.may}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.may}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.june}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.june}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.july}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.july}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.august}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.august}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.september}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.september}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.october}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.october}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.november}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.november}
+										</span>
 									</TableCell>
-									<TableCell className="border border-primary/20 text-center">
-										{x.december}
+									<TableCell className="border border-primary/20 p-0 text-center">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											{x.december}
+										</span>
 									</TableCell>
 								</TableRow>
 							))}
@@ -191,7 +238,7 @@ const CPIndexPage: React.FC<Props> = (props) => {
 				</div>
 			</div>
 
-			<div className="ml-4 mr-12 mt-12 flex justify-end gap-4">
+			<div className="my-12 ml-4 mr-12 flex justify-end gap-4">
 				<ButtonLink
 					href={urls.dashboard.cp_index["upload-history"]}
 					variant={"outline"}

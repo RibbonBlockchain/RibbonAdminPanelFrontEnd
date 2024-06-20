@@ -259,7 +259,40 @@ export type GetRatingOverviewResponse = DefaultResponse<{
 
 // NOTE: Other
 
-export type GetCPIndexResponse = DefaultResponse<{}>;
+export type GetCPIndexResponse = DefaultResponse<
+	{
+		id: number;
+		country: string;
+		january: string;
+		february: string;
+		march: string;
+		april: string;
+		may: string;
+		june: string;
+		july: string;
+		august: string;
+		september: string;
+		october: string;
+		november: string;
+		december: string;
+		year: string;
+		createdAt: string;
+		updatedAt: string;
+		averageCPI: string;
+		currentCPI: string;
+	}[]
+>;
+
+export type GetCPIndexUploadHistoryResponse = DefaultResponse<
+	{
+		id: number;
+		fileName: string;
+		userId: number;
+		user?: User;
+		createdAt: string;
+	}[]
+>;
+
 export type UploadCPIndexResponse = DefaultResponse<{}>;
 
 export type GetSummaryResponse = DefaultResponse<{

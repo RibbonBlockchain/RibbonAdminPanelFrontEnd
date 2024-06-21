@@ -1,11 +1,13 @@
-import React from "react";
 import Header from "@/components/header";
-import UsersReportPage from "./_components/_page";
+import React from "react";
+import SingleUserReportPage from "./_components/_page";
 
 const page = ({
+	params,
 	searchParams,
 }: {
-	searchParams: { q?: string; page?: string; pageSize?: string };
+	params: { id: string };
+	searchParams: { view?: string };
 }) => {
 	return (
 		<>
@@ -19,7 +21,15 @@ const page = ({
 				</p>
 			</div>
 
-			<UsersReportPage searchParams={searchParams} />
+			<SingleUserReportPage
+				view={
+					["questionnaires", "surveys", "tasks"].includes(
+						searchParams.view || ""
+					)
+						? (searchParams.view as string)
+						: "questionnaires"
+				}
+			/>
 		</>
 	);
 };

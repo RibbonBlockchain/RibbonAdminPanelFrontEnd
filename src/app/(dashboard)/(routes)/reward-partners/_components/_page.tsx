@@ -4,8 +4,7 @@ import React from "react";
 import Image from "next/image";
 import urls from "@/lib/urls";
 import { ButtonLink } from "@/components/ui/button_link";
-import { cn, formatCurrency } from "@/lib/utils";
-import { programs } from "@/lib/sample_data";
+import { cn, formatCurrency, formatDate, getMonthDayYear } from "@/lib/utils";
 import {
 	Table,
 	TableHeader,
@@ -14,11 +13,20 @@ import {
 	TableBody,
 	TableCell,
 } from "@/components/ui/table";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
 import { useToken } from "@/components/providers/token";
 import { rewardPartnerService } from "@/services/reward_partner";
 import { useQuery } from "@tanstack/react-query";
 import PaginateSection from "@/components/sections/paginate_section";
 import ErrorScreen from "@/components/sections/error";
+import { Button } from "@/components/ui/button";
+import { RxCaretDown } from "react-icons/rx";
 
 type Props = {
 	searchParams: {
@@ -30,6 +38,7 @@ type Props = {
 
 const RewardPartnerPage: React.FC<Props> = (props) => {
 	const { token } = useToken();
+	const [date, setDate] = React.useState<Date | undefined>(new Date());
 
 	const { data, isPending, error, refetch } = useQuery({
 		queryKey: ["reward partners", props.searchParams],
@@ -63,11 +72,36 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 					<TableHeader className="h-20 border-y border-black-neutral/20 bg-white">
 						<TableRow className="uppercase">
 							<TableHead>name</TableHead>
-							<TableHead>volume</TableHead>
-							<TableHead>1 day</TableHead>
-							<TableHead>1 week</TableHead>
-							<TableHead>1 month</TableHead>
+							<TableHead>balance</TableHead>
 							<TableHead>total value</TableHead>
+							<TableHead>
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button
+											variant={"dropdown"}
+											className={cn("border pl-3 text-left font-normal")}
+										>
+											{date ? (
+												getMonthDayYear(date.toISOString())
+											) : (
+												<span>Pick a date</span>
+											)}
+											<RxCaretDown className="ml-2 text-lg" />
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											selected={date}
+											onSelect={setDate}
+											disabled={(date: Date) =>
+												date > new Date() || date < new Date("1900-01-01")
+											}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+							</TableHead>
 							<TableHead></TableHead>
 						</TableRow>
 					</TableHeader>
@@ -103,35 +137,27 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 										</span>
 										<span>pts</span>
 									</TableCell>
-									<TableCell
-										className={cn(
-											program.value > 0 ? "text-green-500" : "text-red-500"
-										)}
-									>
-										{formatCurrency(program.value, { currency: "USD" })}
+									<TableCell>
+										<div className="flex flex-col">
+											<span>
+												{formatCurrency(program.value, { currency: "USD" })}{" "}
+												<span className="lowercase">{program.token}</span>
+											</span>
+											<span className="text-black-neutral">
+												≈ ${formatCurrency(program.value, { currency: "USD" })}
+											</span>
+										</div>
 									</TableCell>
 									<TableCell
 										className={cn(
+											"flex flex-col",
 											program.value > 0 ? "text-green-500" : "text-red-500"
 										)}
 									>
-										{formatCurrency(program.value, { currency: "USD" })}
-									</TableCell>
-									<TableCell
-										className={cn(
-											program.value > 0 ? "text-green-500" : "text-red-500"
-										)}
-									>
-										{formatCurrency(program.value, { currency: "USD" })}
-									</TableCell>
-									<TableCell className="flex flex-col">
 										<span>
-											{formatCurrency(program.value, { currency: "USD" })}{" "}
-											<span className="lowercase">{program.token}</span>
+											{formatCurrency(program.volume, { currency: "USD" })}
 										</span>
-										<span className="text-black-neutral">
-											≈ ${formatCurrency(program.value, { currency: "USD" })}
-										</span>
+										<span>pts</span>
 									</TableCell>
 									<TableCell>
 										<ButtonLink

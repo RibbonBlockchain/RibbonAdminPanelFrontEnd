@@ -5,7 +5,6 @@ import Image from "next/image";
 import urls from "@/lib/urls";
 import { ButtonLink } from "@/components/ui/button_link";
 import { cn, formatCurrency } from "@/lib/utils";
-import { programs } from "@/lib/sample_data";
 import {
 	Table,
 	TableHeader,

@@ -230,6 +230,23 @@ export type GetAllQuestionnaireActivityReportResponse = DefaultResponse<{
 	}[];
 }>;
 
+// NOTE: Users Report
+
+export type GetUsersActivitiesResponse = DefaultResponse<{
+	data: {
+		id: number;
+		ses: number;
+		location: string;
+		createdAt: string;
+		updatedAt: string;
+		totalRewards: number;
+		dailyRewards: number;
+		totalRatings: number;
+		questionnaires: number;
+	}[];
+	pagination: Pagination;
+}>;
+
 // NOTE: Rating
 export type GetRatingOverviewResponse = DefaultResponse<{
 	ratingsStatus: {

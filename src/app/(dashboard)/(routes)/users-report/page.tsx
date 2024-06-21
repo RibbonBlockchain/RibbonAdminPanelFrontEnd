@@ -2,7 +2,11 @@ import React from "react";
 import Header from "@/components/header";
 import UsersReportPage from "./_components/_page";
 
-const page = () => {
+const page = ({
+	searchParams,
+}: {
+	searchParams: { q?: string; page?: string; pageSize?: string };
+}) => {
 	return (
 		<>
 			<Header />
@@ -15,7 +19,7 @@ const page = () => {
 				</p>
 			</div>
 
-			<UsersReportPage />
+			<UsersReportPage searchParams={searchParams} />
 		</>
 	);
 };

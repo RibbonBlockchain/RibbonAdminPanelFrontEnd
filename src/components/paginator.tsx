@@ -8,17 +8,19 @@ import {
 	PaginationEllipsis,
 	PaginationNext,
 } from "./ui/pagination";
+import { cn } from "@/lib/utils";
 
 type Props = {
 	url_hash?: string;
 	current_page: number;
 	total_pages: number;
 	handlePaginate: (page: number) => void;
+	containerClass?: string;
 };
 
 const Paginator: React.FC<Props> = (props) => {
 	return (
-		<Pagination>
+		<Pagination className={cn(props.containerClass)}>
 			<PaginationContent className="gap-x-2">
 				<PaginationItem
 					onClick={

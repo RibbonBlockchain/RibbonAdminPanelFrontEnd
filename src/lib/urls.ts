@@ -39,6 +39,7 @@ const urls = {
 		},
 		users_report: {
 			index: "/users-report",
+			single_user: (id: string) => `/users-report/${id}`,
 		},
 		ratings: {
 			index: "/ratings",

@@ -94,6 +94,20 @@ export function getCurrentMonth(): string {
 	return monthNames[monthNum];
 }
 
+export function getMonthDayYear(
+	isoDate: string,
+	options?: { shorten_month?: boolean }
+): string {
+	if (!isoDate) return "";
+	const dateObj = new Date(isoDate);
+
+	const month = dateObj.toLocaleString("en-US", { month: "long" });
+	const day = dateObj.getDate().toString().padStart(2, "0");
+	const year = dateObj.getFullYear();
+
+	return `${options?.shorten_month ? month.slice(0, 3) : month} ${day}, ${year}`;
+}
+
 export function debounce<Params extends any[]>(
 	func: (...args: Params) => any,
 	timeout: number = 1000

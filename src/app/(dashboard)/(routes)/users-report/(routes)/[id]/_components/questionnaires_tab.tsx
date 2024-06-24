@@ -60,7 +60,7 @@ const QuestionnairesTab: React.FC<Props> = (props) => {
 												</SelectItem>
 											))
 										) : (
-											<SelectItem key={`q-category-0`} value="">
+											<SelectItem key={`q-category-0`} value="0" disabled>
 												No categories
 											</SelectItem>
 										)}

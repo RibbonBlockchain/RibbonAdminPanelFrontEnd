@@ -173,3 +173,16 @@ export type Notification = {
 	createdAt: string;
 	updatedAt: string;
 };
+
+export type UserActivityByCategory = Record<
+	string,
+	{
+		question: string;
+		reward: number;
+		rating: number;
+		response: string;
+		answer: string;
+	}[]
+>;
+
+export type UserActivity = UserActivityByCategory[keyof UserActivityByCategory];

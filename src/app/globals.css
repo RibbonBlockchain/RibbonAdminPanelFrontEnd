@@ -43,3 +43,24 @@ html,body{
   .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
    @apply bg-primary-50 /* Color of the handle on hover */
   }
+
+  /* React Datepicker */
+  .rdp-vhidden  {
+    @apply hidden
+  }
+
+  .rdp-dropdown_month>div {
+    @apply hidden
+  }
+
+  .rdp-dropdown_year>div {
+    @apply hidden
+  }
+
+  .rdp-caption_dropdowns {
+    @apply flex justify-between p-0 w-full
+  }
+
+  .rdp-caption_dropdowns > div > select {
+    @apply max-w-24 border px-2 py-1 rounded-lg
+  }

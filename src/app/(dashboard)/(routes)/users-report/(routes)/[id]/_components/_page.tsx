@@ -120,7 +120,9 @@ const SingleUserReportPage: React.FC<Props> = (props) => {
 				<div className="flex w-full justify-between rounded-lg bg-primary/10 p-4">
 					<figure className="flex w-full items-center gap-2">
 						<SingleUserReportIconSvg />
-						<figcaption>{questionnairesData?.data?.user.id}</figcaption>
+						<figcaption>
+							{questionnairesData?.data?.user.id || "N/A"}
+						</figcaption>
 					</figure>
 					<div className="flex w-full flex-col">
 						<span className="text-xs opacity-60">Location</span>
@@ -131,19 +133,19 @@ const SingleUserReportPage: React.FC<Props> = (props) => {
 					<div className="flex w-full flex-col">
 						<span className="text-xs opacity-60">SES Score</span>
 						<span className="text-xl">
-							{questionnairesData?.data?.user.ses}
+							{questionnairesData?.data?.user.ses || "N/A"}
 						</span>
 					</div>
 					<div className="flex w-full flex-col">
 						<span className="text-xs opacity-60">Average ratings</span>
 						<span className="text-xl">
-							{questionnairesData?.data?.user.rating}
+							{questionnairesData?.data?.user.rating || "N/A"}
 						</span>
 					</div>
 					<div className="flex w-full flex-col">
 						<span className="text-xs opacity-60">Total rewards earned</span>
 						<span className="text-xl">
-							{questionnairesData?.data?.user.totalReward}
+							{questionnairesData?.data?.user.totalReward || "N/A"}
 						</span>
 					</div>
 				</div>

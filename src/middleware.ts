@@ -6,7 +6,6 @@ import urls from "./lib/urls";
 export default withAuth(function middleware(req) {}, {
 	callbacks: {
 		authorized: ({ req, token }) => {
-			console.log(`\n req: ${req.nextUrl.pathname} \n token: ${token} \n`);
 
 			if (
 				req.nextUrl.pathname.startsWith(urls.auth.login()) ||

@@ -22,6 +22,7 @@ const page = ({
 			</div>
 
 			<SingleUserReportPage
+				params={params}
 				view={
 					["questionnaires", "surveys", "tasks"].includes(
 						searchParams.view || ""

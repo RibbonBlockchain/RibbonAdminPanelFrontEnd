@@ -7,6 +7,7 @@ import {
 	Survey,
 	Task,
 	Notification,
+	UserActivityByCategory,
 } from ".";
 
 type DefaultResponse<T> = {
@@ -245,6 +246,17 @@ export type GetUsersActivitiesResponse = DefaultResponse<{
 		questionnaires: number;
 	}[];
 	pagination: Pagination;
+}>;
+
+export type GetUsersActivitiesQuestionnaireResponse = DefaultResponse<{
+	user: {
+		id: number;
+		location: string;
+		ses: number;
+		rating: number;
+		totalReward: number;
+	};
+	data: UserActivityByCategory;
 }>;
 
 // NOTE: Rating

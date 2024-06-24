@@ -48,13 +48,13 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 		enabled: !!token,
 	});
 
-	if (isPending) return <div className="p-4">Loading...</div>;
-
-	if (error) return <ErrorScreen error={error} reset={refetch} />;
-
 	React.useEffect(() => {
 		if (toDate! < fromDate!) setToDate(fromDate);
 	}, [fromDate, toDate]);
+
+	if (isPending) return <div className="p-4">Loading...</div>;
+
+	if (error) return <ErrorScreen error={error} reset={refetch} />;
 
 	return (
 		<>

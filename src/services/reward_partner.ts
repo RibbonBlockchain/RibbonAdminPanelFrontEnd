@@ -29,8 +29,14 @@ async function getById(id: string | number, token: string) {
 	);
 }
 
-async function getFundingHistory(id: string, token: string) {
-	return await Fetch<GetFundingHistoryResponse>(`/admin/wallet/history`, token);
+async function getFundingHistory(
+	input: { q?: string; page?: string; pageSize?: string },
+	token: string
+) {
+	return await Fetch<GetFundingHistoryResponse>(
+		`/admin/wallet/history?q=${input.q || ""}&page=${parseInt(input.page || "1")}&pageSize=${parseInt(input.pageSize || "10")}`,
+		token
+	);
 }
 
 async function createVault(input: CreateVaultRequest, token: string) {

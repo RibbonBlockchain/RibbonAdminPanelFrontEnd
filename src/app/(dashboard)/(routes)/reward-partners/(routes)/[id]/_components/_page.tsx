@@ -20,8 +20,7 @@ import { Button } from "@/components/ui/button";
 import InputDropdown from "./input_dropdown";
 import DepositAddress from "./deposit_address";
 
-import { funding_history } from "@/lib/sample_data";
-import { cn, getTimeAgo, getErrorMessage, debounce } from "@/lib/utils";
+import { cn, getTimeAgo, getErrorMessage } from "@/lib/utils";
 
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { rewardPartnerService } from "@/services/reward_partner";
@@ -29,25 +28,41 @@ import { useToken } from "@/components/providers/token";
 import { toast } from "@/components/ui/use-toast";
 import { reward_partner_input } from "@/lib/constants";
 import ErrorScreen from "@/components/sections/error";
-import { useParams } from "next/navigation";
-import { z } from "zod";
+import { useParams, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { CreateVaultSchema, CreateVaultSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateVaultRequest, TransferToVaultRequest } from "@/types/request";
 import ErrorMessage from "@/components/ui/error_message";
+import PaginateSection from "@/components/sections/paginate_section";
+import { formatUnits, parseUnits } from "ethers";
 
-const RewardPartnerSinglePage = () => {
-	const params = useParams();
+type Props = {
+	searchParams: {
+		q?: string;
+		page?: string;
+		pageSize?: string;
+	};
+	params: { id: string };
+};
+
+const RewardPartnerSinglePage: React.FC<Props> = (props) => {
+	const params = props.params;
 	const qc = useQueryClient();
 	const { token } = useToken();
 
 	const [
 		{
 			data: rewardPartnerData,
-			isLoading: isLoadingRewardPartner,
+			isPending: isPendingRewardPartner,
 			error: rewardPartnerError,
 			refetch: refetchRewardPartner,
+		},
+		{
+			data: fundingHistoryData,
+			isPending: isPendingFundingHistory,
+			error: fundingHistoryError,
+			refetch: refetchFundingHistory,
 		},
 	] = useQueries({
 		queries: [
@@ -56,6 +71,15 @@ const RewardPartnerSinglePage = () => {
 				queryFn: () =>
 					rewardPartnerService.getById(params?.id as string, token || ""),
 				enabled: !!params?.id && !!token,
+			},
+			{
+				queryKey: ["funding history", props.searchParams],
+				queryFn: () =>
+					rewardPartnerService.getFundingHistory(
+						props.searchParams,
+						token || ""
+					),
+				enabled: !!token,
 			},
 		],
 	});
@@ -155,7 +179,7 @@ const RewardPartnerSinglePage = () => {
 		() => clearTimeout(timer);
 	}, [input, inputType.point_per_coin, setValue]);
 
-	if (isLoadingRewardPartner) return <div className="p-4">Loading...</div>;
+	if (isPendingRewardPartner) return <div className="p-4">Loading...</div>;
 
 	if (rewardPartnerError)
 		return (
@@ -267,63 +291,93 @@ const RewardPartnerSinglePage = () => {
 				</div>
 			</form>
 
-			<section className="mx-4 mb-12 mt-8 rounded-2xl bg-white p-6">
+			<section
+				id="funding-history"
+				className="mx-4 mb-12 mt-8 scroll-mt-20 rounded-2xl bg-white p-6"
+			>
 				<h2 className="text-lg font-bold">Funding History</h2>
 
-				<Table className="mt-6">
-					<TableHeader className="sr-only h-20 border-y border-black-neutral/20 bg-white">
-						<TableRow className="uppercase">
-							<TableHead>name</TableHead>
-							<TableHead>address</TableHead>
-							<TableHead>status</TableHead>
-							<TableHead>amount</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody className="[&_tr:nth-child(even)]:bg-white [&_tr:nth-child(odd)]:bg-transparent">
-						{funding_history.map((history, index) => (
-							<TableRow
-								key={`program-${index}`}
-								className="border-black-neutral/20 hover:bg-transparent"
-							>
-								<TableCell className="pl-0 font-medium">
-									<figure className="flex gap-x-2">
-										<FundingHistorySvg />
-										<figcaption>
-											<h2 className="text-base font-medium">{history.name}</h2>
-											<span className="text-xs font-light text-black-neutral">
-												{getTimeAgo(history.date)}
-											</span>
-										</figcaption>
-									</figure>
-								</TableCell>
-								<TableCell className="text-black-neutral">
-									{history.wallet_address}
-								</TableCell>
-								<TableCell>
-									<span
-										className={cn(
-											history.status === "Successful"
-												? "bg-green-100 text-green-900"
-												: "bg-red-100 text-red-900",
-											"rounded-md px-2 py-1"
-										)}
-									>
-										{history.status}
-									</span>
-								</TableCell>
-								<TableCell className="flex flex-col text-right">
-									<span className="text-lg font-medium">
-										{history.amount.from.value} {history.amount.from.unit}
-									</span>
-									<span className="text-xs font-medium text-black-neutral">
-										+{history.amount.to.unit}
-										{history.amount.to.value}
-									</span>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+				{isPendingFundingHistory ? (
+					<div>Loading...</div>
+				) : fundingHistoryError ? (
+					<ErrorScreen
+						error={fundingHistoryError}
+						reset={refetchFundingHistory}
+					/>
+				) : (
+					<>
+						<Table className="mt-6">
+							<TableHeader className="sr-only h-20 border-y border-black-neutral/20 bg-white">
+								<TableRow className="uppercase">
+									<TableHead>name</TableHead>
+									<TableHead>address</TableHead>
+									<TableHead>status</TableHead>
+									<TableHead>amount</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody className="[&_tr:nth-child(even)]:bg-white [&_tr:nth-child(odd)]:bg-transparent">
+								{Array.isArray(fundingHistoryData?.data?.data) &&
+									fundingHistoryData?.data.data.map((history, index) => (
+										<TableRow
+											key={`program-${index}`}
+											className="border-black-neutral/20 hover:bg-transparent"
+										>
+											<TableCell className="pl-0 font-medium">
+												<figure className="flex gap-x-2">
+													<FundingHistorySvg />
+													<figcaption>
+														<h2 className="text-base font-medium">
+															{history.admin.firstName} {history.admin.lastName}
+														</h2>
+														<span className="text-xs font-light text-black-neutral">
+															{getTimeAgo(history.createdAt)}
+														</span>
+													</figcaption>
+												</figure>
+											</TableCell>
+											<TableCell className="text-black-neutral">
+												{history.metadata.to}
+											</TableCell>
+											<TableCell>
+												<span
+													className={cn(
+														history.metadata.confirmations > 0
+															? "bg-green-100 text-green-900"
+															: "bg-red-100 text-red-900",
+														"rounded-md px-2 py-1"
+													)}
+												>
+													{history.metadata.confirmations > 0
+														? "Successful"
+														: "Failed"}
+												</span>
+											</TableCell>
+											<TableCell className="flex flex-col text-right">
+												<span className="text-lg font-medium">
+													{formatUnits(
+														BigInt(history.amount).toString(),
+														18
+													).toString()}
+													{/* {history.amount.from.unit} */}
+												</span>
+												{/* <span className="text-xs font-medium text-black-neutral">
+												+{history.amount.to.unit}
+												{history.amount.to.value}
+											</span> */}
+											</TableCell>
+										</TableRow>
+									))}
+							</TableBody>
+						</Table>
+						<PaginateSection
+							current_page={
+								fundingHistoryData?.data?.pagination.currentPage || 1
+							}
+							total_pages={fundingHistoryData?.data?.pagination.totalPages || 1}
+							url_hash="funding-history"
+						/>
+					</>
+				)}
 			</section>
 		</>
 	);

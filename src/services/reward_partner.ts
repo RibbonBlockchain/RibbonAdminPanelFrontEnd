@@ -1,5 +1,6 @@
 import {
 	CreateVaultResponse,
+	GetFundingHistoryResponse,
 	GetRewardPartnerByIdResponse,
 	GetRewardPartnersResponse,
 } from "@/types/response";
@@ -29,7 +30,7 @@ async function getById(id: string | number, token: string) {
 }
 
 async function getFundingHistory(id: string, token: string) {
-	return await Fetch<CreateVaultResponse>(`/admin/wallet/history`, token);
+	return await Fetch<GetFundingHistoryResponse>(`/admin/wallet/history`, token);
 }
 
 async function createVault(input: CreateVaultRequest, token: string) {

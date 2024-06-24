@@ -27,6 +27,7 @@ import PaginateSection from "@/components/sections/paginate_section";
 import ErrorScreen from "@/components/sections/error";
 import { Button } from "@/components/ui/button";
 import { RxCaretDown } from "react-icons/rx";
+import { IoRemoveOutline } from "react-icons/io5";
 
 type Props = {
 	searchParams: {
@@ -38,7 +39,8 @@ type Props = {
 
 const RewardPartnerPage: React.FC<Props> = (props) => {
 	const { token } = useToken();
-	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const [fromDate, setFromDate] = React.useState<Date | undefined>(new Date());
+	const [toDate, setToDate] = React.useState<Date | undefined>(new Date());
 
 	const { data, isPending, error, refetch } = useQuery({
 		queryKey: ["reward partners", props.searchParams],
@@ -49,6 +51,10 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 	if (isPending) return <div className="p-4">Loading...</div>;
 
 	if (error) return <ErrorScreen error={error} reset={refetch} />;
+
+	React.useEffect(() => {
+		if (toDate! < fromDate!) setToDate(fromDate);
+	}, [fromDate, toDate]);
 
 	return (
 		<>
@@ -75,35 +81,73 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 							<TableHead>balance</TableHead>
 							<TableHead>total value</TableHead>
 							<TableHead>
-								<Popover>
-									<PopoverTrigger asChild>
-										<Button
-											variant={"dropdown"}
-											className={cn("border pl-3 text-left font-normal")}
-										>
-											{date ? (
-												getMonthDayYear(date.toISOString())
-											) : (
-												<span>Pick a date</span>
-											)}
-											<RxCaretDown className="ml-2 text-lg" />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent className="w-auto p-0" align="start">
-										<Calendar
-											mode="multiple"
-											fromYear={2023}
-											toYear={new Date().getFullYear()}
-											captionLayout="dropdown"
-											selected={[date as Date, date as Date]}
-											// onSelect={setDate}
-											disabled={(date: Date) =>
-												date > new Date() || date < new Date("1900-01-01")
-											}
-											initialFocus
-										/>
-									</PopoverContent>
-								</Popover>
+								<span className="text-sm capitalize">
+									Filter points claimed by dates
+								</span>
+								<div className="mt-1 flex items-center gap-2">
+									<Popover>
+										<PopoverTrigger asChild>
+											<Button
+												variant={"dropdown"}
+												className={cn("border pl-3 text-left font-normal")}
+											>
+												{fromDate ? (
+													getMonthDayYear(fromDate.toISOString())
+												) : (
+													<span>Pick a date</span>
+												)}
+												<RxCaretDown className="ml-2 text-lg" />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className="w-auto p-0" align="end">
+											<Calendar
+												mode="single"
+												fromYear={2023}
+												toYear={new Date().getFullYear()}
+												captionLayout="dropdown"
+												selected={fromDate}
+												onSelect={setFromDate}
+												disabled={(date: Date) =>
+													date > new Date() || date < new Date("1900-01-01")
+												}
+												initialFocus
+											/>
+										</PopoverContent>
+									</Popover>
+									<IoRemoveOutline />
+									<Popover>
+										<PopoverTrigger asChild>
+											<Button
+												variant={"dropdown"}
+												className={cn("border pl-3 text-left font-normal")}
+											>
+												{toDate ? (
+													getMonthDayYear(toDate.toISOString())
+												) : (
+													<span>Pick a date</span>
+												)}
+												<RxCaretDown className="ml-2 text-lg" />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className="w-auto p-0" align="start">
+											<Calendar
+												mode="single"
+												fromYear={2023}
+												toYear={new Date().getFullYear()}
+												captionLayout="dropdown"
+												selected={toDate}
+												onSelect={setToDate}
+												disabled={(date: Date) =>
+													date > new Date() ||
+													date < new Date("1900-01-01") ||
+													!fromDate ||
+													fromDate > date
+												}
+												initialFocus
+											/>
+										</PopoverContent>
+									</Popover>
+								</div>
 							</TableHead>
 							<TableHead></TableHead>
 						</TableRow>

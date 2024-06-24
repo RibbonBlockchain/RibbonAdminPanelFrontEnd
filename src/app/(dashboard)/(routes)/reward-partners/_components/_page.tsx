@@ -91,9 +91,12 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 									</PopoverTrigger>
 									<PopoverContent className="w-auto p-0" align="start">
 										<Calendar
-											mode="single"
-											selected={date}
-											onSelect={setDate}
+											mode="multiple"
+											fromYear={2023}
+											toYear={new Date().getFullYear()}
+											captionLayout="dropdown"
+											selected={[date as Date, date as Date]}
+											// onSelect={setDate}
 											disabled={(date: Date) =>
 												date > new Date() || date < new Date("1900-01-01")
 											}

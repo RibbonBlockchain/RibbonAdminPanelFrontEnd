@@ -21,6 +21,7 @@ import { usersReportService } from "@/services/users_report";
 import ErrorScreen from "@/components/sections/error";
 import { useQuery } from "@tanstack/react-query";
 import PaginateSection from "@/components/sections/paginate_section";
+import Search from "@/components/search";
 
 type Props = {
 	searchParams: {
@@ -45,10 +46,8 @@ const UsersReportPage: React.FC<Props> = (props) => {
 		<section className="mb-12 h-full min-h-[700px] px-4">
 			<div className="flex w-full justify-between bg-white p-4 shadow">
 				<div className="flex w-full gap-4">
-					<div className="relative">
-						<IoSearchOutline className="absolute left-2 top-1/2 -translate-y-1/2" />
-						<Input placeholder="Search by location" className="pl-8" />
-					</div>
+					<Search form_className="w-fit" container_className="w-fit" />
+
 					<UsersReportFilter />
 				</div>
 
@@ -93,7 +92,7 @@ const UsersReportPage: React.FC<Props> = (props) => {
 								<TableCell>{user.dailyRewards}</TableCell>
 								<TableCell>{user.location}</TableCell>
 								<TableCell>{user.ses}</TableCell>
-								<TableCell>{4}</TableCell>
+								<TableCell>{user.totalRatings}</TableCell>
 							</TableRow>
 						))}
 					</TableBody>

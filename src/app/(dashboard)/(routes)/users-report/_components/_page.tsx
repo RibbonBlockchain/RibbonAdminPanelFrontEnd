@@ -72,7 +72,7 @@ const UsersReportPage: React.FC<Props> = (props) => {
 							<TableHead>Daily rewards Earned</TableHead>
 							<TableHead>User Location</TableHead>
 							<TableHead>User SES</TableHead>
-							<TableHead>Average Ratings</TableHead>
+							<TableHead>Total Ratings</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody className="[&_tr:nth-child(even)]:bg-white [&_tr:nth-child(odd)]:bg-transparent">

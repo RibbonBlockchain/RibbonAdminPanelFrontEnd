@@ -10,7 +10,13 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 	};
 }
 
-const page = () => {
+const page = ({
+	params,
+	searchParams,
+}: {
+	params: { id: string };
+	searchParams: { q?: string; page?: string; pageSize?: string };
+}) => {
 	return (
 		<>
 			<Header>Reward Partners</Header>
@@ -26,7 +32,7 @@ const page = () => {
 				<span>Deposit address</span>
 			</div>
 
-			<RewardPartnerSinglePage />
+			<RewardPartnerSinglePage params={params} searchParams={searchParams} />
 		</>
 	);
 };

@@ -47,7 +47,8 @@ const ActivitiesRatedCard: React.FC<Props> = (props) => {
 									value={status}
 									onValueChange={(v) => setStatus(v as any)}
 								>
-									<SelectTrigger className="max-w-32">
+									{/* TODO: make visible ones backend returns both rated and unrated */}
+									<SelectTrigger className="hidden max-w-32">
 										<SelectValue
 											className="placeholder:text-neutral-500"
 											placeholder="Choose a status"

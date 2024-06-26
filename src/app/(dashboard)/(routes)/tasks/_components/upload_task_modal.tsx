@@ -97,7 +97,7 @@ const UploadTaskModal = () => {
 					<hr />
 				</DialogHeader>
 
-				<ErrorMessage>{errors.file?.message}</ErrorMessage>
+				<ErrorMessage>{errors.file?.message as string}</ErrorMessage>
 
 				<Dropzone
 					multiple={false}

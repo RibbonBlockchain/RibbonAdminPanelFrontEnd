@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 export type Props = {
 	current_page: number;
 	total_pages: number;
+	url_hash?: string;
 	containerClass?: string;
 };
 
@@ -25,6 +26,10 @@ const PaginateSection: React.FC<Props> = (props) => {
 
 		if (page > 0) {
 			url.searchParams.set("page", page.toString());
+		}
+
+		if (props.url_hash) {
+			url.hash = props.url_hash;
 		}
 
 		router.push(url.href);

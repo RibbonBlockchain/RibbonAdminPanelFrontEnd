@@ -91,9 +91,9 @@ export type GetRewardPartnerByIdResponse = DefaultResponse<RewardPartner>;
 
 export type GetFundingHistoryResponse = DefaultResponse<{
 	data: {
-		id: 2;
-		amount: 10000;
-		points: 10000;
+		id: number;
+		amount: number;
+		points: number;
 		metadata: {
 			to: "0x004E9b9c6Ff44ccd0c2bD12addB9b9C56E893E62";
 			from: "0xe050A5B250919d0c552085DF16f71c1716079821";
@@ -160,12 +160,44 @@ export type GetFundingHistoryResponse = DefaultResponse<{
 				},
 			];
 		};
-		userId: 38;
-		partnerId: 6;
-		createdAt: "2024-06-11T09:25:27.173Z";
-		updatedAt: "2024-06-11T09:25:27.173Z";
+		userId: number;
+		partnerId: number;
+		admin: {
+			id: number;
+			avatar: null;
+			firstName: string;
+			lastName: string;
+			otherNames: string;
+			email: string;
+			phone: string;
+			location: string;
+			gender: "MALE" | "FEMALE";
+			dob: string;
+			socials: {
+				x: string;
+				discord: string;
+				linkedIn: string;
+				instagram: string;
+			};
+			worldId: null;
+			partnerId: number;
+			role: "SUPER_ADMIN" | "ADMIN";
+			status: "ACTIVE" | "INACTIVE";
+			numberOfClaims: number;
+			lastClaimTime: string;
+			createdAt: string;
+			updatedAt: string;
+		};
+		createdAt: string;
+		updatedAt: string;
 	}[];
 	pagination: Pagination;
+}>;
+
+export type GetClaimedPointsResponse = DefaultResponse<{
+	data: {
+		points: number;
+	};
 }>;
 
 export type CreateVaultResponse = DefaultResponse<null>;

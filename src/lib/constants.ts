@@ -72,13 +72,6 @@ export const nav_links = [
 	},
 ];
 
-export const sidebar_actions = [
-	{
-		name: "Logout",
-		component: LogoutModal,
-	},
-];
-
 export const response_types = [
 	{
 		value: ResponseType.SHORT_TEXT,

@@ -2,12 +2,20 @@
 
 import React from "react";
 import Link from "next/link";
-import { nav_links, sidebar_actions } from "@/lib/constants";
+import { nav_links } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import urls from "@/lib/urls";
 import Image from "next/image";
 import RibbonLogo from "@/public/images/ribbon.webp";
+import LogoutModal from "./logout_modal";
+
+export const sidebar_actions = [
+	{
+		name: "Logout",
+		component: LogoutModal,
+	},
+];
 
 const DashboardSidebar = () => {
 	const pathname = usePathname();

@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import InputDropdown from "./input_dropdown";
 import DepositAddress from "./deposit_address";
 
-import { cn, getTimeAgo, getErrorMessage } from "@/lib/utils";
+import { cn, getErrorMessage, formatDate, formatTime } from "@/lib/utils";
 
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { rewardPartnerService } from "@/services/reward_partner";
@@ -330,7 +330,8 @@ const RewardPartnerSinglePage: React.FC<Props> = (props) => {
 															{history.admin.firstName} {history.admin.lastName}
 														</h2>
 														<span className="text-xs font-light text-black-neutral">
-															{getTimeAgo(history.createdAt)}
+															{formatDate(history.createdAt)}{" "}
+															{formatTime(history.createdAt)}
 														</span>
 													</figcaption>
 												</figure>

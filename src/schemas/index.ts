@@ -176,21 +176,24 @@ export type EditQuestionnaireSchemaType = z.infer<
 >;
 
 export const UploadQuestionnaireSchema = z.object({
-	file: z
-		// @ts-ignore
-		.instanceof(File, { message: "Please select a file" })
-		.refine((file) => file.size < 1024 * 1024 * 5, {
-			message: "File size must be less than 5MB",
-		})
-		.refine(
-			(file) =>
-				file.type ===
-				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-			{
-				message: "Only Excel files are allowed",
-			}
-		)
-		.nullable(),
+	file:
+		typeof window === "undefined"
+			? z.any()
+			: z
+
+					.instanceof(File, { message: "Please select a file" })
+					.refine((file) => file.size < 1024 * 1024 * 5, {
+						message: "File size must be less than 5MB",
+					})
+					.refine(
+						(file) =>
+							file.type ===
+							"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+						{
+							message: "Only Excel files are allowed",
+						}
+					)
+					.nullable(),
 });
 
 export type UploadQuestionnaireSchemaType = z.infer<

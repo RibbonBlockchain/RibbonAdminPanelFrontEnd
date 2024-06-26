@@ -26,7 +26,7 @@ export function formatTime(isoDatetimeString: string): string {
 	const date = new Date(isoDatetimeString);
 
 	// Ensure valid Date object
-	if (isNaN(date.getTime())) {
+	if (isNaN(date?.getTime())) {
 		return "Invalid time";
 	}
 
@@ -42,7 +42,7 @@ export function formatDate(isoDatetimeString: string): string {
 	const date = new Date(isoDatetimeString);
 
 	// Ensure valid Date object
-	if (isNaN(date.getTime())) {
+	if (isNaN(date?.getTime())) {
 		return "Invalid date";
 	}
 

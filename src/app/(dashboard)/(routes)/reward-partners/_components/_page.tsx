@@ -57,11 +57,11 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 				{
 					queryKey: [
 						"claimed points",
-						{ from: fromDate!.getTime(), to: toDate!.getTime() },
+						{ from: fromDate!?.getTime(), to: toDate!?.getTime() },
 					],
 					queryFn: () =>
 						rewardPartnerService.getClaimedPoints(
-							{ from: fromDate!.getTime(), to: toDate!.getTime() },
+							{ from: fromDate!?.getTime(), to: toDate!?.getTime() },
 							token || ""
 						),
 

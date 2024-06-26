@@ -194,6 +194,12 @@ export type GetFundingHistoryResponse = DefaultResponse<{
 	pagination: Pagination;
 }>;
 
+export type GetClaimedPointsResponse = DefaultResponse<{
+	data: {
+		points: number;
+	};
+}>;
+
 export type CreateVaultResponse = DefaultResponse<null>;
 export type TransferToVaultResponse = DefaultResponse<null>;
 

@@ -22,7 +22,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { useToken } from "@/components/providers/token";
 import { rewardPartnerService } from "@/services/reward_partner";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import PaginateSection from "@/components/sections/paginate_section";
 import ErrorScreen from "@/components/sections/error";
 import { Button } from "@/components/ui/button";
@@ -39,14 +39,36 @@ type Props = {
 
 const RewardPartnerPage: React.FC<Props> = (props) => {
 	const { token } = useToken();
-	const [fromDate, setFromDate] = React.useState<Date | undefined>(new Date());
-	const [toDate, setToDate] = React.useState<Date | undefined>(new Date());
+	const today = new Date();
+	const [fromDate, setFromDate] = React.useState<Date | undefined>(
+		new Date(today.getTime() - 24 * 60 * 60 * 1000)
+	);
+	const [toDate, setToDate] = React.useState<Date | undefined>(today);
 
-	const { data, isPending, error, refetch } = useQuery({
-		queryKey: ["reward partners", props.searchParams],
-		queryFn: () => rewardPartnerService.getAll(props.searchParams, token || ""),
-		enabled: !!token,
-	});
+	const [{ data, isPending, error, refetch }, { data: claimedPointsData }] =
+		useQueries({
+			queries: [
+				{
+					queryKey: ["reward partners", props.searchParams],
+					queryFn: () =>
+						rewardPartnerService.getAll(props.searchParams, token || ""),
+					enabled: !!token,
+				},
+				{
+					queryKey: [
+						"claimed points",
+						{ from: fromDate!.getTime(), to: toDate!.getTime() },
+					],
+					queryFn: () =>
+						rewardPartnerService.getClaimedPoints(
+							{ from: fromDate!.getTime(), to: toDate!.getTime() },
+							token || ""
+						),
+
+					enabled: !!token && !!fromDate && !!toDate,
+				},
+			],
+		});
 
 	React.useEffect(() => {
 		if (toDate! < fromDate!) setToDate(fromDate);
@@ -64,12 +86,22 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 				</span>
 				<div className="rounded-md text-xl drop-shadow-sm">
 					<span className="font-bold">
-						{formatCurrency(data?.data?.totalBalance || 0, { currency: "USD" })}{" "}
+						{formatCurrency(
+							(data?.data?.data.reduce((a, b) => a + b.volume, 0) || 0) /
+								10 ** 18,
+							{ currency: "USD" }
+						)}{" "}
 						pts
 					</span>
 					<span className="text-black-neutral"> ≈ </span>
 					<span className="text-black-neutral">
-						${formatCurrency(124_326.91, { currency: "USD" })}
+						{formatCurrency(
+							(data?.data?.data.reduce((a, b) => a + b.volume, 0) || 0) /
+								10 ** 18 /
+								5000,
+							{ currency: "USD" }
+						)}{" "}
+						wld
 					</span>
 				</div>
 			</div>
@@ -180,17 +212,22 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 									</TableCell>
 									<TableCell className="flex flex-col">
 										<span>
-											{formatCurrency(program.volume, { currency: "USD" })}
+											{formatCurrency(program.volume / 10 ** 18, {
+												currency: "USD",
+											})}
 										</span>
 										<span>pts</span>
 									</TableCell>
 									<TableCell>
 										<div className="flex flex-col">
+											{/* TODO: calculate based on token type and not fixed */}
 											<span>
-												{formatCurrency(program.value, { currency: "USD" })}{" "}
+												{formatCurrency(program.volume / 10 ** 18 / 5000, {
+													currency: "USD",
+												})}{" "}
 												<span className="lowercase">{program.token}</span>
 											</span>
-											<span className="text-black-neutral">
+											<span className="hidden text-black-neutral">
 												≈ ${formatCurrency(program.value, { currency: "USD" })}
 											</span>
 										</div>
@@ -202,7 +239,12 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 										)}
 									>
 										<span>
-											{formatCurrency(program.volume, { currency: "USD" })}
+											{formatCurrency(
+												claimedPointsData?.data?.data.points ||
+													0 / 10 ** 18 ||
+													0,
+												{ currency: "USD" }
+											)}
 										</span>
 										<span>pts</span>
 									</TableCell>

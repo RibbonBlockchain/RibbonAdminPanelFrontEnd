@@ -1,5 +1,6 @@
 import {
 	CreateVaultResponse,
+	GetClaimedPointsResponse,
 	GetFundingHistoryResponse,
 	GetRewardPartnerByIdResponse,
 	GetRewardPartnersResponse,
@@ -25,6 +26,16 @@ async function getAll(
 async function getById(id: string | number, token: string) {
 	return await Fetch<GetRewardPartnerByIdResponse>(
 		`/admin/reward-partner/${id}`,
+		token
+	);
+}
+
+async function getClaimedPoints(
+	input: { from: number; to: number },
+	token: string
+) {
+	return await Fetch<GetClaimedPointsResponse>(
+		`/admin/wallet/claimed-points?from=${input.from}&to=${input.to}`,
 		token
 	);
 }
@@ -62,6 +73,7 @@ export const rewardPartnerService = {
 	getAll,
 	getById,
 	getFundingHistory,
+	getClaimedPoints,
 	createVault,
 	transferToVault,
 };

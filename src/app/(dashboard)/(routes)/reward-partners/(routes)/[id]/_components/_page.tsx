@@ -160,6 +160,7 @@ const RewardPartnerSinglePage: React.FC<Props> = (props) => {
 	const onSubmit = handleSubmit(async (data) => {
 		if (!rewardPartnerData?.data?.vaultAddress) {
 			createVaultMutation({
+				partnerId: +params?.id,
 				address: data.type.address,
 				points: data.output * 0.9,
 			});

@@ -90,7 +90,11 @@ export type EditTaskRequest = {
 
 // NOTE: Reward Partner
 
-export type CreateVaultRequest = { points: number; address: string };
+export type CreateVaultRequest = {
+	points: number;
+	address: string;
+	partnerId?: number;
+};
 
 export type TransferToVaultRequest = { amount: number };
 

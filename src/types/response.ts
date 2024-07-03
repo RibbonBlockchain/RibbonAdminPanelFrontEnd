@@ -195,9 +195,7 @@ export type GetFundingHistoryResponse = DefaultResponse<{
 }>;
 
 export type GetClaimedPointsResponse = DefaultResponse<{
-	data: {
-		points: number;
-	};
+	data: { [x: string]: any };
 }>;
 
 export type CreateVaultResponse = DefaultResponse<null>;

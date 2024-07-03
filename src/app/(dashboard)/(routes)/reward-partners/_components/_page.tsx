@@ -57,11 +57,11 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 				{
 					queryKey: [
 						"claimed points",
-						{ from: fromDate!.getTime(), to: toDate!.getTime() },
+						{ from: fromDate!?.getTime(), to: toDate!?.getTime() },
 					],
 					queryFn: () =>
 						rewardPartnerService.getClaimedPoints(
-							{ from: fromDate!.getTime(), to: toDate!.getTime() },
+							{ from: fromDate!?.getTime(), to: toDate!?.getTime() },
 							token || ""
 						),
 
@@ -240,9 +240,10 @@ const RewardPartnerPage: React.FC<Props> = (props) => {
 									>
 										<span>
 											{formatCurrency(
-												claimedPointsData?.data?.data.points ||
-													0 / 10 ** 18 ||
-													0,
+												(claimedPointsData?.data?.data?.[
+													program?.token as any
+												] || 0) /
+													10 ** 18 || 0,
 												{ currency: "USD" }
 											)}
 										</span>

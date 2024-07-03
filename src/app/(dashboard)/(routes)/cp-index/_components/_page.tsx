@@ -58,12 +58,12 @@ const CPIndexPage: React.FC<Props> = (props) => {
 		enabled: !!token && !!year,
 	});
 
-	if (isPending) return <p className="px-4">Loading...</p>;
+	// if (isPending) return <p className="px-4">Loading...</p>;
 
 	if (error) return <ErrorScreen error={error} reset={refetch} />;
 
-	if (!cpiData.data || cpiData.data?.length < 1)
-		return <p className="px-4">No data</p>;
+	// if (!cpiData.data || cpiData.data?.length < 1)
+	// 	return <p className="px-4">No data</p>;
 
 	return (
 		<>
@@ -119,25 +119,56 @@ const CPIndexPage: React.FC<Props> = (props) => {
 									</span>
 								</TableCell>
 							</TableRow>
-							{cpiData.data.map((x, i) => (
-								<TableRow key={`countries-sub-header-${i}`} className="h-10">
+							{isPending ? (
+								<TableRow className="h-10">
 									<TableCell className="p-0">
 										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.country}
+											Loading...
 										</span>
 									</TableCell>
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.averageCPI}
-										</span>
-									</TableCell>
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.currentCPI}
-										</span>
-									</TableCell>
+
+									{Array.from({ length: 2 }).map((x, i) => (
+										<TableCell
+											key={`countries-sub-header-${i}`}
+											className="p-0"
+										></TableCell>
+									))}
 								</TableRow>
-							))}
+							) : !cpiData.data || cpiData.data?.length < 1 ? (
+								<TableRow className="h-10">
+									<TableCell className="p-0">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											No data
+										</span>
+									</TableCell>
+									{Array.from({ length: 2 }).map((x, i) => (
+										<TableCell
+											key={`countries-sub-header-${i}`}
+											className="p-0"
+										></TableCell>
+									))}
+								</TableRow>
+							) : (
+								cpiData.data.map((x, i) => (
+									<TableRow key={`countries-sub-header-${i}`} className="h-10">
+										<TableCell className="p-0">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.country}
+											</span>
+										</TableCell>
+										<TableCell className="p-0">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.averageCPI}
+											</span>
+										</TableCell>
+										<TableCell className="p-0">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.currentCPI}
+											</span>
+										</TableCell>
+									</TableRow>
+								))
+							)}
 						</TableBody>
 					</Table>
 				</div>
@@ -169,70 +200,94 @@ const CPIndexPage: React.FC<Props> = (props) => {
 									</TableCell>
 								))}
 							</TableRow>
-							{cpiData.data.map((x, i) => (
-								<TableRow key={`country-cpi-${i}`}>
-									<TableCell className="border border-l-0 border-primary/20 p-0 text-center">
+							{isPending ? (
+								<TableRow className="h-10">
+									<TableCell className="p-0">
 										<span className="flex h-14 w-full items-center justify-center text-center">
-											<span>{x.january}</span>
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.february}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.march}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.april}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.may}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.june}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.july}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.august}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.september}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.october}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.november}
-										</span>
-									</TableCell>
-									<TableCell className="border border-primary/20 p-0 text-center">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											{x.december}
+											Loading...
 										</span>
 									</TableCell>
 								</TableRow>
-							))}
+							) : !cpiData.data || cpiData.data?.length < 1 ? (
+								<TableRow className="h-10">
+									<TableCell className="p-0">
+										<span className="flex h-14 w-full items-center justify-center text-center">
+											No data
+										</span>
+									</TableCell>
+									{Array.from({ length: months_header.length }, (_, i) => (
+										<TableCell
+											key={`empty-month-${i}`}
+											className="p-0"
+										></TableCell>
+									))}
+								</TableRow>
+							) : (
+								cpiData.data.map((x, i) => (
+									<TableRow key={`country-cpi-${i}`}>
+										<TableCell className="border border-l-0 border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												<span>{x.january}</span>
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.february}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.march}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.april}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.may}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.june}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.july}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.august}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.september}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.october}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.november}
+											</span>
+										</TableCell>
+										<TableCell className="border border-primary/20 p-0 text-center">
+											<span className="flex h-14 w-full items-center justify-center text-center">
+												{x.december}
+											</span>
+										</TableCell>
+									</TableRow>
+								))
+							)}
 						</TableBody>
 					</Table>
 				</div>

@@ -56,6 +56,7 @@ async function createVault(input: CreateVaultRequest, token: string) {
 		body: JSON.stringify({
 			points: parseUnits(input.points.toString(), 18).toString(),
 			address: input.address,
+			partnerId: input.partnerId,
 		}),
 	});
 }

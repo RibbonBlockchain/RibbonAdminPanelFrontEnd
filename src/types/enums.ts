@@ -9,6 +9,7 @@ export enum ResponseType {
 	DATE = "DATE",
 	TIME = "TIME",
 	BOOLEAN = "BOOLEAN",
+	URL = "URL",
 }
 
 export enum UserRole {

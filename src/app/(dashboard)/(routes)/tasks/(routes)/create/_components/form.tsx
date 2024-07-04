@@ -62,6 +62,8 @@ const CreateTaskForm = () => {
 		queryKey: ["task categories"],
 		queryFn: () =>
 			categoriesService.getTaskCategories({ pageSize: "1000" }, token || ""),
+
+		enabled: !!token,
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({
@@ -252,7 +254,7 @@ const CreateTaskForm = () => {
 					{questions.map((question, question_index) => (
 						<fieldset className="space-y-6" key={`question-${question_index}`}>
 							<div>
-								<Label>Question {question_index + 1}</Label>
+								<Label>Task {question_index + 1}</Label>
 								<Input
 									type="text"
 									placeholder="Type your question"

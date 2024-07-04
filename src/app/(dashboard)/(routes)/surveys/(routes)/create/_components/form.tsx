@@ -62,6 +62,8 @@ const CreateSurveyForm = () => {
 		queryKey: ["survey categories"],
 		queryFn: () =>
 			categoriesService.getSurveyCategories({ pageSize: "1000" }, token || ""),
+
+		enabled: !!token,
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({

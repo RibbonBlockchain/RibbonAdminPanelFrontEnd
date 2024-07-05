@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Home page: [ribbon-admin.vercel.app](https://ribbon-admin.vercel.app)
+
+Staging: [ribbon-admin.vercel.app/](https://ribbon-admin.vercel.app)
+
+Production: [ribbon-admin.vercel.app/](https://ribbon-admin.vercel.app)
+
+## [RibbonProtocol <a href="https://ibb.co/pfpWc5b"><img src="https://i.ibb.co/8rVzqtN/ribbon-app-logo-copy.png" alt="ribbon-app-logo-copy" border="0"></a>](https://ribbon-app-ten.vercel.app)
+
+[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](/LICENSE)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg?style=flat-square)](/contributing.md)
+
+Ribbon Protocol is a universal health coverage rewards and loyalty platform that aims to modify health and wellness behavior through incentivization and rewardable tasks.
+
+The Ribbon App intertwines Universal Basic Income with Universal Health Coverage, utilizing World ID users health & socioeconomic data to enhance global well-being. The protocol rewards users for activities that help assess their wellness and socioeconomic needs, while linking them to equitable UBI and personalized services.
+
+Rewards and Incentives are distributed in points and WLD tokens, on the Optimism Mainnet network which is a Layer 2 network of the Ethereum blockchain.
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Packages](#packages)
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
+- [Resources](#resources)
+
+## Packages
+
+This RibbonProtocol App contains JavaScript tools and applications that enables users to earn tokenized universal basic income. The ribbon app consists of three key components right now; this will change in time. These are as follows:
+
+| Name                                                                                           | Description                                                                                                                    |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [`@ribbonprotocol/api`](https://github.com/RibbonBlockchain/RibbonApp-BackEnd)                 | Backend API built with Typescript and NestJS restful API that handles data capture for users and all system wide interactions. |
+| [`@ribbonprotoccol/frontend`](https://github.com/RibbonBlockchain/RibbonApp)                   | Frontend NextJS application that users interact with. [Link](https://ribbon-app-ten.vercel.app)                                |
+| [`@ribbonprotoccol/admin-panel`](https://github.com/RibbonBlockchain/RibbonAdminPanelFrontEnd) | Frontend NextJS application for admin management.                                                                              |
+
+Each section has it's own repository and has it's own readme within the package that explains how to set it up and get running with that specific component.
+
+## Requirements
+
+This project requires `node >=18.0.0`, `npm >=10.x.x` and `pnpm >=8.x.x`. A unix shell is also required.
+
+- [Installing Node](https://docs.npmjs.com/getting-started/installing-node)
+- [Installing pnpm](https://pnpm.io/7.x/installation)
+- [UNIX Shell (Windows users)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 
 ## Getting Started
 
-First, run the development server:
+To get started, clone the repo and install its dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/RibbonBlockchain/RibbonApp.git
+cd RibbonApp
+pnpm install
+```
+
+For development purposes there's a top-level `dev` script that will watch and continuously compile all packages concurrently:
+
+```bash
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For next steps, take a look at documentation for the individual package(s) you want to run and/or develop. Each package can be run from the root directory using pnpm or npm. The main things you can do are outlined below:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+    pnpm dev       # start the development server/environment
+    pnpm build     # run a production build
+    pnpm start     # starts the application in a production-like environment
+    pnpm lint      # runs a linter on your codebase
+```
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+RibbonProtocol App is currently deployed using vercel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Thanks for your interest in RibbonProtocol App. There are many ways you can contribute. To start, take a few minutes to look over the official guide:
 
-## Deploy on Vercel
+**[Read the "Contributing to RibbonProtocol App" Guide &raquo;](/contributing.md)**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We happily await your pull requests and/or involvement in our [issues page](https://github.com/RibbonBlockchain/RibbonApp/issues) and hope to see your username on our [list of contributors](https://github.com/RibbonBlockchain/RibbonApp) 🎉🎉🎉
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Resources
+
+To get a full idea of what RibbonProtocol is about, be sure to take a look at these other resources
+
+1.  [Website](https://ribbon-app-ten.vercel.app)
+2.  [Twitter](https://twitter.com/ribbonprotocol)
+3.  [Telegram Announcements](https://t.me/RibbonProtocol)
+4.  [Telegram Community Group](https://t.me/+JbmcP2EjVqYwMjRk)
+5.  [Discord](https://discord.com/invite/HWa2b9H3qy)
+6.  [Blog](https://medium.com/@RibbonProtocol)
+7.  [Instagram](https://www.instagram.com/ribbonprotocol)
+8.  [Facebook](https://www.facebook.com/ribbonprotocol/)
+9.  [YouTube](https://www.youtube.com/@ribbonprotocol)
+10. [TikTok](https://www.tiktok.com/@ribbonprotocol)
+11. [LinkedIn](https://www.linkedin.com/company/ribbonprotocol/)

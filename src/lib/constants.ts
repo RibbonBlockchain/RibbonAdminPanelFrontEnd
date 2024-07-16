@@ -6,7 +6,7 @@ import SurveySvg from "@/components/svgs/survey";
 import TaskSvg from "@/components/svgs/task";
 import { ResponseType } from "@/types/enums";
 import { HiOutlineMenuAlt2, HiOutlineMenu } from "react-icons/hi";
-import { IoMdRadioButtonOn, IoMdTime } from "react-icons/io";
+import { IoIosLink, IoMdRadioButtonOn, IoMdTime } from "react-icons/io";
 import { IoCalendarOutline, IoCheckboxOutline } from "react-icons/io5";
 import RoundBoxSvg from "@/components/svgs/round_box";
 import BubbleBoxSvg from "@/components/svgs/bubble_box";
@@ -122,6 +122,11 @@ export const response_types = [
 		value: ResponseType.MULTISELECT,
 		name: "Multiple selections",
 		icon: IoCheckboxOutline,
+	},
+	{
+		value: ResponseType.URL,
+		name: "Link",
+		icon: IoIosLink,
 	},
 ];
 

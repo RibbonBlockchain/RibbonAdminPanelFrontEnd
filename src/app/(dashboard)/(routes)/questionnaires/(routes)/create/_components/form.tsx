@@ -68,6 +68,8 @@ const CreateQuestionnaireForm = () => {
 				{ pageSize: "1000" },
 				token || ""
 			),
+
+		enabled: !!token,
 	});
 
 	const { mutate, isPending: isPendingMutation } = useMutation({

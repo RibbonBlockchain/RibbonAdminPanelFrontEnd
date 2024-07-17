@@ -43,6 +43,17 @@ export const ResetPasswordSchema = z
 
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
 
+export const InviteUserSchema = z.object({
+	name: z
+		.string()
+		.min(1, "Name cannot be empty")
+		.max(100, "Name too long")
+		.trim(),
+	email: z.string().email("Invalid email address").trim(),
+});
+
+export type InviteUserSchemaType = z.infer<typeof InviteUserSchema>;
+
 export const CreateQuestionnaireSchema = z.object({
 	reward: z
 		.number({ coerce: true })

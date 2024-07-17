@@ -18,12 +18,14 @@ const buttonVariants = cva(
 					"text-left justify-start px-0 py-0 hover:bg-primary hover:text-white",
 				faint:
 					"bg-primary-50 border-2 border-primary-50 px-2 py-2 text-primary-500 hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50",
+				header_icon:
+					"text-2xl text-primary hover:bg-neutral-200/50 hover:shadow",
 				plain: "",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
-				sm: "h-9 rounded-md px-3",
-				lg: "h-11 rounded-md px-8",
+				sm: "h-9 px-3",
+				lg: "h-11 px-8",
 				icon: "h-10 w-10",
 				dropdown: "h-10 px-4",
 				plain: "",

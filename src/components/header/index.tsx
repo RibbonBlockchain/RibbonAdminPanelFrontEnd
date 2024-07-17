@@ -5,6 +5,7 @@ import { IoNotifications } from "react-icons/io5";
 import { Button } from "../ui/button";
 import ProfileDropdown from "./profile_dropdown";
 import { cn } from "@/lib/utils";
+import InviteUserModal from "@/app/(dashboard)/_components/invite_user_modal";
 // import { getServerSession } from "next-auth";
 
 const Header: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -19,11 +20,14 @@ const Header: React.FC<React.PropsWithChildren> = ({ children }) => {
 			<h1 className="text-nowrap text-2xl font-bold">{children}</h1>
 
 			<div className="flex w-full items-center justify-end gap-4">
+				<InviteUserModal />
 				<Button
+					variant={"header_icon"}
+					size={"icon"}
 					aria-describedby="notifications"
-					className="rounded-md bg-primary px-2 py-2 text-2xl text-white"
 				>
 					<IoNotifications />
+					<span className="sr-only">Notifications</span>
 				</Button>
 
 				<ProfileDropdown />

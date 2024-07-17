@@ -23,6 +23,7 @@ export type LoginResponse = DefaultResponse<{
 }>;
 
 // NOTE: User
+export type InviteUserResponse = DefaultResponse<{}>;
 export type UserProfileResponse = DefaultResponse<User>;
 
 // NOTE:  Category

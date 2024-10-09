@@ -19,6 +19,7 @@ import UsdtSvg from "@/components/svgs/usdt";
 import WorldCoinSvg from "@/components/svgs/worldcoin";
 import { CreateVaultSchemaType } from "@/schemas";
 import UsersReportSvg from "@/components/svgs/users_report";
+import MoneySendSvg from "@/components/svgs/money_send";
 // import { HiHome, HiTrophy } from "react-icons/hi2";
 // import { PiScrollFill } from "react-icons/pi";
 // import { RiQuestionnaireFill } from "react-icons/ri";
@@ -64,6 +65,11 @@ export const nav_links = [
 		name: "CP Index",
 		href: urls.dashboard.cp_index.index,
 		image: CPIndexSvg,
+	},
+	{
+		name: "Mass Payments",
+		href: urls.dashboard.mass_payments.index,
+		image: MoneySendSvg,
 	},
 	{
 		name: "Send Notification",

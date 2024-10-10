@@ -94,13 +94,15 @@ const RecipientsForm = () => {
 	};
 
 	function formatWalletAddress(address: string) {
-		if (address && address.length <= 8) {
-			return address;
-		}
+		if (address) {
+			if (address.length <= 8) {
+				return address;
+			}
 
-		const firstPart = address.slice(0, 4);
-		const lastPart = address.slice(-4);
-		return `${firstPart}...${lastPart}`;
+			const firstPart = address.slice(0, 4);
+			const lastPart = address.slice(-4);
+			return `${firstPart}...${lastPart}`;
+		}
 	}
 
 	return (

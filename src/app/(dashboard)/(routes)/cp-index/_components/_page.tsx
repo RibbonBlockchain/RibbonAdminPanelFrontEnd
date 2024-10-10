@@ -1,437 +1,155 @@
 "use client";
 
-import React from "react";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-import {
-	Select,
-	SelectTrigger,
-	SelectValue,
-	SelectContent,
-	SelectItem,
-} from "@/components/ui/select";
-
-import HistorySvg from "@/components/svgs/history";
 import { useToken } from "@/components/providers/token";
-import { useQuery } from "@tanstack/react-query";
-import { cpIndexService } from "@/services/cp_index";
 import ErrorScreen from "@/components/sections/error";
-import { ButtonLink } from "@/components/ui/button_link";
-import urls from "@/lib/urls";
-import UploadCpIndexModal from "./upload_cpindex_modal";
+import { cpIndexService } from "@/services/cp_index";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Select, Space, Table, TableColumnsType } from "antd";
+import React from "react";
 
 type Props = {};
 
-const months_header = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
-];
-
 const CPIndexPage: React.FC<Props> = (props) => {
 	const { token } = useToken();
-	const [year, setYear] = React.useState(new Date().getFullYear());
+	const [country, setCountry] = React.useState("");
+	const [year, setYear] = React.useState(0);
+
+	const {
+		data: cpiCountries,
+		isPending,
+		error,
+		refetch: refetchCountries,
+	} = useQuery({
+		queryKey: ["cp-index-countries"],
+		queryFn: () => cpIndexService.getSupportedCPICountries(token || ""),
+		enabled: !!token,
+	});
 
 	const {
 		data: cpiData,
-		isPending,
-		error,
-		refetch,
+		error: cpiError,
+		refetch: refetchCPIData,
 	} = useQuery({
-		queryKey: ["cp-index", { year }],
-		queryFn: () => cpIndexService.getAll(year, token || ""),
-		enabled: !!token && !!year,
+		queryKey: ["cp-index-data", { year, country }],
+		queryFn: () => cpIndexService.getAll(year, country, token || ""),
+		enabled: false, // Disable automatic fetching
 	});
 
-	// if (isPending) return <p className="px-4">Loading...</p>;
+	function getSupportedYears(countryName: string) {
+		const country = cpiCountries?.data?.find((c) => c.name === countryName);
+		if (country) return country.years;
+		else return [];
+	}
 
-	if (error) return <ErrorScreen error={error} reset={refetch} />;
+	const countries = cpiCountries?.data?.map((c) => c.name);
 
-	// if (!cpiData.data || cpiData.data?.length < 1)
-	// 	return <p className="px-4">No data</p>;
+	if (error) return <ErrorScreen error={error} reset={refetchCountries} />;
+	if (cpiError) return <ErrorScreen error={cpiError} reset={refetchCPIData} />;
+
+	const handleSearch = () => {
+		// Trigger the CPI data query manually
+		refetchCPIData();
+	};
+
+	interface DataType {
+		category: string;
+	}
+
+	const cpiCategory = [
+		"CONSUMER_PRICE_INDEX",
+		"FOOD_AND_BEVERAGES",
+		"ALCOHOL_TOBACCO_NARCOTICS",
+		"CLOTHING_AND_FOOTWEAR",
+		"HOUSING_AND_UTILITIES",
+		"FURNISHINGS_AND_MAINTENANCE",
+		"HEALTH",
+		"TRANSPORT",
+		"COMMUNICATION",
+		"RECREATION_AND_CULTURE",
+		"EDUCATION",
+		"RESTAURANTS_AND_HOTELS",
+		"MISCELLANEOUS_GOODS_AND_SERVICES",
+	] as const;
+
+	const columns: TableColumnsType<DataType> = [
+		{
+			title: "Category",
+			width: 300,
+			dataIndex: "category",
+			key: "category",
+			fixed: "left",
+			rowScope: "row",
+		},
+		{ title: "Jan", width: 100, dataIndex: "Jan", key: "Jan" },
+		{ title: "Feb", width: 100, dataIndex: "Feb", key: "Feb" },
+		{ title: "Mar", width: 100, dataIndex: "Mar", key: "Mar" },
+		{ title: "Apr", width: 100, dataIndex: "Apr", key: "Apr" },
+		{ title: "May", width: 100, dataIndex: "May", key: "May" },
+		{ title: "Jun", width: 100, dataIndex: "Jun", key: "Jun" },
+		{ title: "Jul", width: 100, dataIndex: "Jul", key: "Jul" },
+		{ title: "Aug", width: 100, dataIndex: "Aug", key: "Aug" },
+		{ title: "Sep", width: 100, dataIndex: "Sep", key: "Sep" },
+		{ title: "Oct", width: 100, dataIndex: "Oct", key: "Oct" },
+		{ title: "Nov", width: 100, dataIndex: "Nov", key: "Nov" },
+		{ title: "Dec", width: 100, dataIndex: "Dec", key: "Dec" },
+	];
+
+	const data: DataType[] = cpiCategory?.map((c) => {
+		const categoryData = cpiData?.data?.filter((d) => d.category === c);
+
+		const monthValues = {
+			Jan: categoryData?.find((d) => d.month === 1)?.value || "-",
+			Feb: categoryData?.find((d) => d.month === 2)?.value || "-",
+			Mar: categoryData?.find((d) => d.month === 3)?.value || "-",
+			Apr: categoryData?.find((d) => d.month === 4)?.value || "-",
+			May: categoryData?.find((d) => d.month === 5)?.value || "-",
+			Jun: categoryData?.find((d) => d.month === 6)?.value || "-",
+			Jul: categoryData?.find((d) => d.month === 7)?.value || "-",
+			Aug: categoryData?.find((d) => d.month === 8)?.value || "-",
+			Sep: categoryData?.find((d) => d.month === 9)?.value || "-",
+			Oct: categoryData?.find((d) => d.month === 10)?.value || "-",
+			Nov: categoryData?.find((d) => d.month === 11)?.value || "-",
+			Dec: categoryData?.find((d) => d.month === 12)?.value || "-",
+		};
+
+		return {
+			key: c,
+			category: c,
+			...monthValues,
+		};
+	});
 
 	return (
-		<>
-			<div className="mx-4 grid grid-cols-5 gap-0.5">
-				<div className="col-span-2">
-					<Table>
-						<TableHeader className="bg-primary-500">
-							<TableRow className="border-none ">
-								<TableHead className="text-center text-white">
-									<span className="flex h-14 items-center"></span>
-								</TableHead>
-								<TableHead className="text-center text-white">
-									<span className="flex h-14 items-center">Time Period</span>
-								</TableHead>
-								<TableHead className="flex items-center justify-end gap-4 text-white">
-									<Select
-										value={`${year}`}
-										onValueChange={(v) => setYear(v as any)}
-									>
-										<SelectTrigger className="mt-2 h-full max-w-32 bg-transparent text-white">
-											<SelectValue
-												className="placeholder:text-neutral-500"
-												placeholder="Choose a status"
-											/>
-										</SelectTrigger>
-										<SelectContent className="max-w-sm">
-											<SelectItem value={"2024"} className="cursor-pointer">
-												2024
-											</SelectItem>
-											<SelectItem value={"2023"} className="cursor-pointer">
-												2023
-											</SelectItem>
-										</SelectContent>
-									</Select>
-								</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody className="bg-white">
-							<TableRow className="font-semibold">
-								<TableCell className="p-0">
-									<span className="flex h-14 w-full items-center justify-center">
-										Country
-									</span>
-								</TableCell>
-								<TableCell className="p-0">
-									<span className="flex h-14 w-full items-center justify-center text-center">
-										Avg. CP Index
-									</span>
-								</TableCell>
-								<TableCell className="p-0">
-									<span className="flex h-14 w-full items-center justify-center text-center">
-										Current CP Index
-									</span>
-								</TableCell>
-							</TableRow>
-							{isPending ? (
-								<TableRow className="h-10">
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											Loading...
-										</span>
-									</TableCell>
-
-									{Array.from({ length: 2 }).map((x, i) => (
-										<TableCell
-											key={`countries-sub-header-${i}`}
-											className="p-0"
-										></TableCell>
-									))}
-								</TableRow>
-							) : !cpiData.data || cpiData.data?.length < 1 ? (
-								<TableRow className="h-10">
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											No data
-										</span>
-									</TableCell>
-									{Array.from({ length: 2 }).map((x, i) => (
-										<TableCell
-											key={`countries-sub-header-${i}`}
-											className="p-0"
-										></TableCell>
-									))}
-								</TableRow>
-							) : (
-								cpiData.data.map((x, i) => (
-									<TableRow key={`countries-sub-header-${i}`} className="h-10">
-										<TableCell className="p-0">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.country}
-											</span>
-										</TableCell>
-										<TableCell className="p-0">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.averageCPI}
-											</span>
-										</TableCell>
-										<TableCell className="p-0">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.currentCPI}
-											</span>
-										</TableCell>
-									</TableRow>
-								))
-							)}
-						</TableBody>
-					</Table>
-				</div>
-
-				<div className="col-span-3">
-					<Table>
-						<TableHeader className="bg-primary-500">
-							<TableRow className="border-none ">
-								{months_header.map((x, i) => (
-									<TableHead
-										key={`month-header-${i}`}
-										className="text-center text-white "
-									>
-										<span className="flex h-14 items-center">{x}</span>
-									</TableHead>
-								))}
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							<TableRow className="font-semibold">
-								{Array.from({ length: months_header.length }, (_, i) => (
-									<TableCell
-										key={`empty-month-header-${i}`}
-										className="border border-l-0 border-primary/20 p-0 text-center"
-									>
-										<span aria-hidden className="flex h-14 opacity-0">
-											{months_header[i]}
-										</span>
-									</TableCell>
-								))}
-							</TableRow>
-							{isPending ? (
-								<TableRow className="h-10">
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											Loading...
-										</span>
-									</TableCell>
-								</TableRow>
-							) : !cpiData.data || cpiData.data?.length < 1 ? (
-								<TableRow className="h-10">
-									<TableCell className="p-0">
-										<span className="flex h-14 w-full items-center justify-center text-center">
-											No data
-										</span>
-									</TableCell>
-									{Array.from({ length: months_header.length }, (_, i) => (
-										<TableCell
-											key={`empty-month-${i}`}
-											className="p-0"
-										></TableCell>
-									))}
-								</TableRow>
-							) : (
-								cpiData.data.map((x, i) => (
-									<TableRow key={`country-cpi-${i}`}>
-										<TableCell className="border border-l-0 border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												<span>{x.january}</span>
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.february}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.march}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.april}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.may}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.june}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.july}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.august}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.september}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.october}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.november}
-											</span>
-										</TableCell>
-										<TableCell className="border border-primary/20 p-0 text-center">
-											<span className="flex h-14 w-full items-center justify-center text-center">
-												{x.december}
-											</span>
-										</TableCell>
-									</TableRow>
-								))
-							)}
-						</TableBody>
-					</Table>
-				</div>
-			</div>
-
-			<div className="my-12 ml-4 mr-12 flex justify-end gap-4">
-				<ButtonLink
-					href={urls.dashboard.cp_index["upload-history"]}
-					variant={"outline"}
-					className="items-center gap-2 [&>svg>path]:hover:fill-white"
-				>
-					<span>View history</span> <HistorySvg />{" "}
-				</ButtonLink>
-
-				<UploadCpIndexModal />
-			</div>
-		</>
+		<div className="mx-4">
+			<Space style={{ marginBottom: 16 }}>
+				<Select
+					onChange={(val) => setCountry(val)}
+					placeholder="Select Country"
+					options={countries?.map((c) => ({
+						label: c,
+						value: c,
+					}))}
+				/>
+				<Select
+					onChange={(val) => setYear(val)}
+					placeholder="Select Year"
+					options={getSupportedYears(country)?.map((c) => ({
+						label: c,
+						value: c,
+					}))}
+				/>
+				<Button onClick={handleSearch}>Search</Button>
+			</Space>
+			<Table
+				columns={columns}
+				dataSource={data}
+				scroll={{ x: 1300 }}
+				pagination={{
+					pageSize: 10,
+				}}
+			/>
+		</div>
 	);
 };
-
-const data = [
-	{
-		activity: "Health",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-	{
-		activity: "Lifestyle",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-	{
-		activity: "Migration",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-	{
-		activity: "Relationship",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-	{
-		activity: "Home",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-	{
-		activity: "Health",
-		total_ratings: 100,
-		average_ratings: 4.5,
-		rated_status: 75,
-	},
-];
-
-const months_data = [
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-	{
-		january: 148,
-		february: 148,
-		march: 148,
-		april: 148,
-		may: 148,
-		june: 148,
-		july: 148,
-		august: 148,
-		september: 148,
-		october: 148,
-		november: 148,
-		december: 148,
-	},
-];
 
 export default CPIndexPage;

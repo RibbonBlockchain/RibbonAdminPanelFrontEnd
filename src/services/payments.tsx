@@ -8,6 +8,10 @@ async function getRewardPartners(token: string) {
 	return await Fetch(`/admin/reward-partner`, token);
 }
 
+async function getPaymentHistory(token: string) {
+	return await Fetch(`/admin/reward-partner/0/wallet`, token);
+}
+
 async function sendMassPayment(
 	input: { address: string; amount: string }[],
 	token: string
@@ -22,4 +26,5 @@ export const paymentService = {
 	sendMassPayment,
 	getRewardPartner,
 	getRewardPartners,
+	getPaymentHistory,
 };

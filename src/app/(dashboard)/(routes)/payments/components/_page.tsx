@@ -1,10 +1,12 @@
 "use client";
 import { useToken } from "@/components/providers/token";
 import { toast } from "@/components/ui/use-toast";
+import urls from "@/lib/urls";
 import { getErrorMessage } from "@/lib/utils";
 import { paymentService } from "@/services/payments";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input } from "antd";
+import Link from "next/link";
 import { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
@@ -43,18 +45,6 @@ const RecipientsForm = () => {
 			});
 		},
 	});
-
-	// const {
-	// 	data,
-	// 	isPending: loadingPartners,
-	// 	error,
-	// } = useQuery({
-	// 	queryKey: ["reward-partners"],
-	// 	queryFn: () => paymentService.getRewardPartners(token || ""),
-	// 	enabled: !!token,
-	// });
-
-	// console.log("PARTNERS", data);
 
 	const {
 		data: partner,
@@ -100,6 +90,8 @@ const RecipientsForm = () => {
 		const dataToDisburse = { data: result };
 
 		mutate(dataToDisburse);
+
+		window.location.reload;
 	};
 
 	function formatWalletAddress(address: string) {
@@ -139,12 +131,14 @@ const RecipientsForm = () => {
 					<h2 className="mb-4 text-xl font-semibold">
 						Enter Recipients & Amounts
 					</h2>
-					<Button
-						type="default"
-						className="rounded border-purple-500 px-6 py-2 text-purple-500 hover:bg-purple-100"
-					>
-						Upload CSV file
-					</Button>
+					<Link href={urls.dashboard.mass_payments["payment-history"]}>
+						<Button
+							type="default"
+							className="rounded border-purple-500 px-6 py-2 text-purple-500 hover:bg-purple-100"
+						>
+							History
+						</Button>
+					</Link>
 				</div>
 				<Form
 					form={form}

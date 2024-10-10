@@ -50,6 +50,7 @@ const urls = {
 		},
 		mass_payments: {
 			index: "/payments",
+			"payment-history": "/payments/history",
 		},
 		send_notification: "/notifications",
 	},

@@ -94,7 +94,7 @@ const RecipientsForm = () => {
 	};
 
 	function formatWalletAddress(address: string) {
-		if (address.length <= 8) {
+		if (address && address.length <= 8) {
 			return address;
 		}
 

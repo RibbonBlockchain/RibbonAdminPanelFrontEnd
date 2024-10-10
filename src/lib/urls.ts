@@ -48,6 +48,9 @@ const urls = {
 			index: "/cp-index",
 			"upload-history": "/cp-index/upload-history",
 		},
+		mass_payments: {
+			index: "/payments",
+		},
 		send_notification: "/notifications",
 	},
 };

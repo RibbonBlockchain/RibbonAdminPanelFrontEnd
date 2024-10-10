@@ -1,13 +1,22 @@
 import {
-	GetCPIndexResponse,
+	GetCPICountryResponse,
 	GetCPIndexUploadHistoryResponse,
+	GetCPIResponse,
 	UploadCPIndexResponse,
 } from "@/types/response";
 import { Fetch, methods } from ".";
 
-async function getAll(year: number, token: string) {
-	return await Fetch<GetCPIndexResponse>(`/admin/cpi?year=${year}`, token);
+async function getAll(year: number, country: string, token: string) {
+	return await Fetch<GetCPIResponse>(
+		`/admin/cpi?country=${country}&year=${year}`,
+		token
+	);
 }
+
+async function getSupportedCPICountries(token: string) {
+	return await Fetch<GetCPICountryResponse>(`/admin/cpi/countries`, token);
+}
+
 async function getUploadHistory(token: string) {
 	return await Fetch<GetCPIndexUploadHistoryResponse>(
 		`/admin/cpi-history`,
@@ -32,6 +41,7 @@ async function upload(file: File, token: string) {
 
 export const cpIndexService = {
 	getAll,
+	getSupportedCPICountries,
 	getUploadHistory,
 	upload,
 };

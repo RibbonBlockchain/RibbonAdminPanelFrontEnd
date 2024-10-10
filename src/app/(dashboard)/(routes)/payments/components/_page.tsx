@@ -116,7 +116,7 @@ const RecipientsForm = () => {
 					<span>
 						Address:{" "}
 						<a href="" className="text-indigo-600">
-							{formatWalletAddress(wallet)}
+							{wallet}
 						</a>
 					</span>
 					<span className="font-semibold">

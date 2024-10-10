@@ -35,7 +35,6 @@ const RecipientsForm = () => {
 			});
 		},
 		onError(error) {
-			// console.log(error);
 			toast({
 				title: "Error",
 				description: getErrorMessage(error),
@@ -45,14 +44,25 @@ const RecipientsForm = () => {
 		},
 	});
 
+	// const {
+	// 	data,
+	// 	isPending: loadingPartners,
+	// 	error,
+	// } = useQuery({
+	// 	queryKey: ["reward-partners"],
+	// 	queryFn: () => paymentService.getRewardPartners(token || ""),
+	// 	enabled: !!token,
+	// });
+
+	// console.log("PARTNERS", data);
+
 	const {
-		data,
-		isPending: loadingPartners,
-		error,
+		data: partner,
+		isPending: loadingPartner,
 		refetch: refetchCountries,
 	} = useQuery({
-		queryKey: ["reward-partners"],
-		queryFn: () => paymentService.getRewardPartners(token || ""),
+		queryKey: ["reward-partner"],
+		queryFn: () => paymentService.getRewardPartner(token || ""),
 		enabled: !!token,
 	});
 
@@ -60,13 +70,12 @@ const RecipientsForm = () => {
 	let provider = "";
 	let value = "";
 
-	const rpData: any = data;
+	const rpData: any = partner;
 
-	if (data) {
-		const rpWalletData = rpData.data.data.find((d: any) => d.id === 0);
-		wallet = rpWalletData.address;
-		provider = rpWalletData.provider;
-		value = rpWalletData.value;
+	if (rpData) {
+		wallet = rpData.data.address;
+		provider = rpData.data.provider;
+		value = rpData.data.walletBalance;
 	}
 
 	const onFinish = (data: any) => {
@@ -112,7 +121,8 @@ const RecipientsForm = () => {
 					USDC Mass Grant payments on BASE layer 2 network
 				</h2>
 				<h3 className="small flex flex-col items-center">
-					<span>Network: {provider}</span>
+					<span>BASE layer 2 network</span>
+					<span>Wallet Provider: {provider}</span>
 					<span>
 						Address:{" "}
 						<a href="" className="text-indigo-600">

@@ -9,6 +9,7 @@ import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import { RxExternalLink } from "react-icons/rx";
 
 const RecipientsForm = () => {
 	const [form] = Form.useForm();
@@ -108,27 +109,48 @@ const RecipientsForm = () => {
 
 	return (
 		<>
-			<div className="my-12 flex w-full items-center justify-between px-10">
-				<h2 className=" font-semibold">
+			<div className="my-12 w-full justify-between space-y-4 px-10">
+				<h2 className="text-xl font-semibold">
 					USDC Mass Grant payments on BASE layer 2 network
 				</h2>
-				<h3 className="small flex flex-col items-center">
-					<span>BASE layer 2 network</span>
-					<span>Wallet Provider: {provider}</span>
-					<span>
-						Address:{" "}
-						<a
-							href={`https://sepolia.basescan.org/address/${wallet}`}
-							target="_blank"
-							className="text-indigo-600"
-						>
-							{wallet}
-						</a>
-					</span>
-					<span className="font-semibold">
-						${value} <small className="text-xs font-normal">USDC</small>
-					</span>
-				</h3>
+				<div className="w-72 overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg">
+					<div className="p-3">
+						<div className="mb-4">
+							<span className="mb-1 block text-xs text-blue-100">
+								Available Balance
+							</span>
+							<div className="flex items-center justify-between">
+								<span className="text-2xl font-bold text-white">
+									${value.toLocaleString()}
+								</span>
+								<div className="rounded-full bg-white/20 px-2 py-0.5">
+									<span className="text-xs font-medium text-white">USDC</span>
+								</div>
+							</div>
+						</div>
+						<div className="flex items-center justify-between border-t border-white/10 pt-4">
+							<div className="flex w-full items-center justify-between">
+								<a
+									target="_blank"
+									href={`https://sepolia.basescan.org/address/${wallet}`}
+									className="flex items-center space-x-1 font-mono text-xs text-blue-100"
+								>
+									<span>{formatWalletAddress(wallet)}</span>
+									<RxExternalLink />
+								</a>
+
+								<div className="flex items-center space-x-2">
+									<div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20">
+										<span className="text-sm font-bold text-white">C</span>
+									</div>
+									<span className="text-sm font-semibold text-white">
+										Coinbase
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div className="container mx-auto p-8">
 				<div className="flex justify-between">

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Page() {
 	return (
 		<>
-			<Header />
+			<Header>Mass Payments</Header>
 			<ReceipientsForm />
 		</>
 	);

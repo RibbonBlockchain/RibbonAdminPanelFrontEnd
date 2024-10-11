@@ -117,7 +117,11 @@ const RecipientsForm = () => {
 					<span>Wallet Provider: {provider}</span>
 					<span>
 						Address:{" "}
-						<a href="" className="text-indigo-600">
+						<a
+							href={`https://sepolia.basescan.org/address/${wallet}`}
+							target="_blank"
+							className="text-indigo-600"
+						>
 							{wallet}
 						</a>
 					</span>

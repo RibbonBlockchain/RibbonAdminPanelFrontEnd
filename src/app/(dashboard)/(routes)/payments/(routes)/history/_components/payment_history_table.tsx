@@ -94,9 +94,12 @@ const PaymentHistoryPage = () => {
 			dataIndex: "address",
 			key: "address",
 			render: (_: any, data: any) => (
-				<p className="font-semibold ">
-					{data.type === "out" ? data.to : data.from}
-				</p>
+				<>
+					<p className="font-semibold ">
+						{data.type === "out" ? `to: ${data.to}` : `from: ${data.from}`}
+					</p>
+					<p>{`hash: ${data.hash}`}</p>
+				</>
 			),
 		},
 		{
@@ -105,6 +108,7 @@ const PaymentHistoryPage = () => {
 			render: (_: any, data: any) => (
 				<div>
 					<p className="font-semibold">
+						{data.type === "in" ? "+" : "-"}
 						{data.value} {data.asset}
 					</p>
 					<p className="text-xs">

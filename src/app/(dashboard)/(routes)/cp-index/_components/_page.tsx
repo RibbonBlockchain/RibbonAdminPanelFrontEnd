@@ -133,12 +133,13 @@ const CPIndexPage: React.FC<Props> = (props) => {
 				<Select
 					onChange={(val) => setYear(val)}
 					placeholder="Select Year"
+					onSelect={handleSearch}
 					options={getSupportedYears(country)?.map((c) => ({
 						label: c,
 						value: c,
 					}))}
 				/>
-				<Button onClick={handleSearch}>Search</Button>
+				{/* <Button onClick={handleSearch}>Search</Button> */}
 			</Space>
 			<Table
 				columns={columns}

@@ -58,14 +58,12 @@ const RecipientsForm = () => {
 	});
 
 	let wallet = "";
-	let provider = "";
 	let value = "";
 
 	const rpData: any = partner;
 
 	if (rpData) {
 		wallet = rpData.data.address;
-		provider = rpData.data.provider;
 		value = rpData.data.walletBalance;
 	}
 

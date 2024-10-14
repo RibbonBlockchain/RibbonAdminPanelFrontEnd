@@ -35,8 +35,8 @@ const PaymentHistoryPage = () => {
 	// Sort by blockTimestamp
 	const sortedData = mergedData.sort((a, b) => {
 		return (
-			new Date(a.metadata.blockTimestamp).getTime() -
-			new Date(b.metadata.blockTimestamp).getTime()
+			new Date(b.metadata.blockTimestamp).getTime() -
+			new Date(a.metadata.blockTimestamp).getTime()
 		);
 	});
 
